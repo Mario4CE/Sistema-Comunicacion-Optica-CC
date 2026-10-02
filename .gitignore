@@ -1,0 +1,23 @@
+# Archivos temporales de sistema y editores
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# Compilación de Arduino
+build/
+*.hex
+*.elf
+
+# LTspice temporales
+*.raw
+*.log
+*.fft
+*.op.raw
+
+# MATLAB temporales
+*.asv
+*.m~
+slprj/
