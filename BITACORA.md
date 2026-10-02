@@ -30,9 +30,14 @@
 * **Lista de Materiales y Guía de Compras:**
   * Se generó `docs/lista_de_materiales_BOM.md` especificando componentes, tolerancias y la advertencia clave de adquirir un buzzer pasivo y no activo.
 
+* **Simulación Circuital (LTspice):**
+  * Se creó el netlist SPICE `simulation/ltspice/dac_r2r_buffer.cir` para validar la respuesta analógica y el aislamiento del buffer.
+* **Guía de Montaje Físico y Puntos de Prueba:**
+  * Se redactó `docs/guia_de_conexion_protoboard.md` con instrucciones pin a pin para el armado en protoboard y tabla de puntos de prueba (TP1 a TP5) con multímetro/osciloscopio.
+
 ---
 
 ## Próximos Pasos Planificados
-1. Crear el archivo de simulación esquemático/netlist para LTspice de las etapas analógicas.
-2. Crear la guía de montaje paso a paso en protoboard y diagrama de conexiones.
-3. Configurar el repositorio remoto en GitHub para respaldar y compartir el código con el equipo.
+1. Vincular el repositorio a GitHub cuando el usuario proporcione la URL del repositorio remoto.
+2. Añadir la plantilla del informe formal en LaTeX / Markdown según el formato exigido por la cátedra.
+3. Pruebas y registro de mediciones experimentales en laboratorio.

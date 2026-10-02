@@ -1,0 +1,54 @@
+* ============================================================================
+* PROYECTO: Sistema de Comunicacion por Medios Opticos (EL2113)
+* SIMULACION LTSPICE: DAC R-2R de 4 Bits + Buffer Seguidor LM358
+* AUTOR: Mario Cerdas y equipo de trabajo
+* ============================================================================
+*
+* Descripcion:
+* Esta simulacion valida la escalera de voltajes analoga producida por la red
+* R-2R de 4 bits (b0 a b3) y verifica que el buffer con amplificador operacional
+* aisla la senal eliminando por completo el efecto de carga.
+
+.title DAC R-2R 4-Bits con Buffer Seguidor de Tension
+
+* --- Fuentes de Alimentacion ---
+Vcc Vcc 0 DC 5.0
+
+* --- Fuentes de Entrada Digital (Patron de prueba: Bits b0 a b3) ---
+* Para simular un valor especifico (ej. 1010_2 = 10 decimal = 3.125 V):
+* Ajustar los voltajes de entrada a 5V (alto) o 0V (bajo):
+Vb0 n_b0 0 DC 0.0     ; LSB (Bit 0)
+Vb1 n_b1 0 DC 5.0     ; Bit 1
+Vb2 n_b2 0 DC 0.0     ; Bit 2
+Vb3 n_b3 0 DC 5.0     ; MSB (Bit 3)
+
+* --- Red en Escalera R-2R ---
+* Resistencias horizontales (R = 10k)
+R_h1 n_nodo1 n_nodo2 10k
+R_h2 n_nodo2 n_nodo3 10k
+R_h3 n_nodo3 n_dac_out 10k
+
+* Resistencias verticales (2R = 20k)
+R_term n_nodo1 0 20k          ; Resistencia de terminacion a tierra
+R_v0   n_b0    n_nodo1 20k   ; Bit 0 a primer nodo
+R_v1   n_b1    n_nodo2 20k   ; Bit 1 a segundo nodo
+R_v2   n_b2    n_nodo3 20k   ; Bit 2 a tercer nodo
+R_v3   n_b3    n_dac_out 20k ; Bit 3 a nodo de salida
+
+* --- Etapa de Interfaz: Buffer Seguidor con OpAmp ---
+* Modelo de Amplificador Operacional (Fuente de tension controlada por tension E_OPAMP)
+* Ganancia en lazo abierto = 100,000, alta impedancia de entrada, baja impedancia de salida
+E_OPAMP n_buf_out 0 n_dac_out n_buf_out 100k
+
+* --- Carga de Prueba (Driver de LED: R_driver = 150 Ohms y Diodo LED) ---
+R_driver n_buf_out n_led_anode 150
+D_LED    n_led_anode 0 D_RED_LED
+
+* Modelo de diodo LED rojo tipico (Vd ~ 1.8V)
+.model D_RED_LED D(Is=1e-19 N=1.8 Rs=2.0 Eg=1.9 Xti=3)
+
+* --- Directivas de Simulacion ---
+.op
+.tran 0.1m 10m
+
+.end
