@@ -49,6 +49,7 @@
 * `b864f34` - *feat(simulation): agregar esquematico grafico .asc de LTspice para DAC R-2R y buffer*
 * `b04ca30` - *feat(simulation): agregar codigo y guia de montaje paso a paso para TinkerCAD*
 * `bcde82e` - *feat(matlab): agregar generador de patrones de prueba y cuantizacion con exportacion a C++*
+* `cc960cb` - *docs: agregar guia maestra paso a paso e imagen de referencia para TinkerCAD*
 
 ---
 
