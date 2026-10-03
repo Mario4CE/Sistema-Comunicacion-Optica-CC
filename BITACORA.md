@@ -32,12 +32,27 @@
 
 * **Simulación Circuital (LTspice):**
   * Se creó el netlist SPICE `simulation/ltspice/dac_r2r_buffer.cir` para validar la respuesta analógica y el aislamiento del buffer.
+  * Se generó el esquemático visual gráfico `simulation/ltspice/dac_r2r_buffer.asc` con generadores de pulsos y directivas de simulación transitoria.
+* **Entorno de Simulación Virtual (TinkerCAD):**
+  * Se creó `simulation/tinkercad/codigo_tinkercad.ino` optimizado para el editor web de Arduino en TinkerCAD.
+  * Se redactó `simulation/tinkercad/guia_montaje_tinkercad.md` con la guía de cableado, selección de componentes y conexión de instrumentos virtuales.
+* **Modelado Avanzado en MATLAB:**
+  * Se creó `matlab/generador_patrones.m` para generar señales sinusoidales cuantizadas a 4 bits, calcular la relación señal a ruido de cuantización ($SQNR = 25.84\text{ dB}$) y exportar automáticamente arreglos en formato C++ para Arduino.
 * **Guía de Montaje Físico y Puntos de Prueba:**
   * Se redactó `docs/guia_de_conexion_protoboard.md` con instrucciones pin a pin para el armado en protoboard y tabla de puntos de prueba (TP1 a TP5) con multímetro/osciloscopio.
 
 ---
 
+## Historial de Commits en Git
+* `07ee165` - *Inicializar estructura de proyecto, codigo Arduino, simulacion MATLAB y documentacion de calculo*
+* `e5306b5` - *Agregar simulacion SPICE, guia detallada de conexion en protoboard y actualizar bitacora*
+* `b864f34` - *feat(simulation): agregar esquematico grafico .asc de LTspice para DAC R-2R y buffer*
+* `b04ca30` - *feat(simulation): agregar codigo y guia de montaje paso a paso para TinkerCAD*
+* `bcde82e` - *feat(matlab): agregar generador de patrones de prueba y cuantizacion con exportacion a C++*
+
+---
+
 ## Próximos Pasos Planificados
-1. Vincular el repositorio a GitHub cuando el usuario proporcione la URL del repositorio remoto.
-2. Añadir la plantilla del informe formal en LaTeX / Markdown según el formato exigido por la cátedra.
-3. Pruebas y registro de mediciones experimentales en laboratorio.
+1. Autenticar y completar la subida de los commits a GitHub (`git push`).
+2. Diseñar la simulación del temporizador 555 astable modulado por LDR en LTspice.
+3. Preparar la estructura del informe final escrito.
