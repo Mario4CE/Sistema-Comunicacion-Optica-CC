@@ -1,0 +1,88 @@
+* ============================================================================
+* PROYECTO: Sistema de Comunicacion por Medios Opticos (EL2113)
+* SIMULACION LTSPICE: Etapa Receptora con LDR + Temporizador 555 Astable + Buzzer
+* AUTOR: Mario Cerdas y equipo de trabajo
+* ============================================================================
+*
+* Descripcion:
+* Esta simulacion modela la etapa receptora optica y acustica:
+* 1. La fotorresistencia (LDR) actua como elemento modulador (R2 = {R_LDR}).
+* 2. El NE555 en modo astable genera una frecuencia audible proporcional a la luz:
+*    f = 1.44 / ( (R1 + 2*R_LDR) * C1 )
+* 3. Condensador de desacoplo AC (C_acoplo = 10uF) que bloquea el nivel DC del pin 3.
+* 4. Transductor acustico (Buzzer pasivo modelado como carga de audio).
+*
+* Barrido parametrico:
+* Se evalua R_LDR desde 1.5k (luz maxima, tono agudo ~3.6 kHz) hasta 40k (oscuridad, tono grave ~180 Hz).
+
+.title Receptor Optico: 555 Astable Modulado por LDR y Salida Acustica
+
+* --- Fuente de Alimentacion ---
+Vcc Vcc 0 DC 5.0
+
+* --- Parametro de Resistencia LDR (Simula variacion de luz) ---
+.param R_LDR=10k
+
+* --- Temporizador NE555 (Subcircuito macromodelo estandar SPICE) ---
+* Pines del NE555: 1:GND, 2:TRIG, 3:OUT, 4:RESET, 5:CTRL, 6:THRES, 7:DISCH, 8:VCC
+X_U1 0 n_trig n_out Vcc n_ctrl n_thres n_disch Vcc NE555_BEHAVE
+
+* Conexion entre Trigger (Pin 2) y Threshold (Pin 6)
+R_link n_trig n_thres 1u
+
+* --- Red de Temporizacion RC Astable ---
+* R1: Resistencia fija de proteccion (1k) entre Vcc y Discharge (Pin 7)
+R1 Vcc n_disch 1k
+
+* R2: LDR variable en funcion de la luz recibida entre Pin 7 y Pin 6/2
+R_foto n_disch n_thres {R_LDR}
+
+* C1: Condensador principal de temporizacion (100nF) entre Pin 6/2 y GND
+C1 n_thres 0 100n IC=0V
+
+* C2: Condensador de filtrado en Pin 5 (Control Voltage) de 10nF
+C2 n_ctrl 0 10n
+
+* --- Etapa de Salida Acustica (Buzzer Pasivo con Desacoplo AC) ---
+* Condensador de desacoplo (bloquea DC para proteger el transductor)
+C_acoplo n_out n_buzzer 10u
+
+* Carga equivalente del Buzzer Pasivo (Impedancia tipica 16-32 Ohms a GND)
+R_buzzer n_buzzer 0 32
+
+* ============================================================================
+* Macromodelo de comportamiento del NE555 (Astable)
+* ============================================================================
+.subckt NE555_BEHAVE 1 2 3 4 5 6 7 8
+* 1:GND, 2:TRIG, 3:OUT, 4:RESET, 5:CTRL, 6:THRES, 7:DISCH, 8:VCC
+* Divisor interno de tension (3 resistencias de 5k)
+R_d1 8 5 5k
+R_d2 5 n_comp2 5k
+R_d3 n_comp2 1 5k
+
+* Comparador 1 (Threshold vs Pin 5)
+B_comp1 n_c1 1 V=IF(V(6,1) > V(5,1), 5.0, 0.0)
+
+* Comparador 2 (Trigger vs 1/3 Vcc)
+B_comp2 n_c2 1 V=IF(V(2,1) < V(n_comp2,1), 5.0, 0.0)
+
+* Latch RS basico
+B_latch n_q 1 V=IF(V(4,1) < 0.8, 0.0, IF(V(n_c2,1) > 2.5, 5.0, IF(V(n_c1,1) > 2.5, 0.0, V(n_q,1))))
+C_state n_q 1 10p
+
+* Salida Buffer Push-Pull (Pin 3)
+B_out 3 1 V=IF(V(n_q,1) > 2.5, V(8,1) - 1.2, 0.1)
+
+* Transistor de Descarga (Pin 7 a GND cuando Q=bajo / Q_bar=alto)
+B_disch 7 1 I=IF(V(n_q,1) < 2.5, V(7,1)/5.0, 0.0)
+.ends NE555_BEHAVE
+
+* --- Directivas de Simulacion ---
+* Barrido parametrico de la LDR:
+* 1.5k (Luz max, ~3600 Hz), 5k (~1300 Hz), 10k (~685 Hz), 20k (~350 Hz), 40k (Oscuridad, ~180 Hz)
+.step param R_LDR list 1.5k 5k 10k 20k 40k
+
+* Simulacion transitoria durante 15 ms para observar los ciclos de oscilacion completos
+.tran 0 15m 0 10u startup
+
+.end

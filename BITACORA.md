@@ -40,6 +40,11 @@
   * Se creó `matlab/generador_patrones.m` para generar señales sinusoidales cuantizadas a 4 bits, calcular la relación señal a ruido de cuantización ($SQNR = 25.84\text{ dB}$) y exportar automáticamente arreglos en formato C++ para Arduino.
 * **Guía de Montaje Físico y Puntos de Prueba:**
   * Se redactó `docs/guia_de_conexion_protoboard.md` con instrucciones pin a pin para el armado en protoboard y tabla de puntos de prueba (TP1 a TP5) con multímetro/osciloscopio.
+* **Simulación de Etapa Receptora (LTspice - 555 Astable + LDR + Buzzer):**
+  * Se diseñó el netlist SPICE `simulation/ltspice/receptor_555_ldr.cir` modelando el temporizador NE555 astable modulado por la resistencia óptica de la LDR.
+  * Se implementó el barrido paramétrico `.step param R_LDR list 1.5k 5k 10k 20k 40k` para validar todo el rango audible ($180\text{ Hz}$ a $3.6\text{ kHz}$).
+  * Se incluyó la red de acoplamiento AC ($C_{acoplo} = 10\ \mu\text{F}$) y el modelo de transductor acústico (buzzer pasivo de $32\ \Omega$).
+  * Se generó el esquemático gráfico interactivo `simulation/ltspice/receptor_555_ldr.asc` para visualización y edición en la interfaz gráfica de LTspice.
 
 ---
 
@@ -54,6 +59,6 @@
 ---
 
 ## Próximos Pasos Planificados
-1. Autenticar y completar la subida de los commits a GitHub (`git push`).
-2. Diseñar la simulación del temporizador 555 astable modulado por LDR en LTspice.
-3. Preparar la estructura del informe final escrito.
+1. Sincronizar y completar la subida de los commits a GitHub (`git push`).
+2. Preparar la estructura del informe final escrito formal según las guías del curso.
+3. Pruebas experimentales en protoboard y validación con osciloscopio / multímetro.
