@@ -50,6 +50,14 @@
   * Se desarrolló y ejecutó la suite de pruebas `src/test_validacion_sistema.py` que verifica la sintaxis de los archivos `.ino`, emula la lógica bit a bit, resuelve las ecuaciones nodales de Kirchhoff de la red R-2R (error $0.0000\text{ V}$) y valida la respuesta del 555 astable.
   * Se actualizó `docs/GUIA_PASO_A_PASO_GENERAL.md` con los pasos de simulación del circuito receptor en LTspice.
 
+### [2026-10-10] - Creación de Rama de Trabajo y Estandarización de Comentarios
+* **Flujo de Trabajo Colaborativo en Git:**
+  * Se creó y activó la rama independiente `mario-dev` a partir de `main` para trabajar de forma aislada mientras el resto del equipo colabora en el repositorio.
+* **Estandarización de Documentación Interna de Código:**
+  * Se aplicó el estándar formal de comentarios en todo el código del proyecto (`emisor_4bits.ino`, `codigo_tinkercad.ino`, `test_validacion_sistema.py`, `simulacion_dac_555.m` y `generador_patrones.m`):
+    * **Clases:** Encabezado con breve descripción y listado de funciones/métodos que contiene (implementado en `ValidadorSistemaOptico`).
+    * **Funciones:** Bloques estructurados con **Descripción**, **Entrada**, **Salida** y **Restricciones**, además de comentarios de línea explicativos en operaciones críticas.
+
 ---
 
 ## Historial de Commits en Git
@@ -61,6 +69,7 @@
 * `cc960cb` - *docs: agregar guia maestra paso a paso e imagen de referencia para TinkerCAD*
 * `8c9428f` - *feat(simulation): agregar simulacion de etapa receptora 555 astable modulado por LDR en LTspice*
 * `340c89c` - *docs: actualizar bitacora con commit 8c9428f y sincronizacion remota*
+* `d0f6b54` - *feat(test): agregar suite de validacion automatica de C++ y circuitos y mejorar parser serial*
 
 ---
 

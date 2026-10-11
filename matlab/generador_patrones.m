@@ -3,10 +3,22 @@
 %  SCRIPT: Generador de Patrones de Prueba y Cuantización de 4 Bits
 %  AUTOR: Mario Cerdas y equipo de trabajo
 % ========================================================================
-%  DESCRIPCIÓN:
-%  Este script genera diferentes tipos de señales de prueba, las cuantiza
-%  a una resolución de 4 bits (16 niveles entre 0 y 5V) y genera arreglos
-%  en formato C++ listos para ser copiados al código de Arduino.
+%  Descripción:
+%    Genera señales de prueba analógicas (senoidal y rampa), las cuantiza
+%    a una resolución de 4 bits (16 niveles entre 0 y 5V), grafica la señal
+%    reconstruida e imprime arreglos en formato C++ listos para Arduino.
+%
+%  Entrada:
+%    Parámetros internos configurables en la Sección 1 (N_bits = 4,
+%    V_min = 0.0 V, V_max = 5.0 V, num_muestras = 32).
+%
+%  Salida:
+%    - Código en consola del arreglo C++ `PATRON_SENOIDAL[32]`.
+%    - Ventana gráfica con la comparativa de cuantización y patrón en rampa.
+%
+%  Restricciones:
+%    - N_bits debe ser un entero positivo (diseñado para 4 bits -> 16 niveles).
+%    - Los valores cuantizados se saturan estrictamente al intervalo [0, 15].
 % ========================================================================
 clear; clc; close all;
 

@@ -3,6 +3,25 @@
 %  SCRIPT: Simulación y Modelado Integral (DAC R-2R + Óptica + NE555)
 %  AUTOR: Mario Cerdas y equipo de trabajo
 % ========================================================================
+%  Descripción:
+%    Modela numéricamente las 6 etapas del sistema de comunicación óptica
+%    para los 16 estados digitales de 4 bits: voltaje de salida de la red
+%    R-2R, corriente en el LED transmisor, resistencia de la LDR receptora
+%    y frecuencia/ciclo de trabajo del temporizador NE555 en modo astable.
+%
+%  Entrada:
+%    Parámetros físicos y eléctricos definidos en la Sección 1 (V_ref = 5V,
+%    N_bits = 4, R = 10k, 2R = 20k, R_driver = 150 Ohm, R1_555 = 1k, C = 100nF).
+%
+%  Salida:
+%    - Tabla resumen en consola con las variables de cada uno de los 16 estados.
+%    - Figura con 4 subgráficas (V_DAC, I_LED, R_LDR y frecuencia f_555).
+%
+%  Restricciones:
+%    - Requiere el toolbox Communications (para `de2bi`) o MATLAB base.
+%    - Asume operación con seguidor de voltaje (buffer LM358) ideal entre el
+%      DAC R-2R y el resistor limitador del LED.
+% ========================================================================
 clear; clc; close all;
 
 fprintf('===============================================================\n');
