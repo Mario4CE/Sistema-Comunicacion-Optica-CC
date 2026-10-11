@@ -55,10 +55,10 @@
 * `b04ca30` - *feat(simulation): agregar codigo y guia de montaje paso a paso para TinkerCAD*
 * `bcde82e` - *feat(matlab): agregar generador de patrones de prueba y cuantizacion con exportacion a C++*
 * `cc960cb` - *docs: agregar guia maestra paso a paso e imagen de referencia para TinkerCAD*
+* `8c9428f` - *feat(simulation): agregar simulacion de etapa receptora 555 astable modulado por LDR en LTspice*
 
 ---
 
 ## Próximos Pasos Planificados
-1. Sincronizar y completar la subida de los commits a GitHub (`git push`).
-2. Preparar la estructura del informe final escrito formal según las guías del curso.
-3. Pruebas experimentales en protoboard y validación con osciloscopio / multímetro.
+1. Preparar la estructura del informe final escrito formal según las guías del curso.
+2. Pruebas experimentales en protoboard y validación con osciloscopio / multímetro.
