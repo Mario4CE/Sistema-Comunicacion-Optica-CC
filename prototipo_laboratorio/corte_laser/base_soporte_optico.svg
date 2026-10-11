@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ============================================================================
+  PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113 - ITCR)
+  PIEZA DE CORTE LÁSER (Req. M.13 y B.2): Base Organizadora y Guía Óptica (45 cm)
+  AUTOR: Mario Cerdas y equipo de trabajo
+  LABORATORIO: Equipo de Corte Láser - Escuela de Ingeniería Electrónica
+  MATERIAL: Acrílico o MDF de 3.0 mm de espesor (Dimensiones: 380 mm x 160 mm)
+  CONVENCIÓN DE COLORES LÁSER:
+    - Rojo  (#FF0000, stroke-width 0.1mm) : Corte pasante completo
+    - Azul  (#0000FF, stroke-width 0.2mm) : Grabado vectorial de delimitación de las 7 etapas (Req. B.2)
+  ============================================================================
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="380mm" height="160mm"
+     viewBox="0 0 380 160">
+
+  <!-- 1. CAPA DE CORTE PASANTE (ROJO #FF0000) -->
+  <g id="CORTE_LASER" fill="none" stroke="#FF0000" stroke-width="0.1">
+    <!-- Contorno exterior de la placa base (370 mm x 150 mm con esquinas redondeadas) -->
+    <rect x="5" y="5" width="370" height="150" rx="6" ry="6" />
+
+    <!-- Perforaciones de fijación para Arduino UNO (M3, diámetro 3.2 mm) -->
+    <circle cx="28" cy="30" r="1.6" />
+    <circle cx="28" cy="78" r="1.6" />
+    <circle cx="80" cy="35" r="1.6" />
+    <circle cx="80" cy="63" r="1.6" />
+
+    <!-- Perforaciones M3 para el Acoplador 3D Emisor (Etapa 4: LED Rojo) -->
+    <circle cx="255" cy="40" r="1.6" />
+    <circle cx="255" cy="59" r="1.6" />
+
+    <!-- Perforaciones M3 para el Acoplador 3D Receptor (Etapa 5: LDR) -->
+    <circle cx="255" cy="101" r="1.6" />
+    <circle cx="255" cy="120" r="1.6" />
+
+    <!-- Ranuras de sujeción para bridas del arco de Fibra Óptica Plástica (Longitud 30-60 cm) -->
+    <rect x="310" y="38" width="3" height="10" />
+    <rect x="310" y="112" width="3" height="10" />
+    <rect x="352" y="75" width="10" height="3" />
+
+    <!-- Orificio acústico de resonancia para Buzzer Piezoeléctrico Pasivo (Etapa 7) -->
+    <circle cx="55" cy="122" r="6.0" />
+  </g>
+
+  <!-- 2. CAPA DE GRABADO VECTORIAL DE DELIMITACIÓN DE LAS 7 ETAPAS (AZUL #0000FF - Req. B.2) -->
+  <g id="GRABADO_DELIMITACION_ETAPAS" fill="none" stroke="#0000FF" stroke-width="0.25" font-family="Arial, sans-serif" font-size="4.2">
+    <!-- Recuadros delimitadores de cada una de las 7 etapas (Requerimiento B.2) -->
+    <!-- Etapa 1: Arduino -->
+    <rect x="15" y="18" width="75" height="68" stroke-dasharray="2,1" />
+    <text x="18" y="24" stroke="#0000FF">ETAPA 1: PATRON 4 BITS (ARDUINO)</text>
+
+    <!-- Etapa 2: DAC R-2R + OpAmp 1A -->
+    <rect x="96" y="18" width="68" height="68" stroke-dasharray="2,1" />
+    <text x="99" y="24" stroke="#0000FF">ETAPA 2: DAC R-2R + OPAMP 1A</text>
+
+    <!-- Etapa 3: Interfaz OpAmp 1B -->
+    <rect x="170" y="18" width="58" height="68" stroke-dasharray="2,1" />
+    <text x="173" y="24" stroke="#0000FF">ETAPA 3: INTERFAZ 1B</text>
+
+    <!-- Etapa 4: Generador Óptico (150 Ohm + LED Rojo) -->
+    <rect x="234" y="18" width="52" height="68" stroke-dasharray="2,1" />
+    <text x="237" y="24" stroke="#0000FF">ETAPA 4: LED ROJO</text>
+
+    <!-- Guía del Medio Óptico Curvo (Longitud de arco = 45 cm dentro de [30, 60] cm) -->
+    <path d="M 270 49 C 375 49, 375 111, 270 111" stroke-dasharray="3,2" />
+    <text x="292" y="82" stroke="#0000FF">MEDIO OPTICO POF (45 cm)</text>
+
+    <!-- Etapa 5: Receptor Óptico Pasivo (LDR) -->
+    <rect x="234" y="92" width="52" height="54" stroke-dasharray="2,1" />
+    <text x="237" y="98" stroke="#0000FF">ETAPA 5: RECEPTOR LDR</text>
+
+    <!-- Etapa 6: Generador de Onda Cuadrada (555 Astable) -->
+    <rect x="115" y="92" width="113" height="54" stroke-dasharray="2,1" />
+    <text x="118" y="98" stroke="#0000FF">ETAPA 6: OSCILADOR 555 ASTABLE</text>
+
+    <!-- Etapa 7: Buzzer Piezoeléctrico Pasivo -->
+    <rect x="15" y="92" width="94" height="54" stroke-dasharray="2,1" />
+    <text x="18" y="98" stroke="#0000FF">ETAPA 7: BUZZER PASIVO</text>
+
+    <!-- Rótulo de Entrada de Fuente de Laboratorio (Req. P.17 y Q.18) -->
+    <text x="15" y="152" stroke="#0000FF">EL2113 ITCR - ALIMENTACION EXCLUSIVA CON FUENTE DC DE LABORATORIO (NO 5V ARDUINO / NO BATERIAS)</text>
+  </g>
+</svg>

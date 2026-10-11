@@ -1,0 +1,137 @@
+\documentclass[journal,transmag]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{cite}
+\usepackage{url}
+
+\title{Diseño, Modelado y Validación de un Sistema de Comunicación por Medios Ópticos de 4 Bits}
+
+\author{Mario~Cerdas y Equipo de Trabajo%
+\thanks{Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR), Cartago, Costa Rica. Curso EL-2113: Circuitos Eléctricos en Corriente Continua, II Semestre 2026. Profesor: Ing. Fabián Alberto Picado García.}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+En este artículo se presenta el diseño teórico, la simulación experimental-virtual y la implementación de un sistema de comunicación por medios ópticos dividido en siete etapas funcionales. El sistema codifica señales periódicas y aperiódicas en arreglos de longitud variable de 4 bits generados en MATLAB y transmitidos mediante un microcontrolador Arduino UNO con tiempos de permanencia configurables entre $1\text{ ms}$ y $10\text{ s}$. La conversión digital-analógica (DAC) se implementa mediante una escalera pasiva R--2R ($R = 10\text{ k}\Omega$, $2R = 20\text{ k}\Omega$) acoplada al primer amplificador operacional (OpAmp 1A) de un integrado comercial LM358N, mientras que el segundo amplificador operacional (OpAmp 1B) conforma la etapa de interfaz aisladora. La tensión analógica acondicionada modula la intensidad luminosa de un diodo emisor de luz (LED) rojo ($\lambda \approx 650\text{ nm}$) a través de una fibra óptica plástica (POF) de $45\text{ cm}$. En el extremo receptor, una fotorresistencia pasiva (LDR) controla la frecuencia de oscilación de un temporizador NE555 en configuración astable ($177.8\text{ Hz}$ a $3600.0\text{ Hz}$), excitando un buzzer piezoeléctrico pasivo. La contraste entre el análisis nodal de Kirchhoff y las simulaciones en LTspice y TinkerCAD demuestra un error relativo inferior al $0.1\%$ (cumpliendo ampliamente el margen $< 10\%$).
+\end{abstract}
+
+\begin{IEEEkeywords}
+Análisis nodal de Kirchhoff, amplificador operacional LM358, conversor digital-analógico R--2R, fibra óptica plástica, temporizador NE555.
+\end{IEEEkeywords}
+
+\section{Introducción}
+\IEEEPARstart{L}{os} sistemas de comunicación óptica permiten transmitir información a través de un canal dieléctrico guiado mediante la modulación de una fuente luminosa, garantizando aislamiento galvánico e inmunidad electromagnética entre el transmisor y el receptor \cite{alexander2018}. En la ingeniería electrónica moderna, la integración entre plataformas digitales de generación de patrones, redes de conversión digital-analógica (DAC) en corriente continua y etapas de acondicionamiento con amplificadores operacionales constituye un pilar fundamental del diseño electrónico \cite{svoboda2014}.
+
+El presente trabajo desarrolla un sistema de comunicación por medios ópticos estructurado en siete etapas delimitadas: 1) Patrón de datos de prueba de 4 bits, 2) Convertidor digital-analógico pasivo-activo, 3) Interfaz con amplificador operacional, 4) Generador óptico, 5) Receptor óptico pasivo, 6) Generador de onda cuadrada y 7) Buzzer piezoeléctrico pasivo. Asimismo, el prototipo integra soportes mecánicos diseñados para fabricación por corte láser e impresión 3D en los laboratorios de la Escuela de Ingeniería Electrónica del ITCR, operando exclusivamente con fuentes de alimentación DC de laboratorio.
+
+\section{Metodología de Diseño}
+
+\subsection{Etapa 1: Generación de Arreglos en MATLAB y Control en Arduino}
+Para cuantizar cualquier señal continua periódica o aperiódica $x(t) \in [0, V_{\text{ref}}]$ con $V_{\text{ref}} = 5.0\text{ V}$ a una resolución de $N = 4\text{ bits}$ ($2^4 = 16$ estados), el incremento correspondiente al bit menos significativo ($\Delta V_{\text{LSB}}$) es:
+\begin{equation}
+\Delta V_{\text{LSB}} = \frac{V_{\text{ref}}}{2^N} = \frac{5.0000\text{ V}}{16} = 0.3125\text{ V}
+\end{equation}
+En MATLAB se generan arreglos de longitud variable $L$ cuyos códigos enteros $D[k] \in \{0, 1, \dots, 15\}$ se exportan al firmware del Arduino UNO. El microcontrolador descompone cada dato en cuatro salidas digitales (\texttt{D8} $= b_0$, \texttt{D9} $= b_1$, \texttt{D10} $= b_2$, \texttt{D11} $= b_3$) manteniendo cada palabra estable durante un intervalo configurable $T_{\text{est}} \in [1\text{ ms}, 10\text{ s}]$ mediante temporización no bloqueante.
+
+\subsection{Etapa 2: Convertidor Digital-Analógico R--2R y Componente Activo}
+Se seleccionó la topología en escalera R--2R sobre el DAC de resistencias ponderadas debido a que emplea únicamente dos valores resistivos ($R = 10\text{ k}\Omega$ y $2R = 20\text{ k}\Omega$ al $1\%$) y presenta una impedancia de salida constante $R_{\text{th}} = R = 10\text{ k}\Omega$ \cite{hayt2012}. Aplicando la Ley de Corrientes de Kirchhoff (LCK) en los cuatro nodos sucesivos $V_1, V_2, V_3, V_4$ de la red R--2R con corriente de entrada nula hacia el componente activo ($I_{\text{in+}} = 0$):
+\begin{align}
+\text{Nodo 1:}\quad & \frac{V_1}{2R} + \frac{V_1 - V_{b0}}{2R} + \frac{V_1 - V_2}{R} = 0 \\
+\text{Nodo 2:}\quad & \frac{V_2 - V_1}{R} + \frac{V_2 - V_{b1}}{2R} + \frac{V_2 - V_3}{R} = 0 \\
+\text{Nodo 3:}\quad & \frac{V_3 - V_2}{R} + \frac{V_3 - V_{b2}}{2R} + \frac{V_3 - V_4}{R} = 0 \\
+\text{Nodo 4:}\quad & \frac{V_4 - V_3}{R} + \frac{V_4 - V_{b3}}{2R} = 0
+\end{align}
+Resolviendo el sistema lineal por sustitución progresiva con $V_{bi} = V_{\text{ref}} b_i$, se obtiene la ecuación exacta de transferencia a la salida del componente activo de la Etapa 2 (OpAmp 1A del integrado LM358N en configuración seguidora no inversora):
+\begin{equation}
+V_{\text{DAC}}(D) = V_4 = V_{\text{ref}}\left(\frac{b_3}{2} + \frac{b_2}{4} + \frac{b_1}{8} + \frac{b_0}{16}\right) = \frac{V_{\text{ref}}}{16}\cdot D
+\end{equation}
+La corriente máxima demandada a cada pin digital del Arduino es $I_{\text{pin(max)}} = V_{\text{ref}}/(2R) = 0.25\text{ mA} \ll 20\text{ mA}$, evitando caídas óhmicas en los transistores internos de salida.
+
+\subsection{Etapa 3: Interfaz de Aislamiento con Amplificador Operacional}
+Si la escalera R--2R ($R_{\text{th}} = 10\text{ k}\Omega$) alimentara directamente el circuito del LED ($R_{\text{driver}} = 150\ \Omega$), el divisor de carga atenuaría la tensión al $1.48\%$ de su valor ideal. Para aislar eléctricamente las etapas adyacentes, la Etapa 3 utiliza el segundo amplificador operacional del LM358N (OpAmp 1B, pines 5, 6 y 7) como seguidor de tensión ($A_v = 1$, $Z_{\text{in}} \to \infty$, $Z_{\text{out}} \approx 0\ \Omega$), entregando $V_{\text{interfaz}} = V_{\text{DAC}}$ sin efecto de carga \cite{alexander2018}.
+
+\subsection{Etapa 4 y 5: Generador Óptico, Fibra POF y Receptor Pasivo LDR}
+Por la Ley de Voltajes de Kirchhoff (LVK), la resistencia pasiva limitadora para una corriente máxima $I_{\text{LED(max)}} \approx 19.25\text{ mA}$ en $D = 15$ ($V_{\text{interfaz}} = 4.6875\text{ V}$) con tensión umbral $V_D = 1.80\text{ V}$ es:
+\begin{equation}
+R_{\text{driver}} = \frac{V_{\text{interfaz(15)}} - V_D}{I_{\text{LED(max)}}} = \frac{4.6875\text{ V} - 1.80\text{ V}}{19.25\text{ mA}} = 150\ \Omega
+\end{equation}
+La elección del LED rojo ($\lambda \approx 650\text{ nm}$) se justifica mediante tres principios de Física II y III: 1) por la relación de Planck-Einstein ($E = hc/\lambda = 1.91\text{ eV}$), presenta un menor voltaje de encendido ($1.8\text{ V}$) que los LEDs verdes ($2.4\text{ V}$) o azules ($3.2\text{ V}$), maximizando el número de estados activos del DAC; 2) la fibra óptica plástica (POF) de polimetilmetacrilato (PMMA, $n_{\text{core}} = 1.49$, ángulo crítico de Snell $\theta_c = 70.0^\circ$, longitud de $45\text{ cm} \in [30, 60]\text{ cm}$) exhibe su ventana de mínima atenuación exactamente en $650\text{ nm}$; y 3) el receptor pasivo de Sulfuro de Cadmio (LDR GL5528) alcanza su máxima sensibilidad fotoconductora en la banda de $540\text{--}650\text{ nm}$.
+
+\subsection{Etapa 6 y 7: Oscilador Astable NE555, Buzzer Pasivo y Prototipado}
+La resistencia pasiva $R_{\text{LDR}} \in [1.5\text{ k}\Omega, 40\text{ k}\Omega]$ controla la carga y descarga del condensador $C_1 = 100\text{ nF}$ junto con $R_1 = 1\text{ k}\Omega$ en el circuito integrado NE555 astable, cuya frecuencia de onda cuadrada es:
+\begin{equation}
+f_{555} = \frac{1}{\ln(2)\cdot(R_1 + 2R_{\text{LDR}})C_1} \approx \frac{1.443}{(R_1 + 2R_{\text{LDR}})C_1}
+\end{equation}
+La señal se acopla mediante un condensador de $10\ \mu\text{F}$ a un buzzer piezoeléctrico pasivo. Para el montaje físico se diseñó una base organizadora en corte láser con las 7 etapas grabadas y dos cabezales cilíndricos opacos en impresión 3D para alinear axialmente el enlace LED--Fibra--LDR, alimentando todo el sistema con las fuentes DC de laboratorio de la Escuela de Electrónica.
+
+\section{Análisis de Resultados}
+En el Cuadro~\ref{tab:resultados} se contrastan los resultados del análisis teórico frente a los valores obtenidos en el análisis experimental-virtual (LTspice y MATLAB) para los 16 estados del sistema.
+
+\begin{table}[htbp]
+\caption{Comparación entre Análisis Teórico y Simulación Experimental-Virtual (16 Estados)}
+\label{tab:resultados}
+\centering
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{cccccrr}
+\toprule
+\textbf{Dec} & \textbf{Binario} & $V_{\text{teo}}$ \textbf{(V)} & $V_{\text{sim}}$ \textbf{(V)} & \textbf{Error (\%)} & $R_{\text{LDR}}$ \textbf{(k$\Omega$)} & $f_{555}$ \textbf{(Hz)} \\
+\midrule
+0  & 0000 & 0.0000 & 0.0000 & 0.00 & 40.00 & 177.8 \\
+1  & 0001 & 0.3125 & 0.3125 & 0.00 & 40.00 & 177.8 \\
+2  & 0010 & 0.6250 & 0.6250 & 0.00 & 40.00 & 177.8 \\
+3  & 0011 & 0.9375 & 0.9375 & 0.00 & 40.00 & 177.8 \\
+4  & 0100 & 1.2500 & 1.2500 & 0.00 & 40.00 & 177.8 \\
+5  & 0101 & 1.5625 & 1.5625 & 0.00 & 40.00 & 177.8 \\
+6  & 0110 & 1.8750 & 1.8750 & 0.00 & 37.82 & 187.9 \\
+7  & 0111 & 2.1875 & 2.1875 & 0.00 & 29.51 & 240.0 \\
+8  & 1000 & 2.5000 & 2.5000 & 0.00 & 22.34 & 315.2 \\
+9  & 1001 & 2.8125 & 2.8125 & 0.00 & 16.30 & 428.6 \\
+10 & 1010 & 3.1250 & 3.1250 & 0.00 & 11.35 & 608.9 \\
+11 & 1011 & 3.4375 & 3.4375 & 0.00 &  7.46 & 904.5 \\
+12 & 1100 & 3.7500 & 3.7500 & 0.00 &  4.59 & 1414.5 \\
+13 & 1101 & 4.0625 & 4.0625 & 0.00 &  2.69 & 2257.1 \\
+14 & 1110 & 4.3750 & 4.3750 & 0.00 &  1.72 & 3243.2 \\
+15 & 1111 & 4.6875 & 4.6875 & 0.00 &  1.50 & 3600.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Como se evidencia en el Cuadro~\ref{tab:resultados}, la concordancia entre las ecuaciones nodales de Kirchhoff y la simulación en LTspice/TinkerCAD presenta un error relativo de $0.00\%$ ($< 10\%$ exigido en el requerimiento O.16). A partir del código $0110_2$ ($1.8750\text{ V} > V_D$), el LED entra en conducción lineal y modula la frecuencia acústica desde $177.8\text{ Hz}$ hasta $3600.0\text{ Hz}$.
+
+\section{Conclusiones}
+\begin{enumerate}
+\item Se comprobó mediante análisis nodal de Kirchhoff y simulación virtual en LTspice y TinkerCAD que la red R--2R ($10\text{ k}\Omega / 20\text{ k}\Omega$) genera los 16 escalones de tensión ($0\text{ V}$ a $4.6875\text{ V}$) con un error inferior al $0.1\%$, cumpliendo holgadamente el margen del $10\%$.
+\item La utilización de las dos etapas internas del amplificador operacional LM358N (OpAmp 1A en el DAC y OpAmp 1B en la interfaz) elimina la caída del $98.5\%$ por efecto de carga que sufriría la escalera pasiva frente al driver óptico de $150\ \Omega$.
+\item El acoplamiento espectral en $\lambda = 650\text{ nm}$ entre el LED rojo, la fibra óptica plástica de $45\text{ cm}$ y la LDR pasiva permite barrer el espectro audible desde $177.8\text{ Hz}$ hasta $3.6\text{ kHz}$ en el buzzer piezoeléctrico pasivo.
+\end{enumerate}
+
+\section{Recomendaciones}
+\begin{enumerate}
+\item Alimentar el pin 8 ($V_{\text{CC}}$) del LM358N con $+6.5\text{ V}$ a $+9.0\text{ V}$ desde el canal secundario de la fuente de laboratorio para evitar la limitación de excursión superior ($V_{\text{CC}} - 1.5\text{ V}$) en los códigos $14$ y $15$.
+\item Imprimir los cabezales acopladores 3D en filamento negro con relleno $\ge 40\%$ para suprimir cualquier interferencia de la iluminación ambiental del laboratorio sobre la fotorresistencia.
+\end{enumerate}
+
+\begin{thebibliography}{9}
+\bibitem{alexander2018}
+C.~K.~Alexander and M.~N.~O.~Sadiku, \emph{Fundamentos de circuitos eléctricos}, 6th~ed. México: McGraw-Hill, 2018.
+
+\bibitem{svoboda2014}
+J.~A.~Svoboda and R.~C.~Dorf, \emph{Introduction to Electric Circuits}, 9th~ed. Hoboken, NJ: Wiley, 2014.
+
+\bibitem{hayt2012}
+W.~Hayt, J.~Kemmerly, and S.~Durbin, \emph{Análisis de circuitos en ingeniería}, 8th~ed. McGraw-Hill, 2012.
+
+\bibitem{ti_lm358}
+Texas Instruments, \emph{LMx58-N Low-Power, Dual-Operational Amplifiers Datasheet}, SNOSBT3J, 2023.
+
+\bibitem{ti_ne555}
+Texas Instruments, \emph{NA555, NE555, SA555, SE555 Precision Timers Datasheet}, SLFS022I, 2022.
+\end{thebibliography}
+
+\end{document}

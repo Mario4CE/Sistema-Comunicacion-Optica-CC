@@ -1,54 +1,56 @@
 * ============================================================================
 * PROYECTO: Sistema de Comunicacion por Medios Opticos (EL2113)
-* SIMULACION LTSPICE: DAC R-2R de 4 Bits + Buffer Seguidor LM358
+* SIMULACION LTSPICE: Etapa 2 (DAC R-2R + OpAmp 1A) + Etapa 3 (Interfaz OpAmp 1B) + Etapa 4 (LED)
 * AUTOR: Mario Cerdas y equipo de trabajo
+* CUMPLIMIENTO: Requerimientos E.5, F.6, G.7, O.16, P.17 y Q.18
 * ============================================================================
 *
 * Descripcion:
-* Esta simulacion valida la escalera de voltajes analoga producida por la red
-* R-2R de 4 bits (b0 a b3) y verifica que el buffer con amplificador operacional
-* aisla la senal eliminando por completo el efecto de carga.
+* Esta simulacion valida:
+* 1. Etapa 1: Generadores digitales de 4 bits (b0 a b3) que recorren los 16 estados.
+* 2. Etapa 2 (Req. E.5): Red pasiva R-2R (10k / 20k) + Componente activo OpAmp 1A (LM358).
+* 3. Etapa 3 (Req. F.6): Interfaz de aislamiento implementada con OpAmp 1B (LM358).
+* 4. Etapa 4 (Req. G.7): Resistor pasivo limitador (150 Ohms) + Diodo LED rojo (Vd ~ 1.8V).
 
-.title DAC R-2R 4-Bits con Buffer Seguidor de Tension
+.title Transmisor Optico: DAC R-2R Activo (Etapa 2) + Interfaz OpAmp (Etapa 3) + Driver LED (Etapa 4)
 
-* --- Fuentes de Alimentacion ---
+* --- Fuente de Alimentacion DC de Laboratorio (Req. P.17 y Q.18) ---
 Vcc Vcc 0 DC 5.0
 
-* --- Fuentes de Entrada Digital (Patron de prueba: Bits b0 a b3) ---
-* Para simular un valor especifico (ej. 1010_2 = 10 decimal = 3.125 V):
-* Ajustar los voltajes de entrada a 5V (alto) o 0V (bajo):
-Vb0 n_b0 0 DC 0.0     ; LSB (Bit 0)
-Vb1 n_b1 0 DC 5.0     ; Bit 1
-Vb2 n_b2 0 DC 0.0     ; Bit 2
-Vb3 n_b3 0 DC 5.0     ; MSB (Bit 3)
+* --- Etapa 1: Fuentes de Entrada Digital (Barrido binario de 16 estados: 0000 a 1111) ---
+Vb0 n_b0 0 PULSE(0 5 0 10n 10n 1m 2m)   ; Bit 0 (LSB, D8)
+Vb1 n_b1 0 PULSE(0 5 0 10n 10n 2m 4m)   ; Bit 1 (D9)
+Vb2 n_b2 0 PULSE(0 5 0 10n 10n 4m 8m)   ; Bit 2 (D10)
+Vb3 n_b3 0 PULSE(0 5 0 10n 10n 8m 16m)  ; Bit 3 (MSB, D11)
 
-* --- Red en Escalera R-2R ---
+* --- Etapa 2A: Red Pasiva en Escalera R-2R (Req. E.5) ---
 * Resistencias horizontales (R = 10k)
 R_h1 n_nodo1 n_nodo2 10k
 R_h2 n_nodo2 n_nodo3 10k
-R_h3 n_nodo3 n_dac_out 10k
+R_h3 n_nodo3 n_r2r_out 10k
 
 * Resistencias verticales (2R = 20k)
-R_term n_nodo1 0 20k          ; Resistencia de terminacion a tierra
-R_v0   n_b0    n_nodo1 20k   ; Bit 0 a primer nodo
-R_v1   n_b1    n_nodo2 20k   ; Bit 1 a segundo nodo
-R_v2   n_b2    n_nodo3 20k   ; Bit 2 a tercer nodo
-R_v3   n_b3    n_dac_out 20k ; Bit 3 a nodo de salida
+R_term n_nodo1   0         20k ; Terminacion 2R a tierra
+R_v0   n_b0      n_nodo1   20k ; Rama Bit 0
+R_v1   n_b1      n_nodo2   20k ; Rama Bit 1
+R_v2   n_b2      n_nodo3   20k ; Rama Bit 2
+R_v3   n_b3      n_r2r_out 20k ; Rama Bit 3
 
-* --- Etapa de Interfaz: Buffer Seguidor con OpAmp ---
-* Modelo de Amplificador Operacional (Fuente de tension controlada por tension E_OPAMP)
-* Ganancia en lazo abierto = 100,000, alta impedancia de entrada, baja impedancia de salida
-E_OPAMP n_buf_out 0 n_dac_out n_buf_out 100k
+* --- Etapa 2B: Componente Activo del DAC (OpAmp 1A del LM358 - Req. E.5) ---
+E_OPAMP_DAC n_dac_out 0 n_r2r_out n_dac_out 100k
 
-* --- Carga de Prueba (Driver de LED: R_driver = 150 Ohms y Diodo LED) ---
-R_driver n_buf_out n_led_anode 150
+* --- Etapa 3: Interfaz de Aislamiento con Amplificador Operacional (OpAmp 1B del LM358 - Req. F.6) ---
+E_OPAMP_INT n_interfaz_out 0 n_dac_out n_interfaz_out 100k
+
+* --- Etapa 4: Generador Optico Pasivo + Fuente Luminosa LED Rojo (Req. G.7 y H.8) ---
+R_driver n_interfaz_out n_led_anode 150
 D_LED    n_led_anode 0 D_RED_LED
 
-* Modelo de diodo LED rojo tipico (Vd ~ 1.8V)
-.model D_RED_LED D(Is=1e-19 N=1.8 Rs=2.0 Eg=1.9 Xti=3)
+* Modelo SPICE de diodo LED rojo visible (lambda = 650 nm, Vd ~ 1.8V)
+.model D_RED_LED D(Is=1e-19 N=1.8 Rs=2.0 Eg=1.91 Xti=3)
 
 * --- Directivas de Simulacion ---
 .op
-.tran 0.1m 10m
+.tran 0 16m 0 10u
 
 .end

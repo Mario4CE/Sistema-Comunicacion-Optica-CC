@@ -21,3 +21,7 @@ build/
 *.asv
 *.m~
 slprj/
+
+# Paquete de entrega autogenerado (se crea con src/empaquetar_entrega_oficial.py)
+Investigacion_Dirigida/
+*.zip

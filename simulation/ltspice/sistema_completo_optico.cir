@@ -1,0 +1,83 @@
+* ============================================================================
+* PROYECTO: Sistema de Comunicacion por Medios Opticos (EL2113)
+* SIMULACION LTSPICE INTEGRADA (EN CONJUNTO): LAS 7 ETAPAS COMPLETAS
+* AUTOR: Mario Cerdas y equipo de trabajo
+* CUMPLIMIENTO: Punto 7 (pag. 6) y Requerimientos A.1 a Q.18
+* ============================================================================
+*
+* Descripcion:
+* Modelo SPICE integral que acopla en un solo circuito las 7 etapas del sistema
+* de comunicacion por medios opticos para observar su comportamiento en conjunto:
+*   - Etapa 1: Patron de datos digital de 4 bits (b0, b1, b2, b3).
+*   - Etapa 2: Convertidor Digital-Analogico (Red pasiva R-2R + OpAmp 1A activo).
+*   - Etapa 3: Etapa de Interfaz (Seguidor aislador con OpAmp 1B).
+*   - Etapa 4: Generador Optico (Resistor pasivo 150 Ohms + LED Rojo 650 nm).
+*   - Enlace Optico + Etapa 5: Canal de fibra optica (45 cm) y Receptor LDR pasivo
+*     cuya resistencia varia inversamente con la corriente optica del LED.
+*   - Etapa 6: Generador de Onda Cuadrada (Temporizador NE555 en modo astable).
+*   - Etapa 7: Buzzer Piezoelectrico Pasivo acoplado en AC.
+
+.title Sistema Completo de Comunicacion por Medios Opticos (7 Etapas en Conjunto)
+
+* --- Fuente DC de Laboratorio (Bodega Escuela de Electronica - Req. P.17 y Q.18) ---
+Vcc Vcc 0 DC 5.0
+
+* --- ETAPA 1: Patron de Datos de Prueba de 4 Bits (Escalones de 4 ms por estado) ---
+Vb0 n_b0 0 PULSE(0 5 0 10n 10n 2m 4m)
+Vb1 n_b1 0 PULSE(0 5 0 10n 10n 4m 8m)
+Vb2 n_b2 0 PULSE(0 5 0 10n 10n 8m 16m)
+Vb3 n_b3 0 PULSE(0 5 0 10n 10n 16m 32m)
+
+* --- ETAPA 2: Convertidor Digital-Analogico (Red R-2R + OpAmp 1A - Req. E.5) ---
+R_h1 n_nodo1 n_nodo2 10k
+R_h2 n_nodo2 n_nodo3 10k
+R_h3 n_nodo3 n_r2r   10k
+R_term n_nodo1 0     20k
+R_v0 n_b0 n_nodo1    20k
+R_v1 n_b1 n_nodo2    20k
+R_v2 n_b2 n_nodo3    20k
+R_v3 n_b3 n_r2r      20k
+E_OPAMP_1A n_dac_out 0 n_r2r n_dac_out 100k
+
+* --- ETAPA 3: Etapa de Interfaz con Amplificador Operacional (OpAmp 1B - Req. F.6) ---
+E_OPAMP_1B n_interfaz 0 n_dac_out n_interfaz 100k
+
+* --- ETAPA 4: Generador Optico (Resistor 150 Ohms + LED Rojo - Req. G.7 y H.8) ---
+R_driver n_interfaz n_led_anode 150
+V_sense  n_led_anode n_led_d DC 0.0
+D_LED    n_led_d 0 D_RED_LED
+.model D_RED_LED D(Is=1e-19 N=1.8 Rs=2.0 Eg=1.91 Xti=3)
+
+* --- ENLACE OPTICO (45 cm) + ETAPA 5: Receptor Optico Pasivo LDR (Req. I.9 y J.10) ---
+* La resistencia de la LDR entre n_disch (Pin 7) y n_thres (Pines 6/2) disminuye de
+* 40 kOhm (oscuridad, I_LED=0) a 1.5 kOhm (luz maxima, I_LED=19.25 mA):
+B_LDR n_disch n_thres I=V(n_disch,n_thres) / (1500.0 + 38500.0 * EXP(-220.0 * MAX(0, I(V_sense))))
+
+* --- ETAPA 6: Generador de Onda Cuadrada (Temporizador NE555 Astable - Req. K.11) ---
+X_U555 0 n_trig n_out_555 Vcc n_ctrl n_thres n_disch Vcc NE555_BEHAVE
+R_link n_trig n_thres 1u
+R1     Vcc n_disch 1k
+C1     n_thres 0 100n IC=0V
+C2     n_ctrl 0 10n
+
+* --- ETAPA 7: Buzzer Piezoelectrico Pasivo con Acoplo AC (Req. L.12) ---
+C_acoplo n_out_555 n_buzzer 10u
+R_buzzer n_buzzer 0 32
+
+* --- Subcircuito Macromodelo del Temporizador NE555 ---
+.subckt NE555_BEHAVE 1 2 3 4 5 6 7 8
+R_d1 8 5 5k
+R_d2 5 n_comp2 5k
+R_d3 n_comp2 1 5k
+B_comp1 n_c1 1 V=IF(V(6,1) > V(5,1), 5.0, 0.0)
+B_comp2 n_c2 1 V=IF(V(2,1) < V(n_comp2,1), 5.0, 0.0)
+B_latch n_q 1 V=IF(V(4,1) < 0.8, 0.0, IF(V(n_c2,1) > 2.5, 5.0, IF(V(n_c1,1) > 2.5, 0.0, V(n_q,1))))
+C_state n_q 1 10p
+B_out 3 1 V=IF(V(n_q,1) > 2.5, V(8,1) - 1.2, 0.1)
+B_disch 7 1 I=IF(V(n_q,1) < 2.5, V(7,1)/5.0, 0.0)
+.ends NE555_BEHAVE
+
+* --- Simulacion Transitoria de las 7 Etapas en Conjunto (32 ms) ---
+.tran 0 32m 0 10u startup
+
+.end

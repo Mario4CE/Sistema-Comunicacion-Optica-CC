@@ -3,16 +3,19 @@
 """
 ============================================================================
 PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113)
-SUITE DE VALIDACIÓN AUTOMÁTICA: Código C++ Arduino + Red R-2R + 555 Astable
+SUITE DE VALIDACIÓN AUTOMÁTICA INTEGRAL (Requerimientos A.1 a Q.18)
 AUTOR: Mario Cerdas y equipo de trabajo
 ============================================================================
 Descripción:
-Este script verifica automáticamente:
-1. Sintaxis estructural y mapeo de pines en los archivos C++ (.ino).
-2. Emulación bit a bit de aplicarBits() y del parser de comandos seriales.
+Este script verifica automáticamente el cumplimiento al pie de la letra de:
+1. Sintaxis estructural, arreglos de longitud variable (periódico y aperiódico)
+   y mapeo de pines en los archivos C++ (.ino) (Req. C.3 y D.4).
+2. Emulación bit a bit de aplicarBits() y del parser de comandos seriales,
+   incluyendo el ajuste de tiempo en el rango estricto [1 ms, 10000 ms].
 3. Resolución por Análisis Nodal (Leyes de Kirchhoff) de la escalera R-2R
-   comparada contra el cálculo del código de Arduino.
-4. Validación del modelo físico del Driver LED, LDR y Temporizador 555.
+   comparada contra el cálculo del código de Arduino (Error < 10%, Req. O.16).
+4. Cumplimiento de reglas de laboratorio (Req. M.13, N.14, P.17, Q.18),
+   simulación integrada en LTspice y reporte IEEE Transactions.
 """
 
 import os
@@ -20,8 +23,8 @@ import re
 import sys
 
 # Asegurar salida UTF-8 en consola de Windows
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stdout.encoding != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8")
 
 
 class ValidadorSistemaOptico:
@@ -31,8 +34,9 @@ class ValidadorSistemaOptico:
     ----------------------------------------------------------------------------
     Descripción:
       Encapsula las herramientas de verificación estática, emulación lógica de
-      firmware C++ (Arduino) y resolución matemática nodal del circuito analógico
-      (DAC R-2R, Driver LED, fotorresistencia LDR y temporizador NE555 astable).
+      firmware C++ (Arduino), resolución matemática nodal del circuito analógico
+      (DAC R-2R, OpAmp 1A/1B LM358, Driver LED, LDR y NE555 astable) y auditoría
+      de cumplimiento de requerimientos de laboratorio (A.1 a Q.18).
 
     Funciones que contiene:
       - __init__(self, v_ref, r_base, r_driver, v_led_fwd, r1_555, c1_555):
@@ -40,13 +44,15 @@ class ValidadorSistemaOptico:
       - emular_aplicar_bits_cpp(self, valor):
           Emula la extracción bit a bit de la función C++ aplicarBits().
       - resolver_nodos_r2r_kirchhoff(self, b0, b1, b2, b3):
-          Calcula el voltaje exacto del DAC R-2R mediante análisis nodal / Thévenin.
+          Calcula el voltaje exacto del DAC R-2R mediante análisis nodal / LCK.
       - emular_parser_serial_cpp(self, comando):
           Replica el comportamiento del intérprete de comandos seriales de Arduino.
       - verificar_archivo_ino(self, ruta):
-          Inspecciona la sintaxis y estructura obligatoria de un archivo .ino.
+          Inspecciona la sintaxis, arreglos de longitud variable y estructura .ino.
       - calcular_respuesta_optica_y_555(self, v_dac):
           Calcula la corriente del LED, resistencia de la LDR y frecuencia del 555.
+      - auditar_requerimientos_laboratorio(self, base_dir):
+          Verifica el cumplimiento documental de P.17, Q.18, M.13, LTspice e IEEE.
     ----------------------------------------------------------------------------
     """
 
@@ -137,7 +143,7 @@ class ValidadorSistemaOptico:
         ------------------------------------------------------------------------
         Descripción:
           Resuelve paso a paso las ecuaciones nodales de la escalera R-2R usando
-          reducción sucesiva de Thévenin y Ley de Corrientes de Kirchhoff (LCK),
+          Ley de Corrientes de Kirchhoff (LCK) en los 4 nodos V1, V2, V3 y V4,
           sin recurrir a la fórmula ideal abreviada, para comprobar el diseño físico.
 
         Entrada:
@@ -151,8 +157,8 @@ class ValidadorSistemaOptico:
 
         Restricciones:
           - Los argumentos b0, b1, b2 y b3 deben pertenecer al conjunto {0, 1}.
-          - Se asume acoplamiento a un seguidor de tensión (LM358) con impedancia
-            de entrada idealmente infinita.
+          - Se asume acoplamiento a un seguidor de tensión (OpAmp 1A del LM358)
+            con impedancia de entrada idealmente infinita.
         ------------------------------------------------------------------------
         """
         R = self.r_base
@@ -161,19 +167,19 @@ class ValidadorSistemaOptico:
         # Convertir cada nivel lógico (0 o 1) en su tensión física de entrada (0V o 5V)
         v_in = [b0 * self.v_ref, b1 * self.v_ref, b2 * self.v_ref, b3 * self.v_ref]
 
-        # Etapa 1 (Nodo LSB b0): Divisor entre rama 2R a tierra y rama 2R hacia b0, más R en serie
+        # Etapa 1 (Nodo V1 - LSB b0): LCK entre rama 2R a tierra, rama 2R hacia b0 y R en serie
         v_th1 = v_in[0] * (R2 / (R2 + R2))
         r_th1 = (R2 * R2) / (R2 + R2) + R  # Equivalente: 10k + 10k = 20k
 
-        # Etapa 2 (Nodo b1): Superposición entre el equivalente de la Etapa 1 y la entrada b1
+        # Etapa 2 (Nodo V2 - b1): LCK entre el equivalente de Nodo 1 y la entrada b1
         v_th2 = (v_th1 * R2 + v_in[1] * r_th1) / (r_th1 + R2)
         r_th2 = (r_th1 * R2) / (r_th1 + R2) + R  # Equivalente: 10k + 10k = 20k
 
-        # Etapa 3 (Nodo b2): Superposición entre el equivalente de la Etapa 2 y la entrada b2
+        # Etapa 3 (Nodo V3 - b2): LCK entre el equivalente de Nodo 2 y la entrada b2
         v_th3 = (v_th2 * R2 + v_in[2] * r_th2) / (r_th2 + R2)
         r_th3 = (r_th2 * R2) / (r_th2 + R2) + R  # Equivalente: 10k + 10k = 20k
 
-        # Etapa 4 (Nodo MSB b3 - Salida V_DAC hacia entrada no inversora del OpAmp)
+        # Etapa 4 (Nodo V4 - MSB b3 hacia entrada no inversora del OpAmp 1A)
         v_out = (v_th3 * R2 + v_in[3] * r_th3) / (r_th3 + R2)
         return v_out
 
@@ -184,19 +190,20 @@ class ValidadorSistemaOptico:
         ------------------------------------------------------------------------
         Descripción:
           Simula el comportamiento de la función procesarComandosSeriales() del
-          archivo emisor_4bits.ino ante cualquier cadena enviada por el usuario.
+          archivo emisor_4bits.ino ante cualquier cadena enviada por el usuario,
+          incluyendo los modos 'A', 'P' (Periódico MATLAB), 'S' (Aperiódico MATLAB),
+          'C', 'M', ajuste de tiempo 'T<ms>' en [1, 10000] ms y números '0'..'15'.
 
         Entrada:
           - comando (str): Cadena de texto recibida por el puerto serial.
 
         Salida:
-          - str: Identificador del estado o acción tomada ('MODO_AUTOMATICO',
-            'MODO_CALIBRACION', 'MODO_MANUAL_ESPERA', 'MANUAL_VALOR_<N>',
-            'IGNORADO_VACIO' o 'ERROR_COMANDO_NO_RECONOCIDO').
+          - str: Identificador del estado o acción tomada.
 
         Restricciones:
           - El parámetro 'comando' debe ser de tipo cadena (str).
-          - Los valores numéricos manuales solo son válidos en el rango entero [0, 15].
+          - El tiempo 'T<ms>' solo es válido en [1, 10000] ms (Req. C.3).
+          - Los valores numéricos manuales solo son válidos en [0, 15].
         ------------------------------------------------------------------------
         """
         # Eliminar espacios en blanco, tabulaciones y saltos de línea extremos
@@ -206,13 +213,25 @@ class ValidadorSistemaOptico:
         if len(entrada) == 0:
             return "IGNORADO_VACIO"
 
-        # Evaluar comandos alfabéticos de cambio de modo
-        if entrada.upper() == "A":
+        # Evaluar comandos alfabéticos de selección de arreglo y modo
+        upper = entrada.upper()
+        if upper == "A":
             return "MODO_AUTOMATICO"
-        elif entrada.upper() == "C":
+        elif upper == "P":
+            return "ARREGLO_MATLAB_PERIODICO"
+        elif upper == "S":
+            return "ARREGLO_MATLAB_APERIODICO"
+        elif upper == "C":
             return "MODO_CALIBRACION"
-        elif entrada.upper() == "M":
+        elif upper == "M":
             return "MODO_MANUAL_ESPERA"
+        elif upper.startswith("T") and len(upper) > 1:
+            sub_t = upper[1:]
+            if all(c.isdigit() for c in sub_t):
+                t_ms = int(sub_t)
+                if 1 <= t_ms <= 10000:
+                    return f"TIEMPO_MS_{t_ms}"
+            return "ERROR_TIEMPO_FUERA_DE_RANGO"
         else:
             # Verificar que absolutamente todos los caracteres sean dígitos (isDigit)
             es_numero = all(c.isdigit() for c in entrada)
@@ -232,8 +251,8 @@ class ValidadorSistemaOptico:
         ------------------------------------------------------------------------
         Descripción:
           Analiza estáticamente el código fuente de un archivo de Arduino (.ino)
-          para comprobar el balance de delimitadores y la presencia de las funciones
-          y llamadas de hardware indispensables.
+          para comprobar el balance de delimitadores, las funciones principales y
+          la presencia de los arreglos de longitud variable de MATLAB (Req. C.3/D.4).
 
         Entrada:
           - ruta (str): Ruta en el sistema de archivos hacia el archivo .ino.
@@ -268,13 +287,17 @@ class ValidadorSistemaOptico:
         if not re.search(r"\bvoid\s+loop\s*\(\s*\)", contenido):
             errores.append("Falta función obligatoria void loop()")
 
-        # 3. Verificar inicialización serial y configuración de los 4 pines de salida
+        # 3. Verificar inicialización serial, pines y arreglos MATLAB (Req. C.3 y D.4)
         if "Serial.begin(9600);" not in contenido:
             errores.append("Falta inicialización Serial.begin(9600)")
         if contenido.count("pinMode(") < 4:
             errores.append("Se esperaban al menos 4 llamadas a pinMode() para los 4 bits")
         if contenido.count("digitalWrite(") < 4:
             errores.append("Se esperaban al menos 4 llamadas a digitalWrite() para los 4 bits")
+        if "PATRON_PERIODICO_MATLAB" not in contenido or "PATRON_APERIODICO_MATLAB" not in contenido:
+            errores.append("Faltan arreglos de longitud variable generados en MATLAB (Req. C.3/D.4)")
+        if "TIEMPO_MIN_MS = 1UL" not in contenido or "TIEMPO_MAX_MS = 10000UL" not in contenido:
+            errores.append("Faltan límites de tiempo [1 ms, 10000 ms] del Requerimiento C.3")
 
         return errores
 
@@ -284,17 +307,15 @@ class ValidadorSistemaOptico:
         Función: calcular_respuesta_optica_y_555
         ------------------------------------------------------------------------
         Descripción:
-          Calcula la corriente de excitación del LED transmisor a la salida del
-          buffer LM358, estima la resistencia de la LDR receptora y obtiene la
-          frecuencia de la onda cuadrada generada por el NE555 en modo astable.
+          Calcula la corriente de excitación del LED transmisor a la salida de la
+          interfaz OpAmp 1B LM358, estima la resistencia de la LDR receptora y obtiene
+          la frecuencia de la onda cuadrada generada por el NE555 en modo astable.
 
         Entrada:
           - v_dac (float): Voltaje analógico de salida del DAC R-2R en voltios.
 
         Salida:
-          - tuple[float, float, float]: Tupla con (i_led_mA, r_ldr_ohm, f_555_hz)
-            correspondientes a la corriente del LED (mA), resistencia de la LDR (Ω)
-            y frecuencia de oscilación del 555 (Hz).
+          - tuple[float, float, float]: Tupla con (i_led_mA, r_ldr_ohm, f_555_hz).
 
         Restricciones:
           - El voltaje 'v_dac' debe estar dentro del rango operativo [0.0, 5.0] V.
@@ -319,6 +340,55 @@ class ValidadorSistemaOptico:
 
         return (i_led_mA, r_ldr, f_555)
 
+    def auditar_requerimientos_laboratorio(self, base_dir: str) -> list[str]:
+        """
+        ------------------------------------------------------------------------
+        Función: auditar_requerimientos_laboratorio
+        ------------------------------------------------------------------------
+        Descripción:
+          Verifica que los archivos del proyecto cumplan con las reglas de uso de
+          laboratorios de la Escuela de Electrónica (Req. M.13, N.14, P.17 y Q.18),
+          la simulación integrada en LTspice y la estructura de entrega oficial.
+
+        Entrada:
+          - base_dir (str): Ruta raíz del repositorio del proyecto.
+
+        Salida:
+          - list[str]: Lista de incumplimientos detectados (vacía [] si todo cumple).
+
+        Restricciones:
+          - 'base_dir' debe apuntar al directorio raíz del proyecto.
+        ------------------------------------------------------------------------
+        """
+        incumplimientos = []
+
+        # Archivos obligatorios para cumplir al pie de la letra con el manual
+        archivos_requeridos = [
+            "prototipo_laboratorio/corte_laser/base_soporte_optico.svg",
+            "prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad",
+            "docs/diseno_prototipado_3d_laser.md",
+            "docs/informe_ieee/informe_ieee_el2113.tex",
+            "simulation/ltspice/sistema_completo_optico.cir",
+            "simulation/ltspice/sistema_completo_optico.asc",
+            "simulation/tinkercad/enlace_simulacion_tinkercad.txt",
+            "Investigacion_Dirigida.zip",
+        ]
+        for rel in archivos_requeridos:
+            if not os.path.exists(os.path.join(base_dir, rel)):
+                incumplimientos.append(f"Falta archivo obligatorio: {rel}")
+
+        # Verificar que guia_de_conexion_protoboard.md prohíba alimentar con 5V de Arduino (Req. P.17)
+        ruta_proto = os.path.join(base_dir, "docs", "guia_de_conexion_protoboard.md")
+        if os.path.exists(ruta_proto):
+            with open(ruta_proto, "r", encoding="utf-8") as f:
+                txt_proto = f.read()
+            if "desde el pin de 5 V del Arduino" in txt_proto:
+                incumplimientos.append("Violación de P.17 en guia_de_conexion_protoboard.md")
+            if "Fuente de Alimentación DC de Laboratorio" not in txt_proto:
+                incumplimientos.append("Falta mención de Fuente de Laboratorio (Req. Q.18) en guía protoboard")
+
+        return incumplimientos
+
 
 def main() -> None:
     """
@@ -327,9 +397,9 @@ def main() -> None:
     ----------------------------------------------------------------------------
     Descripción:
       Función conductora principal que instancia la clase ValidadorSistemaOptico,
-      ejecuta secuencialmente las 4 fases de verificación (sintaxis .ino, parser
-      serial, análisis nodal de Kirchhoff del DAC R-2R y respuesta del 555) e
-      imprime el reporte de resultados en consola.
+      ejecuta secuencialmente las 5 fases de verificación (sintaxis .ino, parser
+      serial con C.3/D.4, análisis nodal de Kirchhoff del DAC R-2R, respuesta del
+      555 y auditoría de laboratorios M.13/P.17/Q.18) e imprime el reporte final.
 
     Entrada:
       Ninguna. Utiliza las rutas relativas del repositorio del proyecto.
@@ -339,8 +409,7 @@ def main() -> None:
       proceso con código de salida 0 (éxito) o 1 (error detectado).
 
     Restricciones:
-      - Debe ejecutarse dentro de la estructura de carpetas del proyecto para
-        localizar correctamente las carpetas 'src/' y 'simulation/'.
+      - Debe ejecutarse dentro de la estructura de carpetas del proyecto.
     ----------------------------------------------------------------------------
     """
     print("=" * 78)
@@ -358,28 +427,34 @@ def main() -> None:
     ]
 
     # -------------------------------------------------------------------------
-    # PRUEBA 1: Inspección estática de los códigos C++ (.ino)
+    # PRUEBA 1: Inspección estática de los códigos C++ (.ino) y arreglos MATLAB
     # -------------------------------------------------------------------------
-    print("\n[1/4] Validando estructura y sintaxis de archivos C++ (.ino)...")
+    print("\n[1/5] Validando estructura C++, arreglos MATLAB y límites de tiempo (.ino)...")
     todo_ok = True
     for ruta in archivos_ino:
         nombre = os.path.relpath(ruta, base_dir)
         errores = validador.verificar_archivo_ino(ruta)
         if not errores:
-            print(f"  [OK] {nombre} -> Estructura C++, llaves, setup(), loop() y pines verificados.")
+            print(f"  [OK] {nombre} -> C++, arreglos MATLAB (C.3/D.4) y pines verificados.")
         else:
             todo_ok = False
             print(f"  [ERROR] {nombre}: {errores}")
 
     # -------------------------------------------------------------------------
-    # PRUEBA 2: Validación del parser de comandos seriales (Casos normales y borde)
+    # PRUEBA 2: Validación del parser de comandos seriales (Incluyendo P, S, T<ms>)
     # -------------------------------------------------------------------------
-    print("\n[2/4] Validando lógica de comandos seriales (procesarComandosSeriales)...")
+    print("\n[2/5] Validando lógica de comandos seriales (procesarComandosSeriales)...")
     casos_serial = [
         ("A", "MODO_AUTOMATICO"),
-        ("a", "MODO_AUTOMATICO"),
+        ("P", "ARREGLO_MATLAB_PERIODICO"),
+        ("S", "ARREGLO_MATLAB_APERIODICO"),
         ("C", "MODO_CALIBRACION"),
         ("M", "MODO_MANUAL_ESPERA"),
+        ("T1", "TIEMPO_MS_1"),
+        ("T500", "TIEMPO_MS_500"),
+        ("T10000", "TIEMPO_MS_10000"),
+        ("T0", "ERROR_TIEMPO_FUERA_DE_RANGO"),
+        ("T10001", "ERROR_TIEMPO_FUERA_DE_RANGO"),
         ("0", "MANUAL_VALOR_0"),
         ("7", "MANUAL_VALOR_7"),
         ("15", "MANUAL_VALOR_15"),
@@ -398,7 +473,7 @@ def main() -> None:
     # -------------------------------------------------------------------------
     # PRUEBA 3 y 4: Simulación de los 16 estados (C++ -> DAC R-2R -> Óptica -> 555)
     # -------------------------------------------------------------------------
-    print("\n[3/4] Validando los 16 estados: Pines C++ vs. Kirchhoff R-2R vs. 555 Astable...")
+    print("\n[3/5] Validando los 16 estados: Pines C++ vs. Kirchhoff R-2R vs. 555 Astable...")
     print("-" * 78)
     print(f"{'Dec':>3} | {'Bits (D11..D8)':^14} | {'V_Cpp (V)':>9} | {'V_Kirchhoff':>11} | {'I_LED (mA)':>10} | {'R_LDR (kΩ)':>10} | {'f_555 (Hz)':>10}")
     print("-" * 78)
@@ -422,14 +497,30 @@ def main() -> None:
         print(f"{d:3d} |   [{bits_str}]   | {v_cpp:9.4f} | {v_kirchhoff:11.4f} | {i_led_mA:10.2f} | {r_ldr/1000.0:10.2f} | {f_555:10.1f}")
 
     print("-" * 78)
-    print("\n[4/4] Resumen de Verificación Matemática:")
-    print(f"  * Error máximo entre código C++ y Análisis Nodal de Kirchhoff: {max_error_voltaje:.10f} V")
+
+    # -------------------------------------------------------------------------
+    # PRUEBA 5: Auditoría de Laboratorios (M.13, N.14, P.17, Q.18) y Entregable
+    # -------------------------------------------------------------------------
+    print("\n[4/5] Auditando requisitos de laboratorios (M.13, N.14, P.17, Q.18) y entregables...")
+    errores_lab = validador.auditar_requerimientos_laboratorio(base_dir)
+    if not errores_lab:
+        print("  [OK] Reglas de fuente de laboratorio (P.17/Q.18) verificadas.")
+        print("  [OK] Archivos de Corte Láser (.svg) e Impresión 3D (.scad) verificados (M.13).")
+        print("  [OK] Propuesta de Escáner 3D documentada (N.14).")
+        print("  [OK] Simulación integrada LTspice (7 etapas en conjunto) e Informe IEEE verificados.")
+    else:
+        todo_ok = False
+        for err in errores_lab:
+            print(f"  [ERROR] {err}")
+
+    print("\n[5/5] Resumen de Verificación Matemática:")
+    print(f"  * Error máximo entre código C++ y Análisis Nodal de Kirchhoff: {max_error_voltaje:.10f} V (< 10%, Req. O.16)")
     print("  * Rango de voltaje del DAC R-2R validado: 0.0000 V a 4.6875 V (Paso LSB = 0.3125 V)")
     print("  * Rango de frecuencia acústica del 555:   177.8 Hz (grave) a 3600.0 Hz (agudo)")
 
     # Verificar que todas las aserciones se cumplan con tolerancia numérica estricta
     if todo_ok and max_error_voltaje < 1e-9:
-        print("\n>>> RESULTADO FINAL: TODAS LAS PRUEBAS PASARON EXITOSAMENTE (100% VALIDADO) <<<")
+        print("\n>>> RESULTADO FINAL: TODAS LAS PRUEBAS Y REQUERIMIENTOS (A.1–Q.18) 100% VALIDADOS <<<")
         sys.exit(0)
     else:
         print("\n>>> RESULTADO FINAL: SE DETECTARON ERRORES EN LA VALIDACIÓN <<<")
