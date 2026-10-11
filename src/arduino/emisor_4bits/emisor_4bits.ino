@@ -157,18 +157,32 @@ void procesarComandosSeriales() {
       modoOperacion = 'C';
       Serial.println(F(">>> Activado MODO CALIBRACIÓN (Alterna 0 y 15) <<<"));
     } 
+    else if (entrada.equalsIgnoreCase("M")) {
+      modoOperacion = 'M';
+      Serial.println(F(">>> Activado MODO MANUAL. Ingrese un número del 0 al 15 <<<"));
+    }
     else {
-      // Intentar convertir a número entero para modo manual
-      int valorIngresado = entrada.toInt();
-      if (valorIngresado >= 0 && valorIngresado <= 15) {
-        modoOperacion = 'M';
-        valorActual = (uint8_t)valorIngresado;
-        aplicarBits(valorActual);
-        Serial.print(F(">>> MODO MANUAL FIJO: "));
-        imprimirEstado(valorActual);
-      } else {
-        Serial.println(F("Comando no reconocido. Ingrese 'A', 'C' o un número del 0 al 15."));
+      // Verificar que todos los caracteres sean dígitos válidos (evita que toInt() devuelva 0 ante letras)
+      bool esNumero = true;
+      for (unsigned int i = 0; i < entrada.length(); i++) {
+        if (!isDigit(entrada.charAt(i))) {
+          esNumero = false;
+          break;
+        }
       }
+
+      if (esNumero) {
+        int valorIngresado = entrada.toInt();
+        if (valorIngresado >= 0 && valorIngresado <= 15) {
+          modoOperacion = 'M';
+          valorActual = (uint8_t)valorIngresado;
+          aplicarBits(valorActual);
+          Serial.print(F(">>> MODO MANUAL FIJO: "));
+          imprimirEstado(valorActual);
+          return;
+        }
+      }
+      Serial.println(F("Comando no reconocido. Ingrese 'A', 'C', 'M' o un número del 0 al 15."));
     }
   }
 }

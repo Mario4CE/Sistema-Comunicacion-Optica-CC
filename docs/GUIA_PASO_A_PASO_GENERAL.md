@@ -21,8 +21,10 @@ D:\Proyecto CC\
 │   │   ├── codigo_tinkercad.ino           -> Código para copiar y pegar en TinkerCAD
 │   │   └── guia_montaje_tinkercad.md      -> Guía de conexionado para TinkerCAD
 │   └── ltspice\
-│       ├── dac_r2r_buffer.asc             -> Esquemático gráfico para abrir en LTspice
-│       └── dac_r2r_buffer.cir             -> Netlist SPICE con directivas transitorias
+│       ├── dac_r2r_buffer.asc             -> Esquemático gráfico Emisor (DAC R-2R + Buffer + LED)
+│       ├── dac_r2r_buffer.cir             -> Netlist SPICE del Emisor
+│       ├── receptor_555_ldr.asc           -> Esquemático gráfico Receptor (LDR + 555 + Buzzer)
+│       └── receptor_555_ldr.cir           -> Netlist SPICE del Receptor con barrido de LDR
 │
 ├── matlab\
 │   ├── simulacion_dac_555.m               -> Simulación integral (DAC + Óptica + 555)
@@ -54,7 +56,7 @@ D:\Proyecto CC\
    * **4 Resistencias de $10\text{ k}\Omega$** (configúralas en $10\text{ k}\Omega$ en el cuadro de propiedades)
    * **5 Resistencias de $20\text{ k}\Omega$** (configúralas en $20\text{ k}\Omega$)
    * **1 Multímetro** (modo Voltaje)
-4. Consulta la imagen de referencia guardada en [`docs/tinkercad_circuito_dac.jpg`](file:///d:/Proyecto%20CC/docs/tinkercad_circuito_dac.jpg):
+4. Consulta la imagen de referencia guardada en [`docs/tinkercad_circuito_dac.jpg`](file:///d:/Proyecto%20CC/docs/tinkercad_circuito_dac.jpg) y la guía detallada en [`simulation/tinkercad/guia_montaje_tinkercad.md`](file:///d:/Proyecto%20CC/simulation/tinkercad/guia_montaje_tinkercad.md):
    * Conecta el **GND** de Arduino al riel negativo ($-$) de la placa de pruebas.
    * Conecta la resistencia de terminación de $20\text{ k}\Omega$ entre el nodo del Bit 0 y tierra.
    * Conecta las 4 resistencias verticales de $20\text{ k}\Omega$ desde los pines **D8**, **D9**, **D10** y **D11** de Arduino.
@@ -69,19 +71,25 @@ D:\Proyecto CC\
 
 ---
 
-## 3. FASE 2: Simulación Circuital en LTspice
-**Objetivo:** Validar la forma de onda de la escalera en el dominio del tiempo, comprobar que el buffer LM358 aísla la carga y verificar la corriente en el LED.
+## 3. FASE 2: Simulación Circuital en LTspice (Emisor y Receptor)
+**Objetivo:** Validar las formas de onda analógicas en el dominio del tiempo tanto para el transmisor (DAC + Buffer + LED) como para el receptor (LDR + 555 Astable + Buzzer).
 
-### Paso a paso:
-1. Abre el programa **LTspice** en tu computadora.
-2. Ve a **File** $\rightarrow$ **Open** y navega hasta:
+### Circuito A — Etapa Emisora (`dac_r2r_buffer.asc`):
+1. Abre **LTspice** y ve a **File** $\rightarrow$ **Open**:
    `D:\Proyecto CC\simulation\ltspice\dac_r2r_buffer.asc`
-3. Verás en pantalla el circuito dibujado con la red de resistencias, las fuentes de pulsos binarios, el buffer operacional y el LED.
-4. Presiona el botón del **muñequito corriendo ("Run")** en la barra superior.
-5. Para ver las gráficas:
-   * Pasa el cursor sobre el cable etiquetado como `V_DAC` (el cursor cambiará a una punta de prueba roja) y haz clic. Aparecerá la **escalera analógica perfecta de 16 escalones**.
-   * Haz clic sobre el nodo `V_BUFFER`: verás que la señal es exactamente idéntica, lo que demuestra que el amplificador operacional eliminó el efecto de carga.
-   * Pasa el cursor sobre el diodo `D_LED` (el cursor cambiará a un amperímetro) y haz clic: verás la corriente pulsante que fluirá por la fibra óptica.
+2. Presiona el botón **Run** (icono de persona corriendo).
+3. En el esquemático:
+   * Haz clic sobre el nodo **`V_DAC`**: verás la escalera analógica perfecta de 16 escalones ($0\text{ V}$ a $4.6875\text{ V}$).
+   * Haz clic sobre el nodo **`V_BUFFER`**: comprobarás que la señal sigue intacta gracias al aislamiento de impedancia.
+   * Haz clic sobre el diodo **`D_LED`**: verás la corriente modulada que alimenta al LED óptico.
+
+### Circuito B — Etapa Receptora (`receptor_555_ldr.asc`):
+1. En **LTspice**, ve a **File** $\rightarrow$ **Open**:
+   `D:\Proyecto CC\simulation\ltspice\receptor_555_ldr.asc`
+2. Presiona **Run**. La simulación ejecutará automáticamente un barrido paramétrico de 5 niveles de luz en la LDR (`1.5k`, `5k`, `10k`, `20k` y `40k`).
+3. En el esquemático:
+   * Haz clic sobre el nodo **`V_OUT_555`**: verás los trenes de ondas cuadradas cambiando de frecuencia según la resistencia de la LDR ($180\text{ Hz}$ a $3.6\text{ kHz}$).
+   * Haz clic sobre el nodo **`V_BUZZER`**: observarás cómo el condensador de $10\ \mu\text{F}$ elimina el nivel DC y entrega una señal alterna pura al buzzer pasivo.
 
 ---
 

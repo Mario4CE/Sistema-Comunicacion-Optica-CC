@@ -45,6 +45,10 @@
   * Se implementó el barrido paramétrico `.step param R_LDR list 1.5k 5k 10k 20k 40k` para validar todo el rango audible ($180\text{ Hz}$ a $3.6\text{ kHz}$).
   * Se incluyó la red de acoplamiento AC ($C_{acoplo} = 10\ \mu\text{F}$) y el modelo de transductor acústico (buzzer pasivo de $32\ \Omega$).
   * Se generó el esquemático gráfico interactivo `simulation/ltspice/receptor_555_ldr.asc` para visualización y edición en la interfaz gráfica de LTspice.
+* **Validación Automatizada de Código C++ y Modelos Físicos:**
+  * Se mejoró la validación de entrada serial en `src/arduino/emisor_4bits/emisor_4bits.ino` (`isDigit`) para evitar que `toInt()` convierta texto no numérico en el estado `0` y soportar el comando `'M'` explícito.
+  * Se desarrolló y ejecutó la suite de pruebas `src/test_validacion_sistema.py` que verifica la sintaxis de los archivos `.ino`, emula la lógica bit a bit, resuelve las ecuaciones nodales de Kirchhoff de la red R-2R (error $0.0000\text{ V}$) y valida la respuesta del 555 astable.
+  * Se actualizó `docs/GUIA_PASO_A_PASO_GENERAL.md` con los pasos de simulación del circuito receptor en LTspice.
 
 ---
 
@@ -56,6 +60,7 @@
 * `bcde82e` - *feat(matlab): agregar generador de patrones de prueba y cuantizacion con exportacion a C++*
 * `cc960cb` - *docs: agregar guia maestra paso a paso e imagen de referencia para TinkerCAD*
 * `8c9428f` - *feat(simulation): agregar simulacion de etapa receptora 555 astable modulado por LDR en LTspice*
+* `340c89c` - *docs: actualizar bitacora con commit 8c9428f y sincronizacion remota*
 
 ---
 
