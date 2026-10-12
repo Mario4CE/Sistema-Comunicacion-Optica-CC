@@ -45,6 +45,13 @@
   * Se redactó el informe en formato **IEEE Transactions** (`docs/informe_ieee/informe_ieee_el2113.tex`).
   * Se creó `src/empaquetar_entrega_oficial.py` para generar automáticamente la estructura oficial `Investigacion_Dirigida/` y `Investigacion_Dirigida.zip`.
 
+### [2026-10-12] - Actualización Integral de Guías Operativas (.md) y Preparación de Montaje Físico
+* **Revisión y Expansión de Guías de Montaje y Laboratorio:**
+  * Se reestructuró [`docs/GUIA_PASO_A_PASO_GENERAL.md`](file:///d:/Proyecto%20CC/docs/GUIA_PASO_A_PASO_GENERAL.md) como el manual operativo maestro que guía al usuario desde la Fase 0 (materiales y bodega) hasta la Fase 7 (entrega oficial), detallando el montaje paso a paso, comandos seriales y checklist de laboratorio.
+  * Se actualizó [`docs/lista_de_materiales_BOM.md`](file:///d:/Proyecto%20CC/docs/lista_de_materiales_BOM.md) con los equipos de bodega de la Escuela de Electrónica (fuente DC, multímetro, osciloscopio), piezas de corte láser/impresión 3D, pinouts de circuitos integrados (LM358N y NE555) y la prueba de descarte de buzzer pasivo vs activo.
+  * Se actualizó [`docs/guia_de_conexion_protoboard.md`](file:///d:/Proyecto%20CC/docs/guia_de_conexion_protoboard.md) con un mapa visual de distribución en el protoboard (zona transmisora izquierda y zona receptora derecha), procedimiento incremental de 6 pasos y sección de troubleshooting para laboratorio.
+  * Se generó la malla 3D ASCII [`prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.stl) (512 facetas) lista para corte en slicer (Cura/PrusaSlicer) y se integró en el empaquetador oficial.
+
 ---
 
 ## Historial de Commits en Git
@@ -58,3 +65,5 @@
 * `340c89c` - *docs: actualizar bitacora con commit 8c9428f y sincronizacion remota*
 * `d0f6b54` - *feat(test): agregar suite de validacion automatica de C++ y circuitos y mejorar parser serial*
 * `ef1578c` - *docs(comments): estandarizar documentacion de clases y funciones en todo el codigo*
+* `93e94b5` - *feat(compliance): cumplir al 100% requerimientos A.1-Q.18, arreglos MATLAB, laboratorios 3D/laser e informe IEEE*
+

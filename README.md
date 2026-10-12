@@ -41,3 +41,15 @@ Repositorio oficial del proyecto de Investigación Dirigida para el curso **Circ
 * **[`docs/informe_ieee/informe_ieee_el2113.tex`](file:///d:/Proyecto%20CC/docs/informe_ieee/informe_ieee_el2113.tex)**: Informe técnico en formato **IEEE Transactions** ($\le 3$ páginas, **Sección 4.2 y Rúbrica**).
 * **[`simulation/ltspice/`](file:///d:/Proyecto%20CC/simulation/ltspice)**: Simulaciones SPICE por separado ([`dac_r2r_buffer.asc`](file:///d:/Proyecto%20CC/simulation/ltspice/dac_r2r_buffer.asc), [`receptor_555_ldr.asc`](file:///d:/Proyecto%20CC/simulation/ltspice/receptor_555_ldr.asc)) y en conjunto ([`sistema_completo_optico.asc`](file:///d:/Proyecto%20CC/simulation/ltspice/sistema_completo_optico.asc)).
 * **[`src/empaquetar_entrega_oficial.py`](file:///d:/Proyecto%20CC/src/empaquetar_entrega_oficial.py)**: Genera automáticamente la carpeta `Investigacion_Dirigida/` y el archivo `Investigacion_Dirigida.zip` con la estructura oficial de la **Sección 4.1**.
+
+---
+
+## Ruta Rápida para Revisar y Montar Todo el Sistema
+
+Para empezar a trabajar y montar el circuito físico paso a paso sin confusiones:
+1. **Paso 1 (Materiales y Laboratorio):** Revisa [`docs/lista_de_materiales_BOM.md`](file:///d:/Proyecto%20CC/docs/lista_de_materiales_BOM.md) para confirmar componentes y solicitar la fuente DC de laboratorio en bodega (Req. P.17/Q.18).
+2. **Paso 2 (Manual Maestro de Operaciones):** Sigue [`docs/GUIA_PASO_A_PASO_GENERAL.md`](file:///d:/Proyecto%20CC/docs/GUIA_PASO_A_PASO_GENERAL.md) para ejecutar simulaciones (MATLAB, LTspice, TinkerCAD) y programar el Arduino.
+3. **Paso 3 (Montaje en Protoboard):** Utiliza [`docs/guia_de_conexion_protoboard.md`](file:///d:/Proyecto%20CC/docs/guia_de_conexion_protoboard.md) para el cableado físico pin por pin y pruebas incrementales TP1 a TP6.
+4. **Paso 4 (Prototipado en la Escuela):** Consulta [`docs/diseno_prototipado_3d_laser.md`](file:///d:/Proyecto%20CC/docs/diseno_prototipado_3d_laser.md) para mandar a cortar la base láser y fabricar los acopladores 3D.
+5. **Paso 5 (Validación Automática y Empaquetado):** Ejecuta `python src/test_validacion_sistema.py` y `python src/empaquetar_entrega_oficial.py`.
+

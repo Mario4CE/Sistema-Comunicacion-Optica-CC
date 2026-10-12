@@ -149,6 +149,7 @@ class EmpaquetadorEntregaOficial:
             ("docs/diseno_prototipado_3d_laser.md", "Documentacion"),
             ("prototipo_laboratorio/corte_laser/base_soporte_optico.svg", "Documentacion"),
             ("prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad", "Documentacion"),
+            ("prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.stl", "Documentacion"),
         ]
 
         total_copiados = 0

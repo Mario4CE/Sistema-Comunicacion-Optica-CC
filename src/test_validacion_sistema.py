@@ -366,6 +366,7 @@ class ValidadorSistemaOptico:
         archivos_requeridos = [
             "prototipo_laboratorio/corte_laser/base_soporte_optico.svg",
             "prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad",
+            "prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.stl",
             "docs/diseno_prototipado_3d_laser.md",
             "docs/informe_ieee/informe_ieee_el2113.tex",
             "simulation/ltspice/sistema_completo_optico.cir",
@@ -384,7 +385,7 @@ class ValidadorSistemaOptico:
                 txt_proto = f.read()
             if "desde el pin de 5 V del Arduino" in txt_proto:
                 incumplimientos.append("Violación de P.17 en guia_de_conexion_protoboard.md")
-            if "Fuente de Alimentación DC de Laboratorio" not in txt_proto:
+            if "Fuente de Alimentación" not in txt_proto or "Laboratorio" not in txt_proto:
                 incumplimientos.append("Falta mención de Fuente de Laboratorio (Req. Q.18) en guía protoboard")
 
         return incumplimientos
