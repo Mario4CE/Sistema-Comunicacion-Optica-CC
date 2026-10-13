@@ -99,7 +99,7 @@ No montes todo el circuito a ciegas antes de probar. Sigue estos 6 pasos secuenc
    * Conecta una resistencia horizontal de **$10\text{ k}\Omega$** entre el Nodo $V_3$ y el Nodo $V_4$.
    * **Nodo $V_4$ (Bit 3 - MSB y Salida $V_{DAC}$):** Conecta una resistencia de **$20\text{ k}\Omega$** desde este nodo hacia el pin **D11** del Arduino.
 2. **Prueba de Verificación Inmediata (TP1):**
-   * Abre el Monitor Serial en la computadora a 9600 baudios con `emisor_4bits.ino` cargado.
+   * Abre el Monitor Serial en la computadora a 9600 baudios con [`src/arduino/generador_patrones_tinkercad.ino`](file:///d:/Proyecto%20CC/src/arduino/generador_patrones_tinkercad.ino) cargado.
    * Escribe el comando `'0'` $\rightarrow$ Mide con el multímetro en el Nodo $V_4$: debe marcar **$0.000\text{ V}$**.
    * Escribe el comando `'8'` $\rightarrow$ Mide en el Nodo $V_4$: debe marcar **$2.500\text{ V}$**.
    * Escribe el comando `'15'` $\rightarrow$ Mide en el Nodo $V_4$: debe marcar **$4.688\text{ V}$**.

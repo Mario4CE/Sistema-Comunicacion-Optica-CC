@@ -1,6 +1,7 @@
 # Archivos temporales de sistema y editores
 .DS_Store
 Thumbs.db
+Desktop.ini
 *.swp
 *~
 .vscode/
@@ -10,18 +11,35 @@ Thumbs.db
 build/
 *.hex
 *.elf
+*.bin
 
-# LTspice temporales
+# Archivos temporales de LTspice
 *.raw
+*.op.raw
 *.log
 *.fft
-*.op.raw
+*.net
+*.plt
+*.tmp
+*.bak
 
-# MATLAB temporales
+# Archivos temporales de MATLAB
 *.asv
 *.m~
 slprj/
 
-# Paquete de entrega autogenerado (se crea con src/empaquetar_entrega_oficial.py)
+# Archivos auxiliares de LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.out
+*.toc
+*.bbl
+*.blg
+
+# Archivos comprimidos y carpetas de empaquetado temporal
 Investigacion_Dirigida/
 *.zip
+__pycache__/
+*.pyc

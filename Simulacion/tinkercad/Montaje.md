@@ -77,7 +77,7 @@ En el panel lateral derecho de TinkerCAD Circuits (filtro **Componentes $\righta
 
 ## 3. Ejecución y Comandos de Prueba en el Monitor en Serie
 
-1. Haz clic en **Código** $\rightarrow$ **Texto** y pega el contenido íntegro de [`generador_patrones_tinkercad.ino`](file:///d:/Proyecto%20CC/simulation/tinkercad/generador_patrones_tinkercad.ino).
+1. Haz clic en **Código** $\rightarrow$ **Texto** y pega el contenido íntegro de [`src/arduino/generador_patrones_tinkercad.ino`](file:///d:/Proyecto%20CC/src/arduino/generador_patrones_tinkercad.ino).
 2. Presiona **Iniciar simulación** y abre el **Monitor en serie**:
    * Escribe `A` y presiona Enter: Recorre los 16 escalones (`0` a `15`).
    * Escribe `P` y presiona Enter: Reproduce el arreglo de longitud variable de la **señal periódica** generada en MATLAB ($N = 20$).

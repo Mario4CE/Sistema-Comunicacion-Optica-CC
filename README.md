@@ -1,16 +1,16 @@
 # Sistema de Comunicación por Medios Ópticos (EL2113)
 
-Repositorio oficial del proyecto de Investigación Dirigida para el curso **Circuitos Eléctricos en Corriente Continua (EL2113)**, Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR).
+Repositorio del proyecto de Investigación Dirigida para el curso **Circuitos Eléctricos en Corriente Continua (EL2113)**, Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR).
 
-**Autor principal:** Mario Cerdas  
-**Objetivo:** Transmitir arreglos de longitud variable de datos digitales de 4 bits (de señales periódicas y aperiódicas generadas en MATLAB) mediante una señal luminosa guiada por fibra óptica plástica ($30\text{--}60\text{ cm}$), recuperarla mediante un receptor óptico pasivo y convertirla en una señal acústica audible mediante un buzzer piezoeléctrico pasivo.
+**Responsable:** Mario Cerdas  
+**Objetivo:** Transmitir arreglos de longitud variable de datos digitales de 4 bits (de señales periódicas y aperiódicas generadas en MATLAB) mediante una señal luminosa guiada por fibra óptica plástica ($30\text{--}60\text{ cm}$), recuperarla con un receptor óptico pasivo (LDR) y convertirla en una señal audible mediante un oscilador 555 y un buzzer pasivo.
 
 ---
 
-## Arquitectura de las 7 Etapas Delimitadas (Req. A.1 y B.2)
+## Diagrama de Bloques de las 7 Etapas
 
 ```
- [ Fuente DC de Laboratorio — Bodega Escuela de Electrónica (Req. P.17 y Q.18) ]
+ [ Fuente DC de Laboratorio (Escuela de Electrónica) ]
                                        │
   [ MATLAB ]                           ▼                           [ Etapa 7: Buzzer Pasivo ]
       │ (Arreglos 4 bits)  [ Etapa 2: DAC R-2R + OpAmp 1A ]                    ▲
@@ -31,25 +31,17 @@ Repositorio oficial del proyecto de Investigación Dirigida para el curso **Circ
 
 ---
 
-## Estructura del Repositorio y Cumplimiento del Instructivo
+## Estructura del Repositorio
 
-* **[`BITACORA.md`](file:///d:/Proyecto%20CC/BITACORA.md)**: Registro cronológico de actividades, decisiones de diseño y cambios implementados.
-* **[`src/arduino/emisor_4bits/emisor_4bits.ino`](file:///d:/Proyecto%20CC/src/arduino/emisor_4bits/emisor_4bits.ino)**: Firmware de Arduino UNO/Nano con arreglos de longitud variable (periódico $N=20$, aperiódico $N=18$ y escalera $N=16$) y tiempo configurable entre $1\text{ ms}$ y $10\text{ s}$ (**Req. C.3, D.4 y Punto 8**).
-* **[`matlab/generador_patrones.m`](file:///d:/Proyecto%20CC/matlab/generador_patrones.m)** y **[`matlab/simulacion_dac_555.m`](file:///d:/Proyecto%20CC/matlab/simulacion_dac_555.m)**: Generación de señales periódicas y aperiódicas cuantizadas a 4 bits y simulación numérica integral.
-* **[`docs/memoria_de_calculo.md`](file:///d:/Proyecto%20CC/docs/memoria_de_calculo.md)**: Análisis nodal de Kirchhoff (LCK/LVK), separación de OpAmp 1A (Etapa 2, **Req. E.5**) y OpAmp 1B (Etapa 3, **Req. F.6**), y justificación física (Física 2 y 3) del LED rojo de $650\text{ nm}$ (**Req. H.8**).
-* **[`docs/diseno_prototipado_3d_laser.md`](file:///d:/Proyecto%20CC/docs/diseno_prototipado_3d_laser.md)** y **[`prototipo_laboratorio/`](file:///d:/Proyecto%20CC/prototipo_laboratorio)**: Diseños listos para los equipos de **Corte Láser** ([`base_soporte_optico.svg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/base_soporte_optico.svg)), **Impresión 3D** ([`acoplador_optico_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad)) y propuesta de **Escáner 3D** de la Escuela de Electrónica (**Req. M.13 y N.14**).
-* **[`docs/informe_ieee/informe_ieee_el2113.tex`](file:///d:/Proyecto%20CC/docs/informe_ieee/informe_ieee_el2113.tex)**: Informe técnico en formato **IEEE Transactions** ($\le 3$ páginas, **Sección 4.2 y Rúbrica**).
-* **[`simulation/ltspice/`](file:///d:/Proyecto%20CC/simulation/ltspice)**: Simulaciones SPICE por separado ([`dac_r2r_buffer.asc`](file:///d:/Proyecto%20CC/simulation/ltspice/dac_r2r_buffer.asc), [`receptor_555_ldr.asc`](file:///d:/Proyecto%20CC/simulation/ltspice/receptor_555_ldr.asc)) y en conjunto ([`sistema_completo_optico.asc`](file:///d:/Proyecto%20CC/simulation/ltspice/sistema_completo_optico.asc)).
-* **[`src/empaquetar_entrega_oficial.py`](file:///d:/Proyecto%20CC/src/empaquetar_entrega_oficial.py)**: Genera automáticamente la carpeta `Investigacion_Dirigida/` y el archivo `Investigacion_Dirigida.zip` con la estructura oficial de la **Sección 4.1**.
-
----
-
-## Ruta Rápida para Revisar y Montar Todo el Sistema
-
-Para empezar a trabajar y montar el circuito físico paso a paso sin confusiones:
-1. **Paso 1 (Materiales y Laboratorio):** Revisa [`docs/lista_de_materiales_BOM.md`](file:///d:/Proyecto%20CC/docs/lista_de_materiales_BOM.md) para confirmar componentes y solicitar la fuente DC de laboratorio en bodega (Req. P.17/Q.18).
-2. **Paso 2 (Manual Maestro de Operaciones):** Sigue [`docs/GUIA_PASO_A_PASO_GENERAL.md`](file:///d:/Proyecto%20CC/docs/GUIA_PASO_A_PASO_GENERAL.md) para ejecutar simulaciones (MATLAB, LTspice, TinkerCAD) y programar el Arduino.
-3. **Paso 3 (Montaje en Protoboard):** Utiliza [`docs/guia_de_conexion_protoboard.md`](file:///d:/Proyecto%20CC/docs/guia_de_conexion_protoboard.md) para el cableado físico pin por pin y pruebas incrementales TP1 a TP6.
-4. **Paso 4 (Prototipado en la Escuela):** Consulta [`docs/diseno_prototipado_3d_laser.md`](file:///d:/Proyecto%20CC/docs/diseno_prototipado_3d_laser.md) para mandar a cortar la base láser y fabricar los acopladores 3D.
-5. **Paso 5 (Validación Automática y Empaquetado):** Ejecuta `python src/test_validacion_sistema.py` y `python src/empaquetar_entrega_oficial.py`.
-
+* **[`BITACORA.md`](file:///d:/Proyecto%20CC/BITACORA.md)**: Registro de actividades y avances del proyecto.
+* **[`src/arduino/generador_patrones_tinkercad.ino`](file:///d:/Proyecto%20CC/src/arduino/generador_patrones_tinkercad.ino)**: Código de Arduino UNO con los arreglos de 4 bits (escalera de 16 niveles, señal periódica de 20 muestras y señal aperiódica de 18 muestras) y tiempo de permanencia configurable entre $1\text{ ms}$ y $10\text{ s}$. Se usa tanto en el montaje físico como en TinkerCAD.
+* **[`matlab/generador_patrones.m`](file:///d:/Proyecto%20CC/matlab/generador_patrones.m)** y **[`matlab/simulacion_dac_555.m`](file:///d:/Proyecto%20CC/matlab/simulacion_dac_555.m)**: Scripts en MATLAB para cuantizar las señales a 4 bits y graficar la respuesta teórica de las etapas.
+* **[`Simulacion/tinkercad/`](file:///d:/Proyecto%20CC/Simulacion/tinkercad)**: Guía de montaje en TinkerCAD ([`Montaje.md`](file:///d:/Proyecto%20CC/Simulacion/tinkercad/Montaje.md)) e imágenes del circuito simulado ([`CircuitoTinkercad.png`](file:///d:/Proyecto%20CC/Simulacion/tinkercad/CircuitoTinkercad.png), [`Componentes.png`](file:///d:/Proyecto%20CC/Simulacion/tinkercad/Componentes.png), [`Esquema.png`](file:///d:/Proyecto%20CC/Simulacion/tinkercad/Esquema.png)).
+* **[`Simulacion/ltspice/`](file:///d:/Proyecto%20CC/Simulacion/ltspice)**: Simulaciones en LTspice de la etapa emisora ([`dac_r2r_buffer.asc`](file:///d:/Proyecto%20CC/Simulacion/ltspice/dac_r2r_buffer.asc)), etapa receptora ([`receptor_555_ldr.asc`](file:///d:/Proyecto%20CC/Simulacion/ltspice/receptor_555_ldr.asc)) y sistema completo ([`sistema_completo_optico.asc`](file:///d:/Proyecto%20CC/Simulacion/ltspice/sistema_completo_optico.asc)).
+* **[`prototipo_laboratorio/`](file:///d:/Proyecto%20CC/prototipo_laboratorio)**: Archivos para corte láser ([`base_soporte_optico.svg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/base_soporte_optico.svg)) e impresión 3D ([`acoplador_optico_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad) y [`.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.stl)).
+* **[`docs/`](file:///d:/Proyecto%20CC/docs)**:
+  * [`memoria_de_calculo.md`](file:///d:/Proyecto%20CC/docs/memoria_de_calculo.md): Desarrollo de ecuaciones de nodos (Kirchhoff), diseño del DAC R-2R, etapa de interfaz y cálculos del 555.
+  * [`lista_de_materiales_BOM.md`](file:///d:/Proyecto%20CC/docs/lista_de_materiales_BOM.md): Lista de componentes electrónicos y equipo de laboratorio.
+  * [`guia_de_conexion_protoboard.md`](file:///d:/Proyecto%20CC/docs/guia_de_conexion_protoboard.md): Guía de armado físico en protoboard.
+  * [`diseno_prototipado_3d_laser.md`](file:///d:/Proyecto%20CC/docs/diseno_prototipado_3d_laser.md): Detalles de las piezas en corte láser e impresión 3D.
+  * [`informe_ieee/informe_ieee_el2113.tex`](file:///d:/Proyecto%20CC/docs/informe_ieee/informe_ieee_el2113.tex): Informe en plantilla IEEE.
