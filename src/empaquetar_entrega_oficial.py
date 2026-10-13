@@ -135,7 +135,7 @@ class EmpaquetadorEntregaOficial:
             ("simulation/ltspice/sistema_completo_optico.asc", "LTspice"),
             ("simulation/ltspice/sistema_completo_optico.cir", "LTspice"),
             # 2. TinkerCAD (Archivo de simulación y archivo de enlace)
-            ("simulation/tinkercad/codigo_tinkercad.ino", "TinkerCAD"),
+            ("simulation/tinkercad/generador_patrones_tinkercad.ino", "TinkerCAD"),
             ("simulation/tinkercad/enlace_simulacion_tinkercad.txt", "TinkerCAD"),
             ("simulation/tinkercad/guia_montaje_tinkercad.md", "TinkerCAD"),
             # 3. Arduino (Código fuente oficial)

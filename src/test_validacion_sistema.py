@@ -424,7 +424,7 @@ def main() -> None:
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     archivos_ino = [
         os.path.join(base_dir, "src", "arduino", "emisor_4bits", "emisor_4bits.ino"),
-        os.path.join(base_dir, "simulation", "tinkercad", "codigo_tinkercad.ino"),
+        os.path.join(base_dir, "simulation", "tinkercad", "generador_patrones_tinkercad.ino"),
     ]
 
     # -------------------------------------------------------------------------

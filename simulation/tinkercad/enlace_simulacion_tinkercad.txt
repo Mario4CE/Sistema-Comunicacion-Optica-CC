@@ -6,7 +6,7 @@ AUTOR: Mario Cerdas y equipo de trabajo
 ================================================================================
 
 1. ARCHIVOS DE SIMULACIÓN INCLUIDOS EN ESTA CARPETA:
-   - codigo_tinkercad.ino         : Código fuente C++ (Arduino UNO) con arreglos
+   - generador_patrones_tinkercad.ino         : Código fuente C++ (Arduino UNO) con arreglos
                                     de longitud variable generados en MATLAB
                                     (periódico N=20, aperiódico N=18 y escalera N=16)
                                     y tiempo configurable entre 1 ms y 10 s (Req. C.3/D.4).
@@ -19,5 +19,5 @@ AUTOR: Mario Cerdas y equipo de trabajo
    - Instrucción antes de comprimir el .zip final:
      En tu panel de TinkerCAD -> Haz clic en "Enviar a" (Send To) -> "Invitar a personas"
      -> Copiar enlace público y pegarlo en la línea siguiente:
-   - URL Pública TinkerCAD: [PEGAR_AQUI_EL_ENLACE_PUBLICO_DE_TINKERCAD_DEL_GRUPO]
+   - URL Pública TinkerCAD: https://www.tinkercad.com/things/la1BIC4RtiI-copy-of-prototipo/editel?returnTo=%2Fthings%2Fla1BIC4RtiI-copy-of-prototipo&sharecode=GzSBlUJ-SxSaqOF41kun7i3zvVcJi3TTkY37RADvjuc
 ================================================================================

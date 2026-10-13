@@ -32,7 +32,7 @@ D:\Proyecto CC\
 │   │   ├── receptor_555_ldr.asc / .cir    -> Simulación Receptor (LDR + NE555 astable + Buzzer)
 │   │   └── sistema_completo_optico.asc/.cir -> Simulación INTEGRADA EN CONJUNTO (7 etapas)
 │   └── tinkercad\
-│       ├── codigo_tinkercad.ino           -> Firmware optimizado para simulación web
+│       ├── generador_patrones_tinkercad.ino           -> Firmware optimizado para simulación web
 │       ├── guia_montaje_tinkercad.md      -> Guía de conexionado del sistema completo en TinkerCAD
 │       └── enlace_simulacion_tinkercad.txt -> Archivo de enlace público requerido por Sección 4.1
 │
@@ -152,7 +152,7 @@ Antes de montar un solo cable en el protoboard, verifica que tienes todo prepara
 2. Consulta la guía detallada [guia_montaje_tinkercad.md](file:///d:/Proyecto%20CC/simulation/tinkercad/guia_montaje_tinkercad.md):
    * Agrega: Arduino UNO, Suministro de energía (ajustado en $5.0\text{ V}$, **sin conectar el 5V de Arduino al protoboard**, Req. P.17/Q.18), resistencias R-2R ($10\text{ k}\Omega / 20\text{ k}\Omega$), amplificador operacional LM358, resistencia $150\ \Omega$, LED rojo, fotorresistencia LDR, temporizador 555, condensadores ($100\text{ nF}$, $10\text{ nF}$, $10\ \mu\text{F}$), piezoeléctrico y multímetros.
 3. Haz clic en **Código** $\rightarrow$ cambiar a **Texto**.
-4. Pega todo el contenido de [`simulation/tinkercad/codigo_tinkercad.ino`](file:///d:/Proyecto%20CC/simulation/tinkercad/codigo_tinkercad.ino).
+4. Pega todo el contenido de [`simulation/tinkercad/generador_patrones_tinkercad.ino`](file:///d:/Proyecto%20CC/simulation/tinkercad/generador_patrones_tinkercad.ino).
 5. Haz clic en **Iniciar simulación**:
    * El multímetro en la salida del DAC irá subiendo en 16 pasos cada segundo.
    * Abre el **Monitor en serie** (abajo a la derecha):
