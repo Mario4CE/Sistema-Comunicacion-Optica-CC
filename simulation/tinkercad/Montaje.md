@@ -1,7 +1,5 @@
 # Guía de Simulación del Sistema Completo en TinkerCAD Circuits
-**Proyecto:** Sistema de Comunicación por Medios Ópticos (EL2113)  
-**Alcance:** Simulación modular (Arduino + DAC) y Simulación del Sistema Completo de 7 Etapas (Sección 4.2 del instructivo)
-
+** Pendiente de revicion
 ---
 
 ## 1. Componentes Requeridos en TinkerCAD Circuits
