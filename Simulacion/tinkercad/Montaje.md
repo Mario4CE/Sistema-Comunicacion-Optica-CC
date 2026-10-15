@@ -1,5 +1,5 @@
 # Guía de Simulación del Sistema Completo en TinkerCAD Circuits
-** Pendiente de revicion
+
 ---
 
 ## 1. Componentes Requeridos en TinkerCAD Circuits
@@ -22,11 +22,15 @@ En el panel lateral derecho de TinkerCAD Circuits (filtro **Componentes $\righta
 ## 2. Cableado Paso a Paso de las 7 Etapas Delimitadas
 
 ### A. Fuente de Alimentación de Laboratorio y Tierra Común (Req. P.17 y Q.18)
-1. Configura el **Suministro de energía** virtual en **Voltaje = `5.0 V`** y **Corriente = `1.0 A`**.
-2. Conecta el terminal **positivo (rojo)** del Suministro de energía al riel positivo (`+`) de la placa de pruebas.
-3. Conecta el terminal **negativo (negro)** del Suministro de energía al riel negativo (`- / GND`) de la placa de pruebas.
-4. Conecta un cable desde el pin **`GND` del Arduino Uno** al riel negativo (`- / GND`) de la placa de pruebas.
-5. **Importante (Req. P.17):** **NO conectes el pin `5V` del Arduino** a la placa de pruebas; toda la energía de las etapas de transmisión y recepción proviene de la fuente de laboratorio.
+1. Configura el **Suministro de energía** principal en **Voltaje = `5.0 V`** y **Corriente = `1.0 A`**.
+2. Conecta el terminal **positivo (rojo)** de la fuente al riel positivo (`+`) del protoboard.
+3. Conecta el terminal **negativo (negro)** de la fuente al riel negativo (`- / GND`) del protoboard.
+4. Conecta un cable desde el pin **`GND` del Arduino Uno** al riel negativo (`- / GND`) del protoboard.
+5. **Importante (Req. P.17):** **NO conectes el pin `5V` del Arduino** al protoboard; toda la energía de las etapas proviene de la fuente.
+6. **Nota técnica sobre el LM358 (alimentación a 9V vs 5V):**
+   * El amplificador operacional LM358 no es *rail-to-rail*; su tensión máxima de salida llega aproximadamente a $V_{OH} \approx V_{CC} - 1.5\text{ V}$.
+   * Si alimentas el Pin 8 del LM358 con **5.0 V**, la salida se recortará en $\approx 3.5\text{ V}$ para los códigos digitales 12 a 15 ($3.75\text{ V}$ a $4.6875\text{ V}$).
+   * Para ver los 16 escalones completos en TinkerCAD sin recorte (o en el laboratorio con fuente de dos canales), agrega un segundo suministro de energía en **`9.0 V`** para alimentar el **Pin 8 del LM358**, compartiendo la misma tierra (`GND`) y manteniendo el 555 a **`5.0 V`**.
 
 ### B. Etapa 1 y Etapa 2: Arduino + Red R–2R + OpAmp 1A (Req. C.3 y E.5)
 1. **Resistencia de terminación ($20\text{ k}\Omega$):** Conecta desde el nodo de **Bit 0 ($V_1$)** hacia el riel de tierra (`-`).
@@ -40,7 +44,7 @@ En el panel lateral derecho de TinkerCAD Circuits (filtro **Componentes $\righta
    * Entre Nodo Bit 1 ($V_2$) y Nodo Bit 2 ($V_3$).
    * Entre Nodo Bit 2 ($V_3$) y Nodo Bit 3 ($V_4$).
 4. **Componente Activo del DAC (Mitad 1A del LM358):**
-   * **Pin 8 (`Potencia`):** Al riel positivo (`+`) de la fuente de laboratorio.
+   * **Pin 8 (`Potencia`):** Al riel de alimentación del op-amp (preferiblemente $+9.0\text{ V}$ para evitar saturación superior a $3.5\text{ V}$, o $+5.0\text{ V}$ teniendo en cuenta el recorte en los últimos 4 códigos).
    * **Pin 4 (`Tierra`):** Al riel negativo (`- / GND`).
    * **Pin 3 (`Entrada no inversora 1`):** Al Nodo Bit 3 ($V_4$).
    * **Pin 2 (`Entrada inversora 1`):** Puente directo al **Pin 1 (`Salida 1`)**.
@@ -56,7 +60,7 @@ En el panel lateral derecho de TinkerCAD Circuits (filtro **Componentes $\righta
 
 ### E. Etapa 5 y Etapa 6: Receptor LDR y Temporizador 555 Astable (Req. J.10 y K.11)
 * **Pin 1 (`Tierra`) del 555:** Al riel negativo (`- / GND`).
-* **Pin 8 (`Potencia`) y Pin 4 (`Restablecer`) del 555:** Al riel positivo (`+`) de la fuente de laboratorio.
+* **Pin 8 (`Potencia`) y Pin 4 (`Restablecer`) del 555:** Al riel positivo de **`+5.0 V`** de la fuente de laboratorio.
 * **Pin 5 (`Voltaje de control`) del 555:** Condensador de **$10\text{ nF}$** a tierra (`-`).
 * **Resistencia $R_1$ ($1\text{ k}\Omega$):** Entre el Pin 8 (`+`) y el Pin 7 (`Descarga`).
 * **Fotorresistencia (LDR):** Entre el Pin 7 (`Descarga`) y el Pin 6 (`Umbral`).
@@ -67,6 +71,9 @@ En el panel lateral derecho de TinkerCAD Circuits (filtro **Componentes $\righta
 * Conecta el terminal positivo del condensador de **$10\ \mu\text{F}$** al **Pin 3 (`Salida`)** del 555.
 * Conecta el terminal negativo del condensador de $10\ \mu\text{F}$ al terminal positivo del **Piezo (Buzzer pasivo)**.
 * Conecta el terminal negativo del Piezo a tierra (`- / GND`).
+* **Nota sobre la impedancia del transductor:**
+  * Un **buzzer piezoeléctrico pasivo** presenta una alta impedancia ($Z \approx 1\text{ k}\Omega$ a frecuencias de audio). Junto al condensador $C_{acoplo} = 10\ \mu\text{F}$, la frecuencia de corte pasa-altos es $f_c = \frac{1}{2\pi R C} \approx 16\text{ Hz}$, dejando pasar toda la banda del sistema ($177\text{ Hz}$ a $3.6\text{ kHz}$) sin atenuación.
+  * Si se utilizara una bocina o parlante magnético de baja impedancia ($32\ \Omega$), la frecuencia de corte subiría a $\approx 497\text{ Hz}$, atenuando fuertemente los tonos graves entre 177 Hz y 500 Hz. En ese caso se debería usar un capacitor mayor ($100\ \mu\text{F}$ a $220\ \mu\text{F}$).
 
 ### G. Instrumentos de Medición Virtual
 * **Multímetro 1:** Terminal rojo en Nodo Bit 3 ($V_4$) y negro a `GND` (verifica $V_{DAC}$ de $0.00\text{ V}$ a $4.69\text{ V}$).

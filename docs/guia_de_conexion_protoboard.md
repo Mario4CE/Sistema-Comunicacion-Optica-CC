@@ -163,6 +163,7 @@ Inserta el circuito integrado **LM358N** a horcajadas en el canal central del pr
 1. Conecta el terminal positivo del **condensador electrolítico de $10\ \mu\text{F}$** al **Pin 3 del 555**.
 2. Conecta el terminal negativo del condensador de $10\ \mu\text{F}$ al terminal positivo (`+`) del **Buzzer piezoeléctrico pasivo**.
 3. Conecta el terminal negativo (`-`) del Buzzer al riel azul (`GND`).
+   * *Nota de impedancia:* Se debe usar un **buzzer piezoeléctrico pasivo** (alta impedancia $\approx 1\text{ k}\Omega$). Con $10\ \mu\text{F}$, la frecuencia de corte es de $\approx 16\text{ Hz}$, transmitiendo desde los 177 Hz sin pérdidas. Si se conectara un parlante magnético de $32\ \Omega$, la frecuencia de corte subiría a $\approx 497\text{ Hz}$ y se perderían los tonos graves; en ese caso se requeriría un condensador de $100\ \mu\text{F}$ o $220\ \mu\text{F}$.
 4. **Prueba de Verificación Final del Sistema Completo:**
    * Envía por el Monitor Serial el comando `'A'` (Escalera automática) o `'P'` (Señal periódica de MATLAB).
    * **Resultado audible:** El buzzer reproducirá una secuencia ascendente de 16 notas musicales distintas (desde un tono grave profundo hasta un tono agudo claro).
