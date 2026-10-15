@@ -1,81 +1,74 @@
 %% ========================================================================
-%  PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113)
-%  SCRIPT: Simulación y Modelado Integral (DAC R-2R + Óptica + NE555)
-%  AUTOR: Mario Cerdas y equipo de trabajo
+% DESCRIPCION:
+% Este script es un simulador completo de nuestro sistema de comunicacion 
+% optica. Lo que hace es calcular matematicamente que deberia pasar en 
+% cada etapa del circuito a medida que el Arduino envia los valores del 0 al 15.
+%
+% El programa calcula y grafica paso a paso:
+% 1. El voltaje que sale del convertidor (DAC R-2R).
+% 2. La corriente que pasa por el LED transmisor al encenderse.
+% 3. La resistencia que asume la fotoresistencia (LDR) al recibir esa luz.
+% 4. La frecuencia (el tono) que generara el temporizador 555 en el buzzer.
+%
+% Restricciones y notas:
+%   - Ocupas tener instalado el toolbox "Communications" de MATLAB para  
+%     poder usar la funcion 'de2bi'.
+%   - El codigo asume que hay un amplificador operacional (LM358) trabajando  
+%     como seguidor de voltaje entre el DAC y el LED para que el voltaje no
+%     se caiga al conectar la carga.
 % ========================================================================
-%  Descripción:
-%    Modela numéricamente las 6 etapas del sistema de comunicación óptica
-%    para los 16 estados digitales de 4 bits: voltaje de salida de la red
-%    R-2R, corriente en el LED transmisor, resistencia de la LDR receptora
-%    y frecuencia/ciclo de trabajo del temporizador NE555 en modo astable.
-%
-%  Entrada:
-%    Parámetros físicos y eléctricos definidos en la Sección 1 (V_ref = 5V,
-%    N_bits = 4, R = 10k, 2R = 20k, R_driver = 150 Ohm, R1_555 = 1k, C = 100nF).
-%
-%  Salida:
-%    - Tabla resumen en consola con las variables de cada uno de los 16 estados.
-%    - Figura con 4 subgráficas (V_DAC, I_LED, R_LDR y frecuencia f_555).
-%
-%  Restricciones:
-%    - Requiere el toolbox Communications (para `de2bi`) o MATLAB base.
-%    - Asume operación con seguidor de voltaje (buffer LM358) ideal entre el
-%      DAC R-2R y el resistor limitador del LED.
-% ========================================================================
+
 clear; clc; close all;
 
 fprintf('===============================================================\n');
-fprintf('  SIMULACIÓN DEL SISTEMA DE COMUNICACIÓN POR MEDIOS ÓPTICOS   \n');
+fprintf('  SIMULACION DEL SISTEMA DE COMUNICACION POR MEDIOS OPTICOS   \n');
 fprintf('===============================================================\n\n');
 
-%% 1. PARÁMETROS DEL SISTEMA
-% --- Etapa 1 & 2: DAC R-2R ---
-V_ref = 5.0;            % Voltaje de referencia de salida de Arduino (V)
-N_bits = 4;             % Número de bits del sistema
-num_niveles = 2^N_bits; % 16 niveles (0 a 15)
-R_dac = 10e3;           % Resistencia base R = 10 kOhm
-R_2dac = 20e3;          % Resistencia 2R = 20 kOhm
+%% 1. PARAMETROS DEL SISTEMA
+% --- Etapa 1 y 2: DAC R-2R ---
+V_ref = 5.0;            % Voltaje maximo de salida del Arduino (V)
+N_bits = 4;             % Numero de bits
+num_niveles = 2^N_bits; % 16 niveles de escalera (0 a 15)
+R_dac = 10e3;           % Resistencia base R (10 kOhm)
+R_2dac = 20e3;          % Resistencia 2R (20 kOhm)
 
-% --- Etapa 4: Transmisor Óptico (Driver LED) ---
-V_led_drop = 1.8;       % Caída típica de LED rojo (V)
-R_driver = 150;         % Resistencia limitadora del LED (Ohms)
+% --- Etapa 4: Transmisor Optico (Driver LED) ---
+V_led_drop = 1.8;       % Voltaje que consume el LED rojo (V)
+R_driver = 150;         % Resistencia para proteger el LED (Ohms)
 
-% --- Etapa 5: Receptor Óptico (LDR) ---
-% Modelo aproximado de LDR según intensidad luminosa recibida
-% R_LDR oscila típicamente entre ~50 kOhm en oscuridad total hasta ~1 kOhm a máxima luz
-R_oscuridad = 50e3;     % Resistencia en ausencia de luz (Ohms)
-R_luz_max = 1.2e3;      % Resistencia a máxima iluminación por fibra (Ohms)
+% --- Etapa 5: Receptor Optico (LDR) ---
+% Modelo de la fotoresistencia (LDR) segun la luz que recibe.
+% Oscila entre ~50 kOhm a oscuras y ~1.2 kOhm con luz maxima.
+R_oscuridad = 50e3;     % Resistencia sin luz (Ohms)
+R_luz_max = 1.2e3;      % Resistencia con mucha luz (Ohms)
 
-% --- Etapa 6: Generador de Onda Cuadrada (NE555 Astable) ---
-% Ecuación de frecuencia astable: f = 1.44 / ((R1 + 2*R_LDR) * C)
-R1_555 = 1.0e3;         % Resistencia mínima de carga pin 7 (1 kOhm)
-C_555 = 100e-9;         % Condensador de temporización (100 nF)
+% --- Etapa 6: Generador de Tono (NE555 en modo Astable) ---
+% Formula del NE555: Frecuencia = 1.44 / ((R1 + 2*R_LDR) * C)
+R1_555 = 1.0e3;         % Resistencia fija del pin 7 (1 kOhm)
+C_555 = 100e-9;         % Condensador (100 nF)
 
-%% 2. CÁLCULO DE NIVELES TEÓRICOS
+%% 2. CALCULO DE NIVELES TEORICOS
 datos_decimales = (0:num_niveles-1)';
-bits_matriz = de2bi(datos_decimales, N_bits, 'right-msb'); % [b3 b2 b1 b0]
+bits_matriz = de2bi(datos_decimales, N_bits, 'right-msb'); % Binario: [b3 b2 b1 b0]
 
-% Voltaje de salida de la red R-2R
-% V_out = V_ref * sum(b_i * 2^(i - N)) = V_ref * (D / 2^N)
+% 1. Voltaje teorico a la salida de la escalera R-2R
 voltajes_dac = V_ref * (datos_decimales / num_niveles);
 
-% Corriente en el LED (zona activa cuando V_dac > V_led_drop)
+% 2. Corriente en el LED (solo hay corriente si el voltaje supera la caida del LED)
 corriente_led_mA = max(0, (voltajes_dac - V_led_drop) / R_driver) * 1000;
 
-% Resistencia estimada de la LDR según la corriente lumínica recibida
-% Se modela un comportamiento inverso característico de fotorresistencias
+% 3. Resistencia de la LDR estimada segun cuanta corriente tiene el LED
 factor_atenuacion = corriente_led_mA / max(corriente_led_mA + 1e-6);
 R_ldr_estimada = R_oscuridad ./ (1 + 40 * factor_atenuacion);
-R_ldr_estimada = max(R_ldr_estimada, R_luz_max); % Límite de saturación física
+R_ldr_estimada = max(R_ldr_estimada, R_luz_max); % Pone el limite minimo fisico
 
-% Frecuencia de oscilación del temporizador 555 astable (Hz)
+% 4. Frecuencia del sonido generado por el 555 (Hz)
 frecuencia_555_Hz = 1.44 ./ ((R1_555 + 2 * R_ldr_estimada) * C_555);
 
-% Ciclo de trabajo (Duty Cycle) del 555 estándar:
-% DC = (R1 + R_LDR) / (R1 + 2*R_LDR) * 100 %
+% Calculo extra: Ciclo de trabajo (Duty Cycle) del 555
 duty_cycle_pct = ((R1_555 + R_ldr_estimada) ./ (R1_555 + 2 * R_ldr_estimada)) * 100;
 
-%% 3. TABLA CONSOLA DE RESULTADOS
+%% 3. TABLA DE RESULTADOS EN CONSOLA
 fprintf('Dec | Binario [b3 b2 b1 b0] | V_DAC (V) | I_LED (mA) | R_LDR (kOhm) | Frecuencia (Hz) | Duty Cycle (%%)\n');
 fprintf('--------------------------------------------------------------------------------------------------\n');
 for i = 1:num_niveles
@@ -87,46 +80,46 @@ for i = 1:num_niveles
 end
 fprintf('--------------------------------------------------------------------------------------------------\n\n');
 
-%% 4. GENERACIÓN DE GRÁFICAS DE VALIDACIÓN
-figure('Name', 'Sistema de Comunicación Óptica - EL2113', 'Color', [1 1 1], 'Position', [100 100 1000 700]);
+%% 4. GENERACION DE GRAFICAS
+figure('Name', 'Sistema de Comunicacion Optica - EL2113', 'Color', [1 1 1], 'Position', [100 100 1000 700]);
 
-% Gráfica 1: Escalera DAC de 4 bits
+% Grafica 1: Voltaje del DAC
 subplot(2, 2, 1);
 stairs(datos_decimales, voltajes_dac, 'b', 'LineWidth', 1.8);
 hold on;
 plot(datos_decimales, voltajes_dac, 'ro', 'MarkerFaceColor', 'r');
 grid on;
-title('1. Respuesta del DAC R-2R (4 bits)');
-xlabel('Valor Decimal (Entrada)');
-ylabel('Voltaje de Salida V_{DAC} (V)');
+title('1. Voltaje de salida del DAC (R-2R)');
+xlabel('Valor Decimal (0 al 15)');
+ylabel('Voltaje V_{DAC} (V)');
 ylim([0 5.2]);
 xlim([0 15]);
 
-% Gráfica 2: Corriente del LED emisor
+% Grafica 2: Corriente en el LED
 subplot(2, 2, 2);
 plot(datos_decimales, corriente_led_mA, 'r-s', 'LineWidth', 1.5, 'MarkerFaceColor', [1 0.3 0.3]);
 grid on;
-title('2. Corriente en LED Emisor');
-xlabel('Valor Decimal');
+title('2. Corriente en el LED Emisor');
+xlabel('Valor Decimal (0 al 15)');
 ylabel('Corriente I_{LED} (mA)');
 xlim([0 15]);
 
-% Gráfica 3: Resistencia del receptor LDR
+% Grafica 3: Resistencia de la LDR
 subplot(2, 2, 3);
 plot(datos_decimales, R_ldr_estimada / 1e3, 'm-^', 'LineWidth', 1.5, 'MarkerFaceColor', 'm');
 grid on;
-title('3. Resistencia de la Fotorresistencia (LDR)');
-xlabel('Valor Decimal');
-ylabel('Resistencia R_{LDR} (k\Omega)');
+title('3. Resistencia de la Fotoresistencia (LDR)');
+xlabel('Valor Decimal (0 al 15)');
+ylabel('Resistencia R_{LDR} (kOhms)');
 xlim([0 15]);
 
-% Gráfica 4: Frecuencia de salida hacia el Buzzer
+% Grafica 4: Frecuencia del tono final
 subplot(2, 2, 4);
 plot(datos_decimales, frecuencia_555_Hz, 'g-d', 'LineWidth', 1.8, 'MarkerFaceColor', [0.2 0.7 0.2]);
 grid on;
-title('4. Frecuencia del Buzzer (Astable 555)');
-xlabel('Valor Decimal');
-ylabel('Frecuencia f (Hz)');
+title('4. Frecuencia del Buzzer (NE555)');
+xlabel('Valor Decimal (0 al 15)');
+ylabel('Frecuencia (Hz)');
 xlim([0 15]);
 
-fprintf('Simulación completada con éxito. Gráficas generadas.\n');
+fprintf('Simulacion completada con exito. Graficas generadas.\n');
