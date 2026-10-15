@@ -43,3 +43,4 @@ Investigacion_Dirigida/
 *.zip
 __pycache__/
 *.pyc
+*.db

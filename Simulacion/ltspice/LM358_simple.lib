@@ -1,0 +1,33 @@
+* ============================================================================
+* LM358_simple.lib
+* Macromodelo simplificado de UNA mitad del amplificador operacional LM358
+* (Proyecto: Sistema de Comunicacion por Medios Opticos - EL2113)
+* ============================================================================
+* LTspice no trae un modelo del LM358, asi que se usa este modelo de
+* comportamiento con las caracteristicas que importan en este proyecto:
+*   - Ganancia de lazo abierto: 100 dB (100 000 V/V)
+*   - Producto ganancia-ancho de banda: ~1 MHz (polo dominante en 10 Hz)
+*   - Resistencia de entrada diferencial: 10 MOhm
+*   - Salida limitada entre (V- + 5 mV) y (V+ - 1.5 V), como el LM358 real.
+*     Si V+ = 5 V, la salida NO pasa de ~3.5 V (los codigos 12 a 15 del DAC
+*     se recortarian); por eso el LM358 se alimenta con 9 V (VOP).
+*   - Resistencia de salida: 10 Ohm
+*
+* Orden de pines (igual al simbolo OpAmps\opamp2 de LTspice):
+*   1 = IN+   2 = IN-   3 = V+   4 = V-   5 = OUT
+* ============================================================================
+.subckt LM358_SIMPLE INP INN VCC VEE OUT
+Rin   INP INN 10Meg
+G1    VEE n1  INP INN 1m
+R1    n1  VEE 100Meg
+C1    n1  VEE 159p
+* Limitadores (anti-saturacion) del nodo interno
+B_hi  nhi VEE V=V(VCC,VEE)-1.45
+B_lo  nlo VEE V=0
+D_hi  n1  nhi DCLAMP
+D_lo  nlo n1  DCLAMP
+* Etapa de salida con excursion limitada
+B_out n2  VEE V=limit(V(n1,VEE), 0.005, V(VCC,VEE)-1.5)
+Rout  n2  OUT 10
+.model DCLAMP D(Ron=1 Roff=1G Vfwd=0)
+.ends LM358_SIMPLE

@@ -6,78 +6,81 @@
 * ============================================================================
 *
 * Descripcion:
-* Modelo SPICE integral que acopla en un solo circuito las 7 etapas del sistema
-* de comunicacion por medios opticos para observar su comportamiento en conjunto:
-*   - Etapa 1: Patron de datos digital de 4 bits (b0, b1, b2, b3).
-*   - Etapa 2: Convertidor Digital-Analogico (Red pasiva R-2R + OpAmp 1A activo).
-*   - Etapa 3: Etapa de Interfaz (Seguidor aislador con OpAmp 1B).
-*   - Etapa 4: Generador Optico (Resistor pasivo 150 Ohms + LED Rojo 650 nm).
-*   - Enlace Optico + Etapa 5: Canal de fibra optica (45 cm) y Receptor LDR pasivo
-*     cuya resistencia varia inversamente con la corriente optica del LED.
+* Netlist equivalente al esquematico sistema_completo_optico.asc (mismos nodos
+* y componentes). Sirve para correr la simulacion sin abrir el esquematico:
+*   LTspice.exe -b sistema_completo_optico.cir
+*   - Etapa 1: Patron de datos digital de 4 bits (b0, b1, b2, b3) = pines D8..D11.
+*   - Etapa 2: Convertidor Digital-Analogico (Red pasiva R-2R + OpAmp 1A del LM358).
+*   - Etapa 3: Etapa de Interfaz (Seguidor aislador con OpAmp 1B del LM358).
+*   - Etapa 4: Generador Optico (Resistor 150 Ohms + LED Rojo 650 nm).
+*   - Enlace Optico + Etapa 5: Fibra POF (45 cm) y Receptor LDR pasivo cuya
+*     resistencia baja cuando aumenta la corriente (luz) del LED.
 *   - Etapa 6: Generador de Onda Cuadrada (Temporizador NE555 en modo astable).
 *   - Etapa 7: Buzzer Piezoelectrico Pasivo acoplado en AC.
 
 .title Sistema Completo de Comunicacion por Medios Opticos (7 Etapas en Conjunto)
 
-* --- Fuente DC de Laboratorio (Bodega Escuela de Electronica - Req. P.17 y Q.18) ---
-Vcc Vcc 0 DC 5.0
+.param T=20m VOP=9
 
-* --- ETAPA 1: Patron de Datos de Prueba de 4 Bits (Escalones de 4 ms por estado) ---
-Vb0 n_b0 0 PULSE(0 5 0 10n 10n 2m 4m)
-Vb1 n_b1 0 PULSE(0 5 0 10n 10n 4m 8m)
-Vb2 n_b2 0 PULSE(0 5 0 10n 10n 8m 16m)
-Vb3 n_b3 0 PULSE(0 5 0 10n 10n 16m 32m)
+* --- Fuentes DC de Laboratorio (Req. P.17 y Q.18) ---
+* VOP = 9 V para el LM358 (su salida llega solo hasta V+ - 1.5 V)
+* VCC = 5 V para el NE555
+V_OP VOP 0 {VOP}
+V_CC VCC 0 5
+
+* --- ETAPA 1: Patron de Datos de Prueba de 4 Bits (cada codigo dura T) ---
+V_B0 B0 0 PULSE(0 5 {T}   10n 10n {T}   {2*T})
+V_B1 B1 0 PULSE(0 5 {2*T} 10n 10n {2*T} {4*T})
+V_B2 B2 0 PULSE(0 5 {4*T} 10n 10n {4*T} {8*T})
+V_B3 B3 0 PULSE(0 5 {8*T} 10n 10n {8*T} {16*T})
 
 * --- ETAPA 2: Convertidor Digital-Analogico (Red R-2R + OpAmp 1A - Req. E.5) ---
-R_h1 n_nodo1 n_nodo2 10k
-R_h2 n_nodo2 n_nodo3 10k
-R_h3 n_nodo3 n_r2r   10k
-R_term n_nodo1 0     20k
-R_v0 n_b0 n_nodo1    20k
-R_v1 n_b1 n_nodo2    20k
-R_v2 n_b2 n_nodo3    20k
-R_v3 n_b3 n_r2r      20k
-E_OPAMP_1A n_dac_out 0 n_r2r n_dac_out 100k
+R_b0   B0    N001  20k
+R_b1   B1    N002  20k
+R_b2   B2    N003  20k
+R_b3   B3    V_R2R 20k
+R_h1   N002  N001  10k
+R_h2   N003  N002  10k
+R_h3   V_R2R N003  10k
+R_term N001  0     20k
+*      IN+   IN-   V+  V- OUT
+XU1A   V_R2R V_DAC VOP 0  V_DAC LM358_SIMPLE
 
 * --- ETAPA 3: Etapa de Interfaz con Amplificador Operacional (OpAmp 1B - Req. F.6) ---
-E_OPAMP_1B n_interfaz 0 n_dac_out n_interfaz 100k
+XU1B   V_DAC V_INTERFAZ VOP 0 V_INTERFAZ LM358_SIMPLE
 
 * --- ETAPA 4: Generador Optico (Resistor 150 Ohms + LED Rojo - Req. G.7 y H.8) ---
-R_driver n_interfaz n_led_anode 150
-V_sense  n_led_anode n_led_d DC 0.0
-D_LED    n_led_d 0 D_RED_LED
-.model D_RED_LED D(Is=1e-19 N=1.8 Rs=2.0 Eg=1.91 Xti=3)
+R_driver V_INTERFAZ N004 150
+D_LED    N004 0 D_RED_650
+.model D_RED_650 D(Is=1e-19 N=1.8 Rs=2 Cjo=20p Iave=30m Vpk=5 type=LED)
 
 * --- ENLACE OPTICO (45 cm) + ETAPA 5: Receptor Optico Pasivo LDR (Req. I.9 y J.10) ---
-* La resistencia de la LDR entre n_disch (Pin 7) y n_thres (Pines 6/2) disminuye de
-* 40 kOhm (oscuridad, I_LED=0) a 1.5 kOhm (luz maxima, I_LED=19.25 mA):
-B_LDR n_disch n_thres I=V(n_disch,n_thres) / (1500.0 + 38500.0 * EXP(-220.0 * MAX(0, I(V_sense))))
+* V(RLDR) contiene el valor de la LDR en ohm: 40 kOhm en oscuridad (LED apagado)
+* y ~1.6 kOhm con el LED a ~19 mA. B_LDR se comporta como esa resistencia
+* conectada entre DIS (pin 7) y THR (pines 6 y 2) del 555.
+B_RLDR RLDR 0   V=1500+38500*exp(-max(I(D_LED),0)/0.003)
+B_LDR  DIS  THR I=V(DIS,THR)/V(RLDR)
 
 * --- ETAPA 6: Generador de Onda Cuadrada (Temporizador NE555 Astable - Req. K.11) ---
-X_U555 0 n_trig n_out_555 Vcc n_ctrl n_thres n_disch Vcc NE555_BEHAVE
-R_link n_trig n_thres 1u
-R1     Vcc n_disch 1k
-C1     n_thres 0 100n IC=0V
-C2     n_ctrl 0 10n
+*     GND TRIG OUT     RST CV   THRS DIS VCC
+XU2   0   THR  OUT_555 VCC N005 THR  DIS VCC NE555
+R1    VCC DIS  1k
+C1    THR 0    100n
+C2    N005 0   10n
 
 * --- ETAPA 7: Buzzer Piezoelectrico Pasivo con Acoplo AC (Req. L.12) ---
-C_acoplo n_out_555 n_buzzer 10u
-R_buzzer n_buzzer 0 32
+* R_buzzer = modelo simplificado de la impedancia del piezo pasivo
+C_acoplo OUT_555 V_BUZZER 10u
+R_buzzer V_BUZZER 0 1k
 
-* --- Subcircuito Macromodelo del Temporizador NE555 ---
-.subckt NE555_BEHAVE 1 2 3 4 5 6 7 8
-R_d1 8 5 5k
-R_d2 5 n_comp2 5k
-R_d3 n_comp2 1 5k
-B_comp1 n_c1 1 V=IF(V(6,1) > V(5,1), 5.0, 0.0)
-B_comp2 n_c2 1 V=IF(V(2,1) < V(n_comp2,1), 5.0, 0.0)
-B_latch n_q 1 V=IF(V(4,1) < 0.8, 0.0, IF(V(n_c2,1) > 2.5, 5.0, IF(V(n_c1,1) > 2.5, 0.0, V(n_q,1))))
-C_state n_q 1 10p
-B_out 3 1 V=IF(V(n_q,1) > 2.5, V(8,1) - 1.2, 0.1)
-B_disch 7 1 I=IF(V(n_q,1) < 2.5, V(7,1)/5.0, 0.0)
-.ends NE555_BEHAVE
+* --- Modelos ---
+.lib LM358_simple.lib
+.lib NE555.sub
 
-* --- Simulacion Transitoria de las 7 Etapas en Conjunto (32 ms) ---
-.tran 0 32m 0 10u startup
+* --- Simulacion Transitoria de las 7 Etapas en Conjunto (16 codigos x T) ---
+.tran 0 {16*T} 0 5u startup
+
+* --- Mediciones automaticas (ver resultados en el .log / SPICE Error Log) ---
+.include mediciones_sistema.inc
 
 .end
