@@ -44,6 +44,22 @@
   * Se renombró la carpeta de simulaciones a `Simulacion/`.
   * Se eliminaron códigos y archivos repetidos dejando una única versión del programa de Arduino en `src/arduino/generador_patrones_tinkercad.ino` y limpiando archivos duplicados en `docs/` y `Simulacion/`.
 
+### [2026-10-14] - Corrección de simulaciones en LTspice, guías de montaje e informe técnico
+* **Revisión y corrección de LTspice:**
+  * Al simular los esquemáticos originales se detectaron pines sin conectar (nodos `NC_xx` en el netlist), cortocircuito en `C_acoplo` y fallo de convergencia `Singular matrix` en el modelo del 555.
+  * Se corrigieron y validaron `dac_r2r_buffer.asc`, `receptor_555_ldr.asc` y `sistema_completo_optico.asc` (integrando las 7 etapas completas) junto con el archivo de netlist `sistema_completo_optico.cir`.
+  * Se creó el macromodelo `LM358_simple.lib` con limitación realista de riel superior ($V_{CC} - 1.5\text{ V}$) y diodo LED rojo $\lambda = 650\text{ nm}$.
+  * Se agregaron scripts de medición automática `.meas` (`mediciones_dac.inc`, `mediciones_555.inc`, `mediciones_sistema.inc`) y la guía de resultados esperados `Simulacion/ltspice/VERIFICACION.md`.
+  * Resultados verificados: error relativo del DAC $< 0.01\%$, error de frecuencia del 555 $< 1\%$, y frecuencia modulada del sistema entre $176.7\text{ Hz}$ (código 0) y $3443.0\text{ Hz}$ (código 15).
+* **Guías de montaje (TinkerCAD y Protoboard):**
+  * Se aclaró la necesidad de alimentar el pin 8 del LM358 con $+9.0\text{ V}$ para evitar saturación a $\approx 3.5\text{ V}$ en los códigos 12 a 15, manteniendo el 555 en $+5.0\text{ V}$.
+  * Se documentó el análisis de frecuencia de corte del buzzer pasivo con $C_{acoplo} = 10\ \mu\text{F}$ ($f_c \approx 16\text{ Hz}$ con transductor piezoeléctrico de $1\text{ k}\Omega$, evitando la atenuación de graves que ocurriría con una bocina de $32\ \Omega$).
+* **Memoria de cálculo e informe IEEE:**
+  * Se actualizaron las tablas y textos de `docs/memoria_de_calculo.md` y `docs/informe_ieee/informe_ieee_el2113.tex` con los valores simulados reales de LTspice en lugar de valores redondeados.
+  * Se incluyó la recomendación de calibración experimental de la curva de la fotorresistencia en el laboratorio.
+* **Etapa 1 (Arduino):**
+  * Se actualizó y verificó el código del generador de patrones en `src/arduino/generador_patrones_tinkercad.ino`.
+
 ---
 
 ## Registro de Commits
@@ -57,3 +73,7 @@
 * Actualización del código del generador de patrones de 4 bits.
 * Simulación de TinkerCAD funcional con capturas del circuito, lista de componentes y esquema.
 * Reorganización de la carpeta `Simulacion` y limpieza de archivos repetidos en el repositorio.
+* Corrección de esquemáticos de LTspice, modelo de LM358 y mediciones automáticas.
+* Aclaración de alimentación de 9V para LM358 e impedancia del buzzer en guías de montaje.
+* Actualización de informe IEEE y memoria de cálculo con resultados reales de LTspice.
+* Actualización de documentación general y bitácora del proyecto.
