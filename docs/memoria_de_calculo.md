@@ -99,22 +99,24 @@ $$E_{rel}(\%) = \left| \frac{V_{simulado} - V_{te\acute{o}rico}}{V_{te\acute{o}r
 
 | Decimal ($D$) | Binario ($b_3 b_2 b_1 b_0$) | Ecuación Nodal ($V_{DAC}$) | $V_{te\acute{o}rico}$ (V) | $V_{simulado}$ SPICE (V) | Error Relativo (%) | Cumple O.16 ($< 10\%$) |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 0 | `0 0 0 0` | $0 \times 0.3125$ | **0.0000** | 0.0000 | 0.00 % | Sí |
-| 1 | `0 0 0 1` | $1 \times 0.3125$ | **0.3125** | 0.3125 | 0.00 % | Sí |
-| 2 | `0 0 1 0` | $2 \times 0.3125$ | **0.6250** | 0.6250 | 0.00 % | Sí |
-| 3 | `0 0 1 1` | $3 \times 0.3125$ | **0.9375** | 0.9375 | 0.00 % | Sí |
-| 4 | `0 1 0 0` | $4 \times 0.3125$ | **1.2500** | 1.2500 | 0.00 % | Sí |
-| 5 | `0 1 0 1` | $5 \times 0.3125$ | **1.5625** | 1.5625 | 0.00 % | Sí |
-| 6 | `0 1 1 0` | $6 \times 0.3125$ | **1.8750** | 1.8750 | 0.00 % | Sí |
-| 7 | `0 1 1 1` | $7 \times 0.3125$ | **2.1875** | 2.1875 | 0.00 % | Sí |
-| 8 | `1 0 0 0` | $8 \times 0.3125$ | **2.5000** | 2.5000 | 0.00 % | Sí |
-| 9 | `1 0 0 1` | $9 \times 0.3125$ | **2.8125** | 2.8125 | 0.00 % | Sí |
-| 10 | `1 0 1 0` | $10 \times 0.3125$ | **3.1250** | 3.1250 | 0.00 % | Sí |
-| 11 | `1 0 1 1` | $11 \times 0.3125$ | **3.4375** | 3.4375 | 0.00 % | Sí |
-| 12 | `1 1 0 0` | $12 \times 0.3125$ | **3.7500** | 3.7500 | 0.00 % | Sí |
-| 13 | `1 1 0 1` | $13 \times 0.3125$ | **4.0625** | 4.0625 | 0.00 % | Sí |
-| 14 | `1 1 1 0` | $14 \times 0.3125$ | **4.3750** | 4.3750 | 0.00 % | Sí |
-| 15 | `1 1 1 1` | $15 \times 0.3125$ | **4.6875** | 4.6875 | 0.00 % | Sí |
+| 0 | `0 0 0 0` | $0 \times 0.3125$ | **0.0000** | 0.0050 | Offset de 5.0 mV ($V_{OL}$ LM358) | Sí |
+| 1 | `0 0 0 1` | $1 \times 0.3125$ | **0.3125** | 0.3125 | 0.0012 % | Sí |
+| 2 | `0 0 1 0` | $2 \times 0.3125$ | **0.6250** | 0.6250 | 0.0000 % | Sí |
+| 3 | `0 0 1 1` | $3 \times 0.3125$ | **0.9375** | 0.9375 | 0.0004 % | Sí |
+| 4 | `0 1 0 0` | $4 \times 0.3125$ | **1.2500** | 1.2500 | 0.0006 % | Sí |
+| 5 | `0 1 0 1` | $5 \times 0.3125$ | **1.5625** | 1.5625 | 0.0007 % | Sí |
+| 6 | `0 1 1 0` | $6 \times 0.3125$ | **1.8750** | 1.8750 | 0.0008 % | Sí |
+| 7 | `0 1 1 1` | $7 \times 0.3125$ | **2.1875** | 2.1875 | 0.0009 % | Sí |
+| 8 | `1 0 0 0` | $8 \times 0.3125$ | **2.5000** | 2.5000 | 0.0009 % | Sí |
+| 9 | `1 0 0 1` | $9 \times 0.3125$ | **2.8125** | 2.8125 | 0.0009 % | Sí |
+| 10 | `1 0 1 0` | $10 \times 0.3125$ | **3.1250** | 3.1250 | 0.0010 % | Sí |
+| 11 | `1 0 1 1` | $11 \times 0.3125$ | **3.4375** | 3.4375 | 0.0010 % | Sí |
+| 12 | `1 1 0 0` | $12 \times 0.3125$ | **3.7500** | 3.7500 | 0.0010 % | Sí |
+| 13 | `1 1 0 1` | $13 \times 0.3125$ | **4.0625** | 4.0625 | 0.0010 % | Sí |
+| 14 | `1 1 1 0` | $14 \times 0.3125$ | **4.3750** | 4.3750 | 0.0010 % | Sí |
+| 15 | `1 1 1 1` | $15 \times 0.3125$ | **4.6875** | 4.6874 | 0.0010 % | Sí |
+
+> **Nota sobre el estado $D=0$:** En el código `0000`, la salida teórica es estrictamente $0.0000\text{ V}$. En el circuito simulado y físico, la etapa de salida del LM358 operando con fuente simple presenta una tensión de saturación mínima $V_{OL} \approx 5.0\text{ mV}$, lo cual es completamente normal para este amplificador operacional y no altera en lo absoluto el funcionamiento del sistema. Para los códigos 1 a 15, el error relativo simulado en LTspice es de apenas $\sim 0.001\%$, cumpliendo holgadamente el margen $< 10\%$ exigido en **Req. O.16**.
 
 ---
 
@@ -179,7 +181,11 @@ De acuerdo con el requerimiento **H.8** y la indicación del **Punto 4 (pág. 6)
 * **Medio Óptico (Req. I.9):** Tramo de fibra óptica plástica (POF de PMMA) cortada a una longitud de **$L_{fibra} = 45\text{ cm}$** (exactamente en el centro del rango permitido de **$30\text{ cm}$ a $60\text{ cm}$**).
 * **Receptor Óptico (Req. J.10):** Implementado **únicamente con un componente pasivo**: una fotorresistencia (LDR serie GL5528), cuya resistencia obedece la ley fotoconductora empírica:
   $$R_{LDR}(E_v) = R_0 \cdot E_v^{-\gamma}$$
-  variando desde $R_{LDR(osc)} \approx 40\text{ k}\Omega\text{--}50\text{ k}\Omega$ en oscuridad ($D \le 5$) hasta $R_{LDR(max)} \approx 1.2\text{ k}\Omega\text{--}1.5\text{ k}\Omega$ en iluminación máxima ($D = 15$).
+  variando desde $R_{LDR(osc)} \approx 40\text{ k}\Omega\text{--}50\text{ k}\Omega$ en oscuridad ($D \le 5$) hasta $R_{LDR(max)} \approx 1.2\text{ k}\Omega\text{--}1.6\text{ k}\Omega$ en iluminación máxima ($D = 15$).
+
+> **Modelo de Simulación SPICE y Calibración Experimental:** En la simulación integrada de LTspice ([`sistema_completo_optico.asc`](file:///d:/Proyecto%20CC/Simulacion/ltspice/sistema_completo_optico.asc)), el comportamiento de la LDR se modela mediante la fuente de comportamiento:
+> $$R_{LDR}(I_{LED}) = 1500 + 38500 \cdot e^{-I_{LED} / 3.0\text{ mA}}\quad [\Omega]$$
+> Esta función reproduce fielmente la variación desde $40.0\text{ k}\Omega$ en corte ($I_{LED} \approx 0\text{ mA}$) hasta $\approx 1.58\text{ k}\Omega$ en máxima conducción ($I_{LED} \approx 18.66\text{ mA}$). No obstante, las fotorresistencias de sulfuro de cadmio (CdS) presentan dispersión de fabricación y dependen del alineamiento mecánico con la fibra óptica; por ende, se recomienda **medir en el laboratorio la resistencia real de la LDR para varios códigos** del generador digital y, si se desea, ajustar los parámetros de la expresión en `B_RLDR` para que la simulación refleje con exactitud la curva del montaje físico.
 
 ---
 
@@ -198,11 +204,22 @@ $$v_C(t) = V_f + (V_i - V_f)e^{-t/\tau}$$
   $$f_{555} = \frac{1}{t_H + t_L} = \frac{1}{\ln(2)\cdot(R_1 + 2R_{LDR})C_1} \approx \frac{1.443}{(R_1 + 2R_{LDR})C_1}$$
 
 Seleccionando los componentes pasivos de soporte $R_1 = 1.0\text{ k}\Omega$ (limita la corriente en el transistor de descarga del pin 7 a $I_{disch(max)} = 5\text{ V}/1\text{ k}\Omega = 5\text{ mA}$), $C_1 = 100\text{ nF}$ y $C_{ctrl} = 10\text{ nF}$ (filtro en el pin 5):
-* En oscuridad ($R_{LDR} = 40\text{ k}\Omega$): $f_{min} = \frac{1.44}{(1000 + 80000)\times 10^{-7}} = 177.8\text{ Hz}$ (tono grave).
-* En máxima luz ($R_{LDR} = 1.5\text{ k}\Omega$): $f_{max} = \frac{1.44}{(1000 + 3000)\times 10^{-7}} = 3600.0\text{ Hz}$ (tono agudo).
+* En oscuridad ($R_{LDR} = 40\text{ k}\Omega$): $f_{teo} = \frac{1.443}{(1000 + 80000)\times 10^{-7}} = 178.1\text{ Hz}$; en la simulación con el macromodelo nativo de LTspice se obtiene **$f_{sim} = 176.7\text{ Hz}$** (error de $0.81\%$, tono grave).
+* En máxima luz ($R_{LDR} = 1.58\text{ k}\Omega$ en el estado $D=15$ del sistema integrado): $f_{teo} = \frac{1.443}{(1000 + 3160)\times 10^{-7}} = 3474.3\text{ Hz}$; en la simulación se obtiene **$f_{sim} = 3443.0\text{ Hz}$** (error de $0.90\%$, tono agudo).
+* En el barrido paramétrico individual con $R_{LDR} = 1.50\text{ k}\Omega$, la frecuencia teórica es $3607.5\text{ Hz}$ y la simulada es **$3574.6\text{ Hz}$** (error de $0.91\%$).
 
-### 6.2 Acoplamiento AC al Buzzer Piezoeléctrico Pasivo (Req. L.12)
-Se utiliza un **buzzer piezoeléctrico pasivo** acoplado mediante un condensador serie $C_{acoplo} = 10\ \mu\text{F}$ que forma un filtro pasa-altos con la impedancia del transductor, bloqueando la componente DC y entregando la onda cuadrada alterna pura en todo el espectro audible ($178\text{ Hz}\text{--}3.6\text{ kHz}$).
+### 6.2 Acoplamiento AC al Buzzer Piezoeléctrico Pasivo (Req. L.12) y Análisis de Frecuencia de Corte
+Se utiliza un **buzzer piezoeléctrico pasivo** acoplado mediante un condensador serie $C_{acoplo} = 10\ \mu\text{F}$ que forma un filtro pasa-altos de primer orden con la impedancia del transductor, bloqueando la componente continua ($V_{DC} \approx 2.5\text{ V}$) y entregando la onda cuadrada puramente alterna al transductor acústico.
+
+La frecuencia de corte a $-3\text{ dB}$ del filtro pasa-altos formado por $C_{acoplo}$ y la impedancia de carga $R_L$ es:
+$$f_c = \frac{1}{2\pi \cdot R_L \cdot C_{acoplo}}$$
+
+1. **Caso A: Buzzer Piezoeléctrico Pasivo (Seleccionado, $R_L \approx 1\text{ k}\Omega$):**
+   $$f_c = \frac{1}{2\pi \times 1000\ \Omega \times 10 \times 10^{-6}\text{ F}} \approx 15.9\text{ Hz}$$
+   Dado que $f_c = 15.9\text{ Hz} \ll f_{min} = 176.7\text{ Hz}$, toda la banda del sistema ($177\text{ Hz}$ a $3.5\text{ kHz}$) se transmite con ganancia prácticamente unitaria ($0\text{ dB}$) y sin atenuación de los tonos graves.
+2. **Caso B: Bocina/Parlante Magnético de Baja Impedancia ($R_L = 32\ \Omega$):**
+   $$f_c = \frac{1}{2\pi \times 32\ \Omega \times 10 \times 10^{-6}\text{ F}} \approx 497.4\text{ Hz}$$
+   Si se conectara un transductor de $32\ \Omega$ con $C_{acoplo} = 10\ \mu\text{F}$, la frecuencia de corte caería dentro de la banda útil, atenuando fuertemente todos los tonos graves entre $177\text{ Hz}$ y $500\text{ Hz}$. Por tanto, si se utiliza un parlante de $32\ \Omega$, el condensador de acoplo debe incrementarse a $C_{acoplo} \ge 100\ \mu\text{F}\text{--}220\ \mu\text{F}$ para situar la frecuencia de corte por debajo de $50\text{ Hz}$.
 
 ---
 
