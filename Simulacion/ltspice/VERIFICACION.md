@@ -83,8 +83,18 @@ La LDR se modela con `B_LDR`, una resistencia controlada por la corriente del LE
 
 ```powershell
 $lt = "$env:LOCALAPPDATA\Programs\ADI\LTspice\LTspice.exe"
-& $lt -b dac_r2r_buffer.asc
-& $lt -b receptor_555_ldr.asc
-& $lt -b sistema_completo_optico.asc
+& $lt -Run -b dac_r2r_buffer.asc | Out-Null
+& $lt -Run -b receptor_555_ldr.asc | Out-Null
+& $lt -Run -b sistema_completo_optico.asc | Out-Null
 Get-Content sistema_completo_optico.log
 ```
+
+---
+
+## 4. Legibilidad y estética de los esquemáticos
+
+Los esquemáticos han sido diagramados para facilitar su inspección visual y exportación a documentación técnica:
+* **Etiquetas de red horizontales:** Todos los nodos principales (`B0..B3`, `V_R2R`, `V_DAC`, `V_INTERFAZ`, `OUT_555`, `THR`, `V_BUZZER`, `VCC`, `VOP`, `RLDR`) cuentan con segmentos de cable horizontales para evitar que LTspice rote los textos 90° sobre pines verticales.
+* **Resistencias horizontales R-2R:** Los textos de `R_h1..R_h3` (`10k`) se alinean horizontalmente bajo el componente con `VTop`, liberando los nodos de interconexión con las ramas verticales.
+* **Separación de etapas e integrados:** Los circuitos integrados (`LM358`, `NE555`) disponen de holgura en sus pines para no superponer los nombres de los pines del modelo con las etiquetas de red del usuario.
+
