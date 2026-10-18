@@ -95,7 +95,7 @@
 
 ---
 
-### [2026-10-15] - Sesión 7 (HOY): Refactorización de MATLAB, Compra de Componentes Físicos y Verificación
+### [2026-10-15] - Sesión 7: Refactorización de MATLAB, Compra de Componentes Físicos y Verificación
 * **Refactorización de Scripts de MATLAB (Commit `409707d`):**
   * Se revisaron y actualizaron las descripciones, encabezados y comentarios de línea en `matlab/generador_patrones.m` y `matlab/simulacion_dac_555.m`, garantizando total consistencia con las 7 etapas del sistema y los resultados de simulación de LTspice.
 * **Adquisición Física de Componentes y Materiales (BOM Completo):**
@@ -114,6 +114,26 @@
 * **Planificación de Ensamble y Gestiones de Laboratorio:**
   * Se coordinó la solicitud de la Fuente DC Regulada de Laboratorio en la bodega de la Escuela de Electrónica para cumplir estrictamente con los Requerimientos P.17 y Q.18.
   * Se programó el envío del archivo SVG (`base_soporte_optico.svg`) a la máquina de corte láser y del archivo STL (`acoplador_optico_led_ldr.stl`) a la impresora 3D del laboratorio de prototipado.
+
+---
+
+### [2026-10-18] - Sesión 8 (HOY): Optimización Visual, Despeje Nodal y Diagramación Profesional de Esquemáticos en LTspice
+* **Auditoría Visual de Esquemáticos en LTspice (`dac_r2r_buffer.asc` y `sistema_completo_optico.asc`):**
+  * Se identificaron colisiones tipográficas severas provocadas por el motor de renderizado de LTspice al asociar etiquetas (`FLAG`) directamente sobre terminales de pines verticales, lo que causaba rotación automática de 90° en los textos (`B0..B3`, `VOP`, `VCC`, `RLDR`, `V_BUZZER`), solapándose sobre los símbolos circuitales.
+  * Se detectó que las resistencias horizontales de la red R-2R (`R_h1..R_h3`) empleaban justificación `Bottom 2` dentro del símbolo rotado `R90`, proyectando el texto verticalmente sobre los nodos de entrada `B1`, `B2`, `B3` y `V_R2R`.
+  * En la etapa receptora (NE555), las etiquetas de los pines `OUT_555`, `THR` y `VCC` se encontraban sobrepuestas con los nombres internos de los pines del modelo gráfico DIP-8.
+* **Reingeniería de Layout y Diagramación Estética:**
+  * **Estandarización de Etiquetas Horizontales:** Se dotó a cada bandera de red de un tramo de cable horizontal (`WIRE`) para forzar al motor gráfico de LTspice a renderizar las etiquetas en orientación horizontal despejada, eliminando colisiones en `B0`, `B1`, `B2`, `B3`, `VOP`, `VCC`, `RLDR` y `V_BUZZER`.
+  * **Alineación de Resistencias R-2R:** Se reconfiguraron las ventanas de atributos de `R_h1..R_h3` con alineación `VTop 2`, ubicando la designación y valor ($10\text{ k}\Omega$) centrados horizontalmente debajo del componente, aprovechando el espacio libre inferior y despejando los nodos de interconexión.
+  * **Ampliación de Distancias Nocionales y Amplificador LM358:** Se incrementó la separación horizontal entre los amplificadores $U_{1A}$ y $U_{1B}$ y la resistencia limitadora de $150\ \Omega$ ($R_{\text{driver}}$). Se desplazaron los atributos del macromodelo `LM358_SIMPLE` a la parte inferior de los símbolos para evitar colisiones con el texto de valor de $R_{\text{driver}}$.
+  * **Despeje del Diodo LED emisor:** Se desplazaron las coordenadas de designación (`D_LED`) y modelo (`D_RED_650`) 80 unidades a la derecha para no solapar las flechas de emisión de luz del símbolo esquemático.
+  * **Reordenamiento de Etapas 5, 6 y 7 en el Sistema Completo:**
+    * Se extendieron cables de interconexión horizontales en los 8 pines del `NE555` ($U_2$), alejando las etiquetas del contorno del encapsulado.
+    * Se rediseñó la Etapa 7 (acoplo AC) colocando el condensador $C_{\text{acoplo}}$ en orientación horizontal serie (`cap R90`) hacia el nodo `V_BUZZER`, seguido de la resistencia del transductor piezoeléctrico ($R_{\text{buzzer}}$) orientada verticalmente a tierra, con el texto descriptivo ubicado limpiamente en la parte inferior.
+    * Se reubicó la fuente de tensión dependiente $B_{\text{RLDR}}$ (modelo de la fotorresistencia en función de la corriente óptica $I(D_{\text{LED}})$) y sus notas explicativas, garantizando lectura inmediata sin cruce de trazos.
+* **Verificación de Integridad Funcional mediante Simulación Batch:**
+  * Se ejecutaron simulaciones automatizadas en modo batch (`LTspice.exe -Run -b`) para verificar que ninguna modificación de coordenadas o cables afectara la conectividad de la netlist SPICE.
+  * Ambos circuitos convergieron en el punto de operación de Newton y superaron el 100% de las pruebas paramétricas (`.meas` en `dac_r2r_buffer.log` y `sistema_completo_optico.log`), certificando un error de conversión en el DAC $< 0.0012\%$ y concordancia analítica en la frecuencia de oscilación del 555 con error $< 0.90\%$.
 
 ---
 
@@ -142,7 +162,7 @@
 
 ## 3. Matriz Maestra de Control y Trazabilidad de Commits en Git
 
-A continuación se presenta el registro cronológico completo de los 25 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
+A continuación se presenta el registro cronológico completo de los 29 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
 
 | N° | Hash | Fecha | Módulo / Etapa | Descripción del Cambio / Alcance Técnico | Archivos Clave Impactados |
 |:---:|:---:|:---:|:---|:---|:---|
@@ -171,6 +191,10 @@ A continuación se presenta el registro cronológico completo de los 25 commits 
 | **23** | `e06d1b3` | 2026-10-14 | Informe IEEE / Memoria | Sincronización del informe IEEE Transactions y de la memoria de cálculo con las mediciones numéricas reales obtenidas en las simulaciones de LTspice. | `docs/informe_ieee/informe_ieee_el2113.tex`, `docs/memoria_de_calculo.md` |
 | **24** | `a8dc060` | 2026-10-14 | Documentación | Actualización de la documentación general, alineación del README principal y actualización de las entradas de bitácora. | `BITACORA.md`, `README.md` |
 | **25** | `409707d` | 2026-10-15 | MATLAB / Refactor | Refactorización de comentarios, descripciones y consistencia de encabezados en los scripts `matlab/generador_patrones.m` y `matlab/simulacion_dac_555.m`. | `matlab/generador_patrones.m`, `matlab/simulacion_dac_555.m` |
+| **26** | `adc6aca` | 2026-10-15 | Documentación / Bitácora | Actualización integral de la bitácora con los 25 commits, trazabilidad completa de requerimientos A.1–Q.18 y detalle de compra de componentes físicos. | `BITACORA.md` |
+| **27** | `12f262e` | 2026-10-18 | Simulación LTspice | Optimización visual, orientación horizontal de etiquetas y corrección de espaciado en esquemáticos del DAC y receptor 555. | `Simulacion/ltspice/dac_r2r_buffer.asc`, `Simulacion/ltspice/receptor_555_ldr.asc` |
+| **28** | `9df55d5` | 2026-10-18 | Simulación LTspice | Rediseño espacial del sistema completo óptico de 7 etapas en LTspice, despejando pines de NE555 y acoplo AC. | `Simulacion/ltspice/sistema_completo_optico.asc` |
+| **29** | `1a339b8` | 2026-10-18 | Documentación / LTspice | Actualización de la guía de verificación técnica con soporte de ejecución batch `-Run -b` y directrices de diagramación. | `Simulacion/ltspice/VERIFICACION.md` |
 
 ---
 
