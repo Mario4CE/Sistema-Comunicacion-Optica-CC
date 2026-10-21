@@ -1,9 +1,3 @@
-// ============================================================================
-// PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113 - ITCR)
-// PIEZA DE IMPRESIÓN 3D (Req. M.13): Cabezal Acoplador Óptico LED / Fibra / LDR
-// AUTOR: Mario Cerdas y equipo de trabajo
-// LABORATORIO: Laboratorio de Prototipado 3D - Escuela de Ingeniería Electrónica
-// ============================================================================
 // Descripción:
 //   Genera el modelo 3D paramétrico del manguito de acoplamiento óptico axial
 //   que alinea concéntricamente el LED rojo (o la fotorresistencia LDR) de 5 mm

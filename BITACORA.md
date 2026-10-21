@@ -6,7 +6,7 @@
 **Estudiante / Responsable:** Mario Cerdas  
 **Repositorio Git:** `Sistema-Comunicacion-Optica-CC`  
 **Rama Activa de Trabajo:** `mario-dev`  
-**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes (BOM) completada al 100%; Inicio de la Fase de Montaje Físico en Protoboard y Fabricación de Piezas en Laboratorio.
+**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes (BOM) completada al 100%; Ensamble físico preliminar del circuito en protoboard completado (electrónica conectada); Pendiente acoplamiento de fibra óptica, impresión 3D y corte láser.
 
 ---
 
@@ -117,7 +117,7 @@
 
 ---
 
-### [2026-10-18] - Sesión 8 (HOY): Optimización Visual, Despeje Nodal y Diagramación Profesional de Esquemáticos en LTspice
+### [2026-10-18] - Sesión 8: Optimización Visual, Despeje Nodal y Diagramación Profesional de Esquemáticos en LTspice
 * **Auditoría Visual de Esquemáticos en LTspice (`dac_r2r_buffer.asc` y `sistema_completo_optico.asc`):**
   * Se identificaron colisiones tipográficas severas provocadas por el motor de renderizado de LTspice al asociar etiquetas (`FLAG`) directamente sobre terminales de pines verticales, lo que causaba rotación automática de 90° en los textos (`B0..B3`, `VOP`, `VCC`, `RLDR`, `V_BUZZER`), solapándose sobre los símbolos circuitales.
   * Se detectó que las resistencias horizontales de la red R-2R (`R_h1..R_h3`) empleaban justificación `Bottom 2` dentro del símbolo rotado `R90`, proyectando el texto verticalmente sobre los nodos de entrada `B1`, `B2`, `B3` y `V_R2R`.
@@ -134,6 +134,21 @@
 * **Verificación de Integridad Funcional mediante Simulación Batch:**
   * Se ejecutaron simulaciones automatizadas en modo batch (`LTspice.exe -Run -b`) para verificar que ninguna modificación de coordenadas o cables afectara la conectividad de la netlist SPICE.
   * Ambos circuitos convergieron en el punto de operación de Newton y superaron el 100% de las pruebas paramétricas (`.meas` en `dac_r2r_buffer.log` y `sistema_completo_optico.log`), certificando un error de conversión en el DAC $< 0.0012\%$ y concordancia analítica en la frecuencia de oscilación del 555 con error $< 0.90\%$.
+
+---
+
+### [2026-10-19] - Sesión 9 (HOY): Ensamble Físico Preliminar del Circuito en Protoboard
+* **Montaje Electrónico en Protoboard:**
+  * Se procedió con el armado físico y cableado de las etapas electrónicas del sistema sobre la placa de pruebas (protoboard de 830 puntos) siguiendo las directrices de `docs/guia_de_conexion_protoboard.md`:
+    * Conexión de las salidas digitales del Arduino UNO ($D_8\text{--}D_{11}$) a la red ladder R-2R ($10\text{ k}\Omega / 20\text{ k}\Omega$ al 1%).
+    * Inserción e interconexión del amplificador operacional dual **LM358N** (OpAmp 1A como buffer de tensión del DAC y OpAmp 1B como seguidor de aislamiento y driver del LED emisor con $R_{\text{driver}} = 150\ \Omega$).
+    * Montaje del temporizador **NE555P** en configuración astable, conectando la resistencia de carga de $1\text{ k}\Omega$, el condensador de temporización de $100\text{ nF}$, el filtro de $10\text{ nF}$ en el pin de control y la fotorresistencia LDR GL5528.
+    * Conexión de la etapa final de acoplamiento AC mediante el condensador electrolítico de $10\ \mu\text{F}$ hacia el buzzer piezoeléctrico pasivo.
+* **Alcance y Delimitación del Montaje Preliminar:**
+  * El circuito se armó a nivel eléctrico y circuital completo sobre la protoboard, **sin incluir todavía el cable de fibra óptica plástica (POF)**, **ni las piezas impresas en 3D (acopladores ópticos LED-LDR)**, **ni la base de soporte en corte láser**.
+  * Los componentes optoelectrónicos (diodo LED rojo emisor y fotorresistencia LDR receptora) se encuentran dispuestos provisionalmente en la placa de pruebas para validación de continuidad eléctrica, niveles DC y polarización antes del ensamble mecánico definitivo.
+* **Registro y Evidencia Fotográfica:**
+  * Se capturó la fotografía del prototipo montado en la protoboard como evidencia del avance físico del circuito. Dicha imagen será subida próximamente al repositorio en GitHub por el estudiante Mario Cerdas para documentar la trazabilidad del proyecto.
 
 ---
 
@@ -162,7 +177,7 @@
 
 ## 3. Matriz Maestra de Control y Trazabilidad de Commits en Git
 
-A continuación se presenta el registro cronológico completo de los 29 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
+A continuación se presenta el registro cronológico completo de los 30 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
 
 | N° | Hash | Fecha | Módulo / Etapa | Descripción del Cambio / Alcance Técnico | Archivos Clave Impactados |
 |:---:|:---:|:---:|:---|:---|:---|
@@ -195,6 +210,7 @@ A continuación se presenta el registro cronológico completo de los 29 commits 
 | **27** | `12f262e` | 2026-10-18 | Simulación LTspice | Optimización visual, orientación horizontal de etiquetas y corrección de espaciado en esquemáticos del DAC y receptor 555. | `Simulacion/ltspice/dac_r2r_buffer.asc`, `Simulacion/ltspice/receptor_555_ldr.asc` |
 | **28** | `9df55d5` | 2026-10-18 | Simulación LTspice | Rediseño espacial del sistema completo óptico de 7 etapas en LTspice, despejando pines de NE555 y acoplo AC. | `Simulacion/ltspice/sistema_completo_optico.asc` |
 | **29** | `1a339b8` | 2026-10-18 | Documentación / LTspice | Actualización de la guía de verificación técnica con soporte de ejecución batch `-Run -b` y directrices de diagramación. | `Simulacion/ltspice/VERIFICACION.md` |
+| **30** | `acb8f11` | 2026-10-18 | Documentación / Bitácora | Registro en bitácora de la optimización visual de esquemáticos LTspice y sincronización del estado del proyecto. | `BITACORA.md` |
 
 ---
 
@@ -217,7 +233,7 @@ A continuación se presenta el registro cronológico completo de los 29 commits 
 
 ## 5. Próximos Pasos Planificados
 
-1. **Fabricación de Piezas Mecánicas:** Enviar los archivos `base_soporte_optico.svg` y `acoplador_optico_led_ldr.stl` al taller de prototipado de la Escuela de Electrónica para su corte en acrílico/MDF e impresión en PLA negro.
-2. **Montaje Físico en Protoboard:** Realizar el ensamble por etapas en la placa de pruebas siguiendo la guía `docs/guia_de_conexion_protoboard.md`.
+1. **Subida de Evidencia Fotográfica:** Subir al repositorio en GitHub la fotografía del circuito ensamblado en la protoboard.
+2. **Fabricación e Integración Mecánica:** Fabricar las piezas en el taller de prototipado de la Escuela de Electrónica (`base_soporte_optico.svg` en corte láser y `acoplador_optico_led_ldr.stl` en impresión 3D PLA) e integrar el tramo de fibra óptica plástica ($45\text{ cm}$) entre el LED y la LDR.
 3. **Medición Experimental en Laboratorio:** Conectar la fuente de laboratorio de la bodega de Electrónica y registrar los puntos de prueba TP1 a TP6 con multímetro y osciloscopio para completar la tabla del informe.
 4. **Compilación Final del Informe IEEE:** Compilar `docs/informe_ieee/informe_ieee_el2113.tex` con los datos experimentales reales y generar el entregable `.zip` final.
