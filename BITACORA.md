@@ -148,7 +148,26 @@
   * El circuito se armó a nivel eléctrico y circuital completo sobre la protoboard, **sin incluir todavía el cable de fibra óptica plástica (POF)**, **ni las piezas impresas en 3D (acopladores ópticos LED-LDR)**, **ni la base de soporte en corte láser**.
   * Los componentes optoelectrónicos (diodo LED rojo emisor y fotorresistencia LDR receptora) se encuentran dispuestos provisionalmente en la placa de pruebas para validación de continuidad eléctrica, niveles DC y polarización antes del ensamble mecánico definitivo.
 * **Registro y Evidencia Fotográfica:**
-  * Se capturó la fotografía del prototipo montado en la protoboard como evidencia del avance físico del circuito. Dicha imagen será subida próximamente al repositorio en GitHub por el estudiante Mario Cerdas para documentar la trazabilidad del proyecto.
+  * Se capturó la fotografía del prototipo montado en la protoboard como evidencia del avance físico del circuito. Dicha imagen fue subida en `Simulacion/tinkercad/CircuitoArmado.jpeg` para documentar la trazabilidad del proyecto.
+
+---
+
+### [2026-10-22] - Sesión 10 (HOY): Adecuación a Normativa Oficial LAIMI (Corte Láser e Impresión 3D), Renders 3D y Matriz de Coordenadas (`0`–`60`, `a`–`j`)
+* **Cumplimiento Estricto de Normativa LAIMI — Corte y Grabado Láser (Trotec Speedy 360):**
+  * Se rediseñó la placa base organizadora a dimensiones exactas de **$250\text{ mm} \times 200\text{ mm}$**, calzando en la fracción oficial de **$\mathbf{1/8}\text{ de lámina}$ de LAIMI** ($200\text{ mm} \times 250\text{ mm}$) para minimizar el desperdicio de material y reducir costos.
+  * Se generó el archivo vectorial obligatorio en formato **`.PDF` en espacio de color RGB** (`prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf`), separando estrictamente las 3 capas exigidas por LAIMI:
+    1. **Corte pasante:** Color Rojo RGB (`255, 0, 0` / `#FF0000`) con grosor de línea de **$0.025\text{ mm}$**.
+    2. **Marcado vectorial de etapas y guías:** Color Azul RGB (`0, 0, 255` / `#0000FF`) con grosor de línea de **$0.025\text{ mm}$**.
+    3. **Grabado de textos y rótulos:** Color Negro RGB (`0, 0, 0` / `#000000`) en relleno sólido.
+* **Cumplimiento Estricto de Normativa LAIMI — Impresión 3D (Prusa MK4):**
+  * Se generaron los archivos `.STL` con la nomenclatura obligatoria `CCCCCCCCCC-NN.stl` correspondiente al carné **`2022437519`**:
+    * **`2022437519-01.stl` (Opción A):** Par de torres acopladoras ópticas con pestaña de fijación para tornillos M3 y conexión mediante 4 jumpers Hembra–Macho hacia la protoboard.
+    * **`2022437519-02.stl` (Opción B):** Par de capuchones cilíndricos compactos para encajar directamente sobre el LED y la LDR clavados en las filas de la protoboard.
+* **Mapeo Exacto de Protoboard Grande (`Filas 0 a 60`, `Columnas a–e / f–j`) y Tornillería:**
+  * Se incorporó en `docs/guia_de_conexion_protoboard.md` la tabla maestra de coordenadas pin por pin para la protoboard de 60 filas (`0` a `60`, columnas `a` a `j`).
+  * Se especificó en `docs/lista_de_materiales_BOM.md` y `docs/diseno_prototipado_3d_laser.md` la tornillería exacta: **8 tornillos métricos `M3 x 10 mm` (o `M3 x 12 mm`) con 8 tuercas hexagonales `M3`** para fijar el Arduino UNO y las torres 3D en los orificios de $\varnothing 3.2\text{ mm}$.
+* **Renders 3D de Referencia para el Ensamblaje:**
+  * Se integraron en `prototipo_laboratorio/` las imágenes de referencia `render_maqueta_3d_laser.jpg` y `comparativa_montaje_opcion_a_vs_b.jpg`.
 
 ---
 
@@ -177,7 +196,7 @@
 
 ## 3. Matriz Maestra de Control y Trazabilidad de Commits en Git
 
-A continuación se presenta el registro cronológico completo de los 30 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
+A continuación se presenta el registro cronológico completo de los 42 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
 
 | N° | Hash | Fecha | Módulo / Etapa | Descripción del Cambio / Alcance Técnico | Archivos Clave Impactados |
 |:---:|:---:|:---:|:---|:---|:---|
@@ -211,6 +230,18 @@ A continuación se presenta el registro cronológico completo de los 30 commits 
 | **28** | `9df55d5` | 2026-10-18 | Simulación LTspice | Rediseño espacial del sistema completo óptico de 7 etapas en LTspice, despejando pines de NE555 y acoplo AC. | `Simulacion/ltspice/sistema_completo_optico.asc` |
 | **29** | `1a339b8` | 2026-10-18 | Documentación / LTspice | Actualización de la guía de verificación técnica con soporte de ejecución batch `-Run -b` y directrices de diagramación. | `Simulacion/ltspice/VERIFICACION.md` |
 | **30** | `acb8f11` | 2026-10-18 | Documentación / Bitácora | Registro en bitácora de la optimización visual de esquemáticos LTspice y sincronización del estado del proyecto. | `BITACORA.md` |
+| **31** | `1ef7c9b` | 2026-10-20 | Montaje Físico | Registro de cambios en bitácora e incorporación de fotografía de evidencia del ensamblaje físico preliminar en protoboard. | `BITACORA.md`, `Simulacion/tinkercad/CircuitoArmado.jpeg` |
+| **32** | `0e23dae` | 2026-10-22 | Corte Láser LAIMI | Optimización de la placa base a fracción oficial 1/8 de lámina LAIMI ($250\times 200\text{ mm}$) y ajuste de capas RGB a $0.025\text{ mm}$. | `prototipo_laboratorio/corte_laser/base_soporte_optico.svg` |
+| **33** | `5a1dcd0` | 2026-10-22 | Corte Láser LAIMI | Generación de archivo vectorial `.PDF` en modo RGB listo para cortadora Trotec Speedy 360 en LAIMI F4-05. | `prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf` |
+| **34** | `8c90a5e` | 2026-10-22 | Impresión 3D LAIMI | Adecuación de torres acopladoras M3 a normativa Prusa MK4 de LAIMI y exportación con formato oficial `2022437519-01.stl`. | `acoplador_optico_led_ldr.scad`, `2022437519-01.stl` |
+| **35** | `10a0486` | 2026-10-22 | Impresión 3D LAIMI | Diseño paramétrico y exportación de capuchones ópticos directos para protoboard (`2022437519-02.stl` - Opción B). | `capuchon_protoboard_led_ldr.scad`, `2022437519-02.stl` |
+| **36** | `ba2cb64` | 2026-10-22 | Visualización 3D | Incorporación de render 3D fotorrealista de la maqueta física completa ensamblada en laboratorio. | `prototipo_laboratorio/render_maqueta_3d_laser.jpg` |
+| **37** | `3f25388` | 2026-10-22 | Visualización 3D | Incorporación de ilustración técnica comparativa de montaje optoelectrónico (Opción A con jumpers vs Opción B en protoboard). | `prototipo_laboratorio/comparativa_montaje_opcion_a_vs_b.jpg` |
+| **38** | `3272145` | 2026-10-22 | Guía Protoboard | Mapeo de tabla maestra de coordenadas exactas para protoboard grande de 60 filas (`0` a `60`, columnas `a` a `j`). | `docs/guia_de_conexion_protoboard.md` |
+| **39** | `20b3de1` | 2026-10-22 | Normativa LAIMI | Actualización de guía de prototipado con reglamento LAIMI F4-05, tornillería M3 y guion de solicitud presencial (`2022437519`). | `docs/diseno_prototipado_3d_laser.md` |
+| **40** | `2377cba` | 2026-10-22 | Lista Materiales | Detalle de tornillería métrica `M3 x 10mm/12mm`, tuercas M3, jumpers Hembra–Macho y tarifas de manufactura LAIMI en el BOM. | `docs/lista_de_materiales_BOM.md` |
+| **41** | `b1bb2fe` | 2026-10-22 | Documentación | Vinculación del montaje virtual de TinkerCAD con coordenadas físicas (`0`–`60`, `a`–`j`) y archivos oficiales de LAIMI. | `Simulacion/tinkercad/Montaje.md` |
+| **42** | `a36e6b8` | 2026-10-22 | Documentación | Indexación en `README.md` de los archivos oficiales `.PDF` y `.STL` con carné `2022437519` y renders 3D de ensamblaje. | `README.md` |
 
 ---
 
