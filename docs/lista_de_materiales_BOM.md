@@ -24,8 +24,8 @@
 | **12** | **Condensador de control 555** | **$10\text{ nF}$** ($0.01\ \mu\text{F}$, código `103`) | Cerámico | 2 unid. | **Etapa 6:** Filtro de ruido en Pin 5 (Control) del 555 | Conectar entre Pin 5 y GND para inmunidad al ruido. |
 | **13** | **Condensador de acoplo AC** | **$10\ \mu\text{F}$** ($16\text{ V}$ o $25\text{ V}$) | Electrolítico radial | 2 unid. | **Etapa 7:** Bloqueo de componente DC hacia el buzzer | Filtro pasa-altos; deja pasar solo la componente oscilatoria AC. |
 | **14** | **Transductor acústico** | **Buzzer piezoeléctrico PASIVO** | Radial 2 pines ($12\text{ mm}$) | 1 unid. | **Etapa 7:** Conversión de la onda cuadrada a sonido audible | **¡OBLIGATORIO PASIVO!** Un buzzer activo no varía su tono acústico. |
-| **15** | **Placa de pruebas (Protoboard)** | Protoboard estándar de 830 puntos | 830 puntos con rieles de alimentación | 1 o 2 unid. | Montaje físico del circuito experimental | Dos rieles continuos superiores e inferiores para $+V_{CC}$ y `GND`. |
-| **16** | **Cables jumpers de conexión** | Jumpers Macho-Macho surtidos | Calibre 24-26 AWG | 1 juego (60+ cables) | Cableado de pines y buses del protoboard | Colores sugeridos: Rojo ($+V_{CC}$), Negro (`GND`), Amarillo (4 bits), Azul (analógico). |
+| **15** | **Placa de pruebas (Protoboard)** | Protoboard grande (Filas `0` a `60`, Cols `a`–`j`) | 830 puntos ($165\text{ mm} \times 55\text{ mm}$) | 1 unid. | Montaje físico central del circuito experimental | Columnas `a-e` y `f-j` con rieles laterales `+VCC` y `GND`. |
+| **16** | **Cables jumpers de conexión** | Jumpers Macho–Macho y **4x Hembra–Macho** | Calibre 24-26 AWG | 1 juego | Cableado de protoboard + conexión sin soldadura a torres 3D | Los 4 Hembra–Macho conectan las patas del LED y LDR desde las torres 3D al protoboard. |
 
 ---
 
@@ -40,14 +40,16 @@
 
 ---
 
-## 3. Piezas de Prototipado y Montaje Mecánico (Escuela de Electrónica — Req. M.13 y N.14)
+## 3. Piezas de Manufactura en LAIMI (Aula F4-05) y Tornillería Mecánica (Req. M.13 y N.14)
 
-| Ítem | Pieza / Proceso | Archivo de Diseño en el Repositorio | Material / Parámetros de Fabricación | Función Mecánica / Óptica |
-|:---:|:---|:---|:---|:---|
-| **P1** | **Base Organizadora con Corte Láser** | [`prototipo_laboratorio/corte_laser/base_soporte_optico.svg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/base_soporte_optico.svg) | MDF o Acrílico de $3.0\text{ mm}$ ($380\text{ mm} \times 160\text{ mm}$) | Fija el protoboard, el Arduino y el canal de fibra óptica ($45\text{ cm}$). **Graba las 7 etapas delimitadas (Req. B.2 y M.13).** |
-| **P2** | **Cabezales Acopladores Ópticos (Impresión 3D)** | [`prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad) | PLA o PETG Negro opaco (relleno $\ge 40\%$, 2 unidades) | Alineación concéntrica LED-Fibra y Fibra-LDR con **blindaje total contra luz ambiental**. |
-| **P3** | **Tornillería de fijación mecánica** | Tornillos M3 ($3\text{ mm} \times 10\text{ mm}$) con tuercas | Acero o nylon | 6 juegos | Atornillar los acopladores 3D y la placa Arduino a la base láser. |
-| **P4** | **Cámara Acústica con Escáner 3D** | Propuesta técnica en [`docs/diseno_prototipado_3d_laser.md`](file:///d:/Proyecto%20CC/docs/diseno_prototipado_3d_laser.md) | Escaneo 3D en el laboratorio de prototipado | Resonador acústico para el buzzer piezoeléctrico pasivo (**Puntos extra - Req. N.14**). |
+| Ítem | Pieza / Proceso | Archivo Oficial en el Repositorio | Material / Parámetros LAIMI | Cant. / Costo | Función Mecánica / Óptica |
+|:---:|:---|:---|:---|:---:|:---|
+| **P1** | **Base Organizadora en Corte y Grabado Láser** | [`2022437519_base_soporte_optico.pdf`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf)<br>([`base_soporte_optico.svg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/base_soporte_optico.svg)) | **Fracción $1/8$ de lámina LAIMI** ($250\text{ mm} \times 200\text{ mm}$), MDF o Acrílico de $3.0\text{ mm}$ en Trotec Speedy 360 | 1 unid.<br>($\mathbb{C}100/\text{min}$ + mat.) | Fija el Arduino, la protoboard (`0`–`60`) y la fibra ($45\text{ cm}$). **Delimita las 7 etapas en grabado láser (Req. B.2 y M.13).** |
+| **P2-A** | **Torres Acopladoras 3D con Base M3 (Opción A)** | [`2022437519-01.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-01.stl)<br>([`acoplador_optico_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad)) | Impresora **Prusa MK4**, filamento **PLA** (preferible negro), eje Z = **$0.2\text{ mm}$**, relleno **$20\%\text{--}30\%$** | 1 archivo (incluye las 2 torres)<br>($\mathbb{C}50/\text{g}$) | Alineación coaxial a $0^\circ$ LED-Fibra y Fibra-LDR atornillada al chasis y libre de luz parásita. |
+| **P2-B** | **Capuchones 3D Directos en Protoboard (Opción B)** | [`2022437519-02.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-02.stl)<br>([`capuchon_protoboard_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/capuchon_protoboard_led_ldr.scad)) | Impresora **Prusa MK4**, filamento **PLA**, eje Z = **$0.2\text{ mm}$**, relleno **$20\%\text{--}30\%$** | 1 archivo (incluye los 2 capuchones) | Alternativa para pinchar LED y LDR directamente en las filas de la protoboard y cubrirlos por arriba. |
+| **P3** | **Tornillos y Tuercas de Fijación al Chasis** | **Tornillos métricos `M3 x 10 mm` o `M3 x 12 mm`** + **Tuercas `M3`** (o $1/8\text{''} \times 1/2\text{''}$) | Acero inoxidable, pavonado o nylon (para orificios de $\varnothing 3.2\text{ mm}$) | **8 tornillos + 8 tuercas** (comprar 10) | **4 juegos** para atornillar el Arduino UNO a la base y **4 juegos** para fijar las 2 torres acopladoras 3D. |
+| **P4** | **Bridas Plásticas Sujetacables (Amarras)** | Bridas plásticas pequeñas de $100\text{ mm} \times 2.5\text{ mm}$ | Nylon estándar | 3 a 5 unid. | Sujetar el arco de fibra óptica de $45\text{ cm}$ en las ranuras de la base láser sin doblarla. |
+| **P5** | **Cámara Acústica con Escáner 3D** | Propuesta técnica en [`docs/diseno_prototipado_3d_laser.md`](file:///d:/Proyecto%20CC/docs/diseno_prototipado_3d_laser.md) | Escaneo 3D en Escuela de Electrónica | Opcional | Resonador acústico Helmholtz para el buzzer pasivo (**Puntos extra - Req. N.14**). |
 
 ---
 
