@@ -1,62 +1,45 @@
+// ============================================================================
+// PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113 - ITCR)
+// SERVICIO: LAIMI 2 – Impresión 3D (Edificio F4, Aula F4-05, Sede Cartago)
+// EQUIPO DESTINO: Impresora 3D Prusa MK4 (Volumen máx: 250 x 200 x 210 mm)
+// ARCHIVO STL OFICIAL LAIMI: 2022437519-01.stl (Carné: 2022437519 - Pieza 01)
+//
 // Descripción:
-//   Genera el modelo 3D paramétrico del manguito de acoplamiento óptico axial
-//   que alinea concéntricamente el LED rojo (o la fotorresistencia LDR) de 5 mm
-//   con la fibra óptica plástica (POF), aislando al 100% la luz ambiental del
-//   laboratorio e incorporando una base con perforaciones M3 para fijarse sobre
-//   la placa base cortada con láser.
+//   Genera el modelo 3D paramétrico del par de torres de acoplamiento óptico
+//   axial (Opción A) que alinean concéntricamente el LED rojo de 5 mm (Etapa 4)
+//   y la fotorresistencia LDR GL5528 (Etapa 5) con la fibra óptica plástica (POF),
+//   aislando la luz ambiental del laboratorio e incorporando una pestaña con
+//   perforaciones M3 (3.2 mm) para atornillarse con tornillos M3 x 10mm/12mm
+//   sobre la placa base de corte láser.
 //
-// Entrada (Parámetros de diseño en milímetros):
-//   - d_componente : Diámetro de inserción del LED/LDR (5.2 mm con tolerancia).
-//   - d_fibra      : Diámetro del conducto para fibra óptica plástica (2.2 mm).
-//   - largo_total  : Longitud axial total del cilindro acoplador (28.0 mm).
-//
-// Salida:
-//   - Geometría sólida 3D exportable a formato .STL para impresión FDM (PLA Negro).
-//
-// Restricciones:
-//   - Debe imprimirse en filamento opaco oscuro (PLA o PETG negro, relleno >= 40%)
-//     para impedir la transmisión de luz parásita hacia la LDR.
+// Parámetros de Solicitud en LAIMI F4-05:
+//   - Carné: 2022437519
+//   - Uso: Curso (EL2113 - Circuitos Eléctricos en Corriente Continua)
+//   - Material: PLA (o PETG)
+//   - Resolución eje Z: 0.2 mm (óptimo balance tiempo/calidad en Prusa MK4)
+//   - Relleno (Infill): 20% a 30%
+//   - Color: Preferible color negro (u oscuro opaco) para bloqueo lumínico;
+//            si no hay disponible, imprimir en otro color y pintar con acrílico.
 // ============================================================================
 
 $fn = 64; // Resolución circular de alta calidad (64 facetas por cilindro)
 
-// Parámetros dimensionales en milímetros (mm)
+// Parámetros dimensionales en milímetros (mm) - Escala 1:1 verificada para STL
 d_exterior   = 12.0; // Diámetro exterior del barril opaco
 d_componente = 5.2;  // Cavidad para LED de 5 mm o LDR GL5528 (con holgura 0.2 mm)
 d_reborde    = 6.2;  // Alojamiento para el reborde inferior del LED de 5 mm
-d_fibra      = 2.2;  // Conducto axial para la fibra óptica plástica (POF)
-largo_total  = 28.0; // Longitud total del acoplador
-largo_comp   = 12.0; // Profundidad de inserción del LED o LDR
-ancho_base   = 26.0; // Ancho de la pestaña de anclaje a la base láser
-espesor_base = 3.0;  // Espesor de la pestaña inferior
-d_tornillo   = 3.2;  // Perforaciones para tornillos M3
+d_fibra      = 2.2;  // Conducto axial superior para fibra óptica plástica (POF)
+largo_total  = 28.0; // Longitud axial total de la torre acopladora
+largo_comp   = 12.0; // Profundidad de inserción del LED o LDR desde la base
+ancho_base   = 26.0; // Ancho de la pestaña de anclaje a la base láser (centro a centro M3 = 19 mm)
+espesor_base = 3.0;  // Espesor de la pestaña inferior para tornillos M3 x 10mm/12mm
+d_tornillo   = 3.2;  // Perforaciones pasantes para tornillos métricos M3
 
-/**
- * ----------------------------------------------------------------------------
- * Módulo: acoplador_optico_axial
- * ----------------------------------------------------------------------------
- * Descripción:
- *   Construye mediante geometría constructiva de sólidos (CSG) la unión del
- *   barril cilíndrico y la pestaña de montaje, restando las cavidades internas
- *   concéntricas para el componente optoelectrónico, la fibra y los tornillos.
- *
- * Entrada:
- *   Dimensiones globales parametrizadas en el encabezado del archivo.
- *
- * Salida:
- *   Sólido 3D listo para renderizado (F6) y exportación a archivo .STL.
- *
- * Restricciones:
- *   - d_exterior > d_reborde > d_componente > d_fibra > 0.
- * ----------------------------------------------------------------------------
- */
 module acoplador_optico_axial() {
     difference() {
-        // 1. Sólido positivo: Barril cilíndrico + Base plana de fijación
+        // 1. Sólido positivo: Barril cilíndrico + Pestaña plana de fijación M3
         union() {
-            // Cilindro principal vertical
             cylinder(h = largo_total, d = d_exterior, center = false);
-            // Base rectangular con extremos redondeados para fijar al chasis láser
             translate([-ancho_base/2, -d_exterior/2, 0])
                 cube([ancho_base, d_exterior, espesor_base], center = false);
         }
@@ -73,7 +56,7 @@ module acoplador_optico_axial() {
         translate([0, 0, largo_comp + 1.8])
             cylinder(h = (largo_total - largo_comp) + 1.0, d = d_fibra, center = false);
 
-        // 5. Perforaciones laterales M3 para anclaje a la base de corte láser
+        // 5. Perforaciones laterales M3 (separadas 19.0 mm entre centros: -9.5 y +9.5)
         translate([-ancho_base/2 + 3.5, 0, -0.1])
             cylinder(h = espesor_base + 0.2, d = d_tornillo, center = false);
         translate([ ancho_base/2 - 3.5, 0, -0.1])
@@ -81,7 +64,7 @@ module acoplador_optico_axial() {
     }
 }
 
-// Instanciar par de acopladores: uno para el Emisor (Etapa 4) y otro para el Receptor (Etapa 5)
+// Instanciar par de torres acopladoras: Emisor TX (Etapa 4) y Receptor RX (Etapa 5)
 acoplador_optico_axial();
 translate([0, 20, 0])
     acoplador_optico_axial();
