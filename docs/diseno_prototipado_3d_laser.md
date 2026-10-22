@@ -1,58 +1,99 @@
-# Guía de Uso de Equipos de Laboratorio y Prototipado (Escuela de Electrónica)
+# Guía Oficial de Prototipado en LAIMI (Corte Láser e Impresión 3D) y Tornillería
 **Proyecto:** Investigación Dirigida — Sistema de Comunicación por Medios Ópticos (EL2113)  
-**Autor:** Mario Cerdas y equipo de trabajo  
-**Cumplimiento:** Requerimientos B.2, M.13, N.14, Ñ.15, P.17 y Q.18 del instructivo y presentación oficial  
+**Estudiante Solicitante:** Mario Cerdas — **Carné:** `2022437519`  
+**Ubicación del Servicio en el TEC:** LAIMI 2 (Edificio F4, Aula F4-05, Sede Central Cartago)  
+**Cumplimiento:** Requerimientos B.2, I.9, M.13, N.14, Ñ.15, P.17 y Q.18 + Normativa Oficial LAIMI  
 
 ---
 
-## 1. Uso de las Fuentes de Alimentación de la Bodega (Req. P.17 y Q.18)
+## 1. ¿Qué Tornillos Comprar para Fijar el Arduino y las Impresiones 3D?
 
-El instructivo oficial establece dos restricciones estrictas sobre la energía eléctrica del prototipo:
-* **Requerimiento P.17:** *No es permitido utilizar el Arduino como fuente de alimentación para las etapas globales de transmisión y recepción.*
-* **Requerimiento Q.18:** *No se permite el uso de baterías AA, AAA o cuadrada como fuente de alimentación. En lugar de ello, el grupo de trabajo deberá utilizar las **fuentes de alimentación de laboratorio provistas por la bodega de la Escuela de Electrónica**.*
+Tanto los 4 agujeros de montaje del **Arduino UNO** como los 4 agujeros de las **torres acopladoras 3D** están diseñados con un diámetro pasante de **$3.2\text{ mm}$**, mientras que la lámina de corte láser tiene **$3.0\text{ mm}$ de espesor** y la base de las piezas 3D mide **$3.0\text{ mm}$ de espesor**.
 
-### Protocolo en el Laboratorio:
-1. Solicitar en la bodega de la Escuela de Electrónica una **Fuente de Alimentación DC Regulada de Laboratorio** (con cables banana-lagarto).
-2. Antes de conectar al protoboard, encender la fuente en vacío, fijar la tensión en **$+5.00\text{ V}$** (o usar dos canales: Canal 1 en $+6.5\text{ V}\text{--}9.0\text{ V}$ para el pin 8 del LM358 para evitar saturación del riel superior, y Canal 2 en $+5.0\text{ V}$ para el temporizador NE555) y limitar la corriente de protección a **$0.25\text{ A}$** ($250\text{ mA}$).
-3. Apagar la salida (`OUTPUT OFF`), conectar el terminal positivo (`+`) al riel de alimentación del protoboard y el terminal negativo (`- / GND`) al riel de tierra del protoboard.
-4. Conectar un cable jumper desde el pin **`GND` del Arduino UNO/Nano** hacia el riel de tierra del protoboard (**dejando el pin `5V` del Arduino totalmente desconectado**).
-
----
-
-## 2. Pieza 1: Base Organizadora con Corte Láser (Req. M.13 y B.2)
-
-Tanto el manual (**Req. M.13**) como la presentación oficial (**Diapositiva 13, Comentario 5**) requieren integrar piezas elaboradas con los equipos de **corte láser** e **impresión 3D** de la Escuela de Electrónica.
-
-* **Archivo de fabricación:** [`prototipo_laboratorio/corte_laser/base_soporte_optico.svg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/base_soporte_optico.svg)
-* **Material recomendado:** Lámina de MDF o acrílico de **$3.0\text{ mm}$ de espesor** ($380\text{ mm} \times 160\text{ mm}$).
-* **Funciones de ingeniería que cumple la pieza:**
-  1. **Delimitación física e identificación visual de las 7 etapas (Req. B.2):** Mediante grabado láser vectorial (capa azul `#0000FF`), la placa base presenta recuadros punteados y rótulos grabados para cada una de las 7 etapas (*Etapa 1: Patrón 4 Bits*, *Etapa 2: DAC R–2R + OpAmp 1A*, *Etapa 3: Interfaz OpAmp 1B*, *Etapa 4: Generador Óptico*, *Etapa 5: Receptor LDR*, *Etapa 6: Oscilador 555*, *Etapa 7: Buzzer Pasivo*). Durante la defensa presencial en semana 18/19, el profesor puede identificar cada etapa de inmediato.
-  2. **Fijación geométrica de la longitud de la fibra óptica (Req. I.9):** Incorpora ranuras para sujetar el arco de fibra óptica plástica (POF) de **$45\text{ cm}$** (dentro del rango exigido de $30\text{ cm}$ a $60\text{ cm}$) sin radios de curvatura bruscos que causen pérdidas por macrocurvatura.
-  3. **Anclaje mecánico:** Incluye perforaciones M3 ($3.2\text{ mm}$) para atornillar el Arduino UNO y los dos cabezales acopladores impresos en 3D.
+### Lista de Compra en Ferretería o Tienda de Electrónica:
+* **Medida exacta a pedir:** **Tornillos métricos `M3 x 10 mm` o `M3 x 12 mm`** (de $3\text{ mm}$ de grosor por $10\text{ mm}$ o $12\text{ mm}$ de largo, cabeza Phillips o Allen cilíndrica) con su respectiva **tuerca hexagonal `M3`**.
+  * *(Alternativa en pulgadas si vas a una ferretería tradicional):* Tornillos de **$1/8\text{''} \times 1/2\text{''}$** con tuerca (también entran en los orificios de $3.2\text{ mm}$, aunque el **M3** calza más holgado en los bordes del Arduino).
+* **Cantidad necesaria:**
+  * **4 tornillos M3 + 4 tuercas M3** para fijar el Arduino UNO a la base.
+  * **4 tornillos M3 + 4 tuercas M3** para fijar las 2 torres 3D (`2022437519-01.stl`) a la base (2 tornillos por cada torre).
+  * **Total a comprar:** **8 tornillos M3 x 10mm (o 12mm) y 8 tuercas M3** *(se recomienda comprar 10 unidades de cada uno por respaldo)*.
+* **¿Cómo se fija la Protoboard Grande (filas `0` a `60`, columnas `a`–`j`)?**
+  * La protoboard NO lleva tornillos; trae una lámina autoadhesiva amarilla en su parte trasera, o bien puedes pegarla dentro del recuadro grabado central usando dos tiras de **cinta doble faz**.
 
 ---
 
-## 3. Pieza 2: Cabezales de Acoplamiento Óptico en Impresión 3D (Req. M.13)
+## 2. Pieza 1: Base Organizadora en Corte y Grabado Láser (Normativa LAIMI)
 
-* **Archivo de fabricación:** [`prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad)
-* **Parámetros de impresión 3D para el asistente del laboratorio de la Escuela de Electrónica:**
-  * **Material:** Filamento **PLA Negro** o **PETG Negro** (estrictamente opaco para bloquear la luz ambiente).
-  * **Altura de capa:** $0.20\text{ mm}$.
-  * **Relleno (Infill):** $40\%$ a $100\%$ (evita translucidez de las paredes).
-  * **Soportes:** No requiere soportes (diseñado para imprimirse verticalmente sobre su pestaña plana).
-* **Funciones de ingeniería que cumple la pieza:**
-  1. **Alineación coaxial precisa ($\text{Apertura Numérica } NA \approx 0.51$):** Garantiza que el eje óptico del domo del LED rojo de $5\text{ mm}$ (Etapa 4) y el núcleo de la fibra óptica plástica ($1.0\text{--}2.2\text{ mm}$) queden enfrentados a $0^\circ$, maximizando la potencia acoplada según la Ley de Snell.
-  2. **Blindaje hermético contra luz ambiental en la LDR (Etapa 5):** Elimina la interferencia de las lámparas fluorescentes/LED del techo del laboratorio sobre la fotorresistencia pasiva.
+El archivo ha sido preparado cumpliendo al 100% el reglamento oficial de **Corte y Grabado Láser de LAIMI** para las cortadoras **Trotec Speedy 360** ($\text{CO}_2$ sellado de $60\text{ W}$):
+
+* **Archivo obligatorio para entregar en LAIMI (Formato `.PDF`):**  
+  [`prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf)  
+  *(También disponible la fuente vectorial en [`base_soporte_optico.svg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/base_soporte_optico.svg)).*
+* **Optimización de Material (Fracción Oficial LAIMI):**
+  * La lámina completa de LAIMI mide $800\text{ mm} \times 500\text{ mm}$.
+  * Nuestro diseño mide exactamente **$250\text{ mm} \times 200\text{ mm}$**, lo cual calza de forma exacta en **$\mathbf{1/8}\text{ de lámina}$ ($200\text{ mm} \times 250\text{ mm}$)**, cumpliendo la regla de reducción de residuos (Sección 4 del manual LAIMI) y reduciendo el costo a la mitad respecto a $1/4$ de lámina.
+* **Cumplimiento de Paleta de Colores RGB y Grosores LAIMI (Secciones 5, 6 y 7):**
+  1. **Líneas de CORTE:** Color **ROJO RGB (`255, 0, 0` / `#FF0000`)** con grosor exacto de **$0.025\text{ mm}$** (contorno exterior de $244\text{ mm} \times 194\text{ mm}$, 8 perforaciones M3 de $\varnothing 3.2\text{ mm}$ y 5 ranuras pasantes para amarrar el arco de fibra óptica de $45\text{ cm}$).
+  2. **Líneas de MARCADO Vectorial:** Color **AZUL RGB (`0, 0, 255` / `#0000FF`)** con grosor exacto de **$0.025\text{ mm}$** (recuadros de ubicación de la protoboard de filas `0` a `60`, subdivisiones de las 7 etapas según **Req. B.2**, silueta del Arduino y trayectoria guía de la fibra óptica).
+  3. **Textos de GRABADO:** Color **NEGRO RGB (`0, 0, 0` / `#000000`)** en relleno sólido (rótulos de cada etapa, numeración de filas `0` a `60` de la protoboard, carné `2022437519` y reglas de laboratorio P.17/Q.18).
 
 ---
 
-## 4. Propuesta de Uso del Escáner 3D para Puntos Extra (Req. N.14)
+## 3. Pieza 2: Acopladores Ópticos en Impresión 3D (Normativa LAIMI Prusa MK4)
 
-El **Requerimiento N.14** indica:
-> *"También existe la posibilidad de utilizar un escáner 3D en la Escuela de Electrónica. Si así lo desean, pueden plantear sus propuestas de cómo se podría utilizar para el prototipado de la propuesta. Si están interesados, por favor contactar al profesor a cargo. **Se otorgarán puntos extra a los grupos de trabajo que logren emplear este equipo.**"*
+Cumpliendo la **Sección 1 de Condiciones del Servicio de Impresión 3D de LAIMI**, los archivos `.STL` llevan el formato oficial **`CCCCCCCCCC-NN.stl`** con tu número de carné (`2022437519`):
 
-### Propuesta Técnica Lista para Presentar al Profesor (`fapicado@itcr.ac.cr`):
-1. **Objeto a escanear:** Escanear en 3D el conjunto físico del **transductor piezoeléctrico pasivo (Etapa 7) y el conector/portafibra junto con el extremo del protoboard**.
-2. **Aplicación en el prototipo:**
-   * A partir de la nube de puntos / malla `.stl` obtenida con el **Escáner 3D de la Escuela de Electrónica**, realizar una operación booleana inversa (molde negativo exacto) para imprimir una **cámara acústica resonadora (caja de resonancia Helmholtz) y cubierta ergonómica a medida** que encaje con tolerancia submilimétrica sobre el buzzer pasivo y el protoboard.
-   * **Beneficio técnico demostrable:** Incrementa la presión sonora (dB SPL) del buzzer pasivo en el rango de frecuencias bajas ($180\text{ Hz}\text{--}800\text{ Hz}$) y asegura la sujeción mecánica sin adhesivos.
+1. **Opción A (Recomendada — Torres con pestaña para tornillos M3 y conexión con 4 jumpers):**
+   * **Archivo oficial a entregar:** [`prototipo_laboratorio/impresion_3d/2022437519-01.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-01.stl)
+   * **Código fuente paramétrico:** [`acoplador_optico_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/acoplador_optico_led_ldr.scad)
+   * Contiene las 2 torres (Emisor LED y Receptor LDR) listas en una sola cama de impresión.
+
+2. **Opción B (Alternativa — Capuchones compactos para pinchar el LED y la LDR directo en la protoboard):**
+   * **Archivo oficial a entregar:** [`prototipo_laboratorio/impresion_3d/2022437519-02.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-02.stl)
+   * **Código fuente paramétrico:** [`capuchon_protoboard_led_ldr.scad`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/capuchon_protoboard_led_ldr.scad)
+   * Contiene los 2 capuchones cilíndricos sin pestañas laterales para encajar sobre el LED y la LDR clavados en la protoboard.
+
+---
+
+## 4. Guion Exacto: ¿Qué Decir y Qué Datos Dar al Ir a LAIMI (Aula F4-05)?
+
+Lleva en una llave maya (USB) los archivos [`2022437519_base_soporte_optico.pdf`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf) y [`2022437519-01.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-01.stl) (o `2022437519-02.stl`), preséntate en el **Edificio F4, Aula F4-05 (LAIMI 2)** con tu carné estudiantil físico y toma ficha de atención.
+
+### A. Lo que debes decir para el CORTE Y GRABADO LÁSER:
+> *"Hola, vengo a solicitar un trabajo de corte, marcado y grabado láser para un proyecto de curso. Ya traigo el archivo en formato `.PDF` en modo RGB optimizado a $250\text{ mm} \times 200\text{ mm}$ con líneas de corte rojas (`#FF0000`) y de marcado azules (`#0000FF`) en $0.025\text{ mm}$, y textos de grabado en negro (`#000000`)."*
+
+* **Material a solicitar al operador (proporcionado por LAIMI):**
+  * **Tamaño:** **$1/8\text{ de lámina}$** ($200\text{ mm} \times 250\text{ mm}$).
+  * **Tipo de material:** **MDF de $3\text{ mm}$** (el más económico y de excelente contraste en grabado) o **Acrílico de $3\text{ mm}$** (según disponibilidad en LAIMI).
+  * **Costo oficial LAIMI:** $\mathbb{C}100$ por minuto de máquina + costo de la fracción de $1/8$ de lámina (se carga al Sistema de Solicitudes de Impresión; no se paga en efectivo).
+
+### B. Lo que debes decir para la IMPRESIÓN 3D:
+> *"También vengo a dejar en cola este archivo `.STL` nombrado con mi carné (`2022437519-01.stl`) para impresión 3D de uso académico de curso."*
+
+* **Datos que te pedirá el asistente para llenar la boleta (Sección 1 y 6 del manual):**
+  * **Carné:** `2022437519`
+  * **Correo institucional:** Tu correo `@estudiantec.cr`
+  * **Uso:** **`Curso`** *(Importante decir que es de **Curso** — EL2113 Circuitos Eléctricos en Corriente Continua — porque el reglamento de LAIMI en la página 5 le da **prioridad en la fila** a los trabajos académicos de curso sobre los personales).*
+  * **Material:** **`PLA`** (o `PETG` si no hubiera PLA).
+  * **Resolución (eje Z):** **`0.2 mm`** (resolución estándar recomendada por LAIMI para las Prusa MK4).
+  * **Relleno (Infill):** **`20%` a `30%`**.
+  * **Indicación de Color (Página 7 del manual):** Dile al asistente:  
+    *"Preferible imprimir en color **negro** (o gris/azul oscuro) porque es un aislante óptico para una fotorresistencia, pero si se agotó el negro, usar cualquier otro color disponible."* *(Recuerda que si lo imprimen en un color claro, puedes pintarlo por fuera con pintura acrílica negra escolar o marcador permanente negro).*
+* **¡Paso Crítico Después de Ir a LAIMI!**
+  * Revisa tu correo `@estudiantec.cr` en las horas siguientes: LAIMI te enviará un correo con el tiempo estimado y el costo (a **$\mathbb{C}50$ por gramo**). **Debes responder ese correo diciendo que AUTORIZAS la impresión**, de lo contrario no la pondrán en las impresoras Prusa MK4.
+  * Para retirar las piezas cuando te llegue el correo de finalización, lleva tu **carné estudiantil** para firmar la boleta.
+
+---
+
+## 5. Referencias Visuales del Ensamblaje Físico
+
+* **Vista de la maqueta completa armada:** [`prototipo_laboratorio/render_maqueta_3d_laser.jpg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/render_maqueta_3d_laser.jpg)
+* **Comparativa visual Opción A (Torres M3 + Jumpers) vs Opción B (Capuchón en Protoboard):** [`prototipo_laboratorio/comparativa_montaje_opcion_a_vs_b.jpg`](file:///d:/Proyecto%20CC/prototipo_laboratorio/comparativa_montaje_opcion_a_vs_b.jpg)
+
+---
+
+## 6. Propuesta de Uso del Escáner 3D para Puntos Extra (Req. N.14)
+
+Si desean optar por los puntos extra del **Requerimiento N.14** utilizando el escáner 3D de la Escuela de Electrónica:
+1. **Objeto a escanear:** Escanear en 3D el conjunto físico del **transductor piezoeléctrico pasivo (Etapa 7) junto con el extremo de la protoboard (filas 50 a 60)**.
+2. **Aplicación en el prototipo:** A partir de la malla `.stl` escaneada, generar una **campana acústica resonadora (caja Helmholtz) a medida** que encaje sobre las filas 50–60 de la protoboard para amplificar acústicamente el tono del buzzer pasivo en el rango de bajas frecuencias ($178\text{ Hz}\text{--}800\text{ Hz}$).
