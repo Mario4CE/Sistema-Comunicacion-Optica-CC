@@ -40,36 +40,82 @@
 
 ---
 
-## 3. Mapa Visual de Distribución en el Protoboard (División Izquierda / Derecha)
+## 3. Mapa Visual y Matriz de Coordenadas Exactas en Protoboard Grande (Filas `0` a `60`, Columnas `a`–`j`)
 
-Para mantener las etapas **claramente delimitadas e identificables (Req. B.2)** y evitar enredos de cables, se recomienda montar el circuito dividiendo el protoboard en dos zonas:
+Tu protoboard cuenta con **60 filas numeradas (`0` a `60`)** y **10 columnas de contactos divididas por el canal central (`a, b, c, d, e` a la izquierda/abajo y `f, g, h, i, j` a la derecha/arriba)**, además de los buses laterales de alimentación (`+` rojo y `-` azul).
+
+> [!IMPORTANT]
+> **Atención sobre los rieles laterales en protoboards de 60 filas:** En muchas protoboards de 0 a 60, las líneas rojas y azules de alimentación tienen un **corte interno a la mitad (entre la fila 30 y la 31)**. Coloca siempre pequeños puentes en la fila 30–31 uniendo la mitad izquierda con la mitad derecha del riel rojo (`+`) y del riel azul (`-`) para que toda la regleta tenga energía continua.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│ (+) Riel Superior Rojo (+VCC de Fuente de Laboratorio = +5.0V)                        │
-│ (-) Riel Superior Azul (GND común de Fuente de Laboratorio y Arduino)                 │
+│ (+) Riel Superior Rojo (+VCC de Fuente de Laboratorio = +5.0V)  [Puente en fila 30-31] │
+│ (-) Riel Superior Azul (GND común de Fuente de Laboratorio y Arduino)                  │
 ├────────────────────────────────────────┬───────────────────────────────────────────────┤
-│       SECCIÓN TRANSMISORA (IZQUIERDA)  │         SECCIÓN RECEPTORA (DERECHA)           │
+│   SECCIÓN TRANSMISORA (FILAS 0 A 30)   │      SECCIÓN RECEPTORA (FILAS 33 A 60)        │
+│   Columnas: [a-b-c-d-e] | [f-g-h-i-j]  │      Columnas: [a-b-c-d-e] | [f-g-h-i-j]      │
 │                                        │                                               │
-│  [Columnas 1 a 12]:                    │  [Columnas 35 a 45]:                          │
-│   Red en Escalera R-2R (Etapa 2A)      │   Temporizador NE555 Astable (Etapa 6)        │
-│   R=10k (3 unid), 2R=20k (5 unid)      │   R1 = 1k, C1 = 100nF, C2 = 10nF              │
-│   Entradas D8, D9, D10, D11 desde Uno  │                                               │
-│                                        │  [Columnas 46 a 55]:                          │
-│  [Columnas 15 a 25]:                   │   Fotorresistencia LDR (Etapa 5)              │
-│   Amplificador Operacional Dual LM358  │   Acoplador 3D Receptor + Fibra Óptica 45 cm   │
-│   OpAmp 1A (Pines 1, 2, 3) -> DAC Act. │                                               │
-│   OpAmp 1B (Pines 5, 6, 7) -> Interfaz │  [Columnas 56 a 63]:                          │
-│                                        │   Condensador de desacoplo AC (10 uF)         │
-│  [Columnas 26 a 32]:                   │   Buzzer piezoeléctrico pasivo (Etapa 7)      │
-│   Resistencia limitadora (150 Ohm)     │                                               │
-│   LED Rojo 5 mm (Etapa 4)              │                                               │
-│   Acoplador 3D Emisor + Fibra 45 cm    │                                               │
+│  [Filas 02 a 14]:                      │  [Filas 33 a 35]:                             │
+│   Red en Escalera R-2R (Etapa 2A)      │   Fotorresistencia LDR (Etapa 5)              │
+│   Nodos: F.04(V1), F.07(V2),           │   2 Jumpers desde Torre 3D RX (2022437519-01) │
+│          F.10(V3), F.13(V4)            │                                               │
+│                                        │  [Filas 39 a 42]:                             │
+│  [Filas 19 a 22]:                      │   Temporizador NE555 Astable (Etapa 6)        │
+│   Amplificador Operacional Dual LM358  │   Insertado en cols e (1-4) y f (8-5)         │
+│   Insertado en cols e (1-4) y f (8-5)  │                                               │
+│                                        │  [Filas 52 a 58]:                             │
+│  [Filas 28 a 30]:                      │   Condensador de desacoplo AC (10 uF)         │
+│   Resistencia limitadora (150 Ohm)     │   Buzzer piezoeléctrico pasivo (Etapa 7)      │
+│   2 Jumpers hacia Torre 3D TX (LED)    │                                               │
 ├────────────────────────────────────────┴───────────────────────────────────────────────┤
-│ (+) Riel Inferior Rojo (+VCC puenteado con riel superior)                              │
-│ (-) Riel Inferior Azul (GND puenteado con riel superior)                              │
+│ (+) Riel Inferior Rojo (+VCC puenteado con riel superior)       [Puente en fila 30-31] │
+│ (-) Riel Inferior Azul (GND puenteado con riel superior)                               │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### Tabla Maestra de Coordenadas Pin por Pin (Filas `0`–`60`, Columnas `a`–`j`)
+
+Si sigues esta tabla coordenada por coordenada (como un tablero de ajedrez), el circuito quedará armado al primer intento sin un solo cruce erróneo:
+
+| Etapa | Componente / Cable | Terminal 1 (Origen) | Terminal 2 (Destino) | Función en el Circuito |
+|:---|:---|:---:|:---:|:---|
+| **Alimentación** | Cable GND Arduino | Pin `GND` Arduino | **Riel Azul (`-`)** | Tierra común obligatoria (Req. P.17) |
+| **Alimentación** | Fuente Bodega (`+5.0V`) | Borne Rojo (`+`) | **Riel Rojo (`+`)** | Energía global (Req. Q.18) |
+| **Alimentación** | Fuente Bodega (`GND`) | Borne Negro (`-`) | **Riel Azul (`-`)** | Referencia de $0\text{ V}$ |
+| **Etapa 1 $\rightarrow$ 2** | Jumper Bit 0 (LSB) | Pin `D8` Arduino | **`a02`** | Entrada digital Bit 0 |
+| **Etapa 1 $\rightarrow$ 2** | Jumper Bit 1 | Pin `D9` Arduino | **`a05`** | Entrada digital Bit 1 |
+| **Etapa 1 $\rightarrow$ 2** | Jumper Bit 2 | Pin `D10` Arduino | **`a08`** | Entrada digital Bit 2 |
+| **Etapa 1 $\rightarrow$ 2** | Jumper Bit 3 (MSB) | Pin `D11` Arduino | **`a11`** | Entrada digital Bit 3 |
+| **Etapa 2 (R–2R)** | Resistor $2R_{term}$ ($20\text{ k}\Omega$) | **Riel Azul (`-`)** | **`b04`** | Terminación $2R$ del Nodo $V_1$ a tierra |
+| **Etapa 2 (R–2R)** | Resistor $2R_0$ ($20\text{ k}\Omega$) | **`c02`** (viene de D8) | **`c04`** (Nodo $V_1$) | Rama vertical Bit 0 |
+| **Etapa 2 (R–2R)** | Resistor $R_1$ ($10\text{ k}\Omega$) | **`d04`** (Nodo $V_1$) | **`d07`** (Nodo $V_2$) | Rama horizontal $V_1 \leftrightarrow V_2$ |
+| **Etapa 2 (R–2R)** | Resistor $2R_1$ ($20\text{ k}\Omega$) | **`c05`** (viene de D9) | **`c07`** (Nodo $V_2$) | Rama vertical Bit 1 |
+| **Etapa 2 (R–2R)** | Resistor $R_2$ ($10\text{ k}\Omega$) | **`e07`** (Nodo $V_2$) | **`e10`** (Nodo $V_3$) | Rama horizontal $V_2 \leftrightarrow V_3$ |
+| **Etapa 2 (R–2R)** | Resistor $2R_2$ ($20\text{ k}\Omega$) | **`c08`** (viene de D10) | **`c10`** (Nodo $V_3$) | Rama vertical Bit 2 |
+| **Etapa 2 (R–2R)** | Resistor $R_3$ ($10\text{ k}\Omega$) | **`d10`** (Nodo $V_3$) | **`d13`** (Nodo $V_4$) | Rama horizontal $V_3 \leftrightarrow V_4$ |
+| **Etapa 2 (R–2R)** | Resistor $2R_3$ ($20\text{ k}\Omega$) | **`c11`** (viene de D11) | **`c13`** (Nodo $V_4$) | Rama vertical Bit 3 (Salida R–2R) |
+| **Etapa 2B y 3** | **Chip LM358N** (8 pines) | Pines 1–4: **`e19` a `e22`** | Pines 8–5: **`f19` a `f22`** | Muesca mirando hacia la fila 19 |
+| **Etapa 2B (1A)** | Jumper Entrada DAC | **`e13`** (Nodo $V_4$) | **`d21`** (Pin 3 LM358) | Conecta escalera a entrada `IN1+` |
+| **Etapa 2B (1A)** | Puente Seguidor 1A | **`c19`** (Pin 1 LM358) | **`c20`** (Pin 2 LM358) | Realimentación unitaria `OUT1` a `IN1-` |
+| **Etapa 2B/3** | Cable GND LM358 | **`b22`** (Pin 4 LM358) | **Riel Azul (`-`)** | Tierra del amplificador operacional |
+| **Etapa 2B/3** | Cable VCC LM358 | **`h19`** (Pin 8 LM358) | **Riel Rojo (`+`)** | Alimentación positiva del LM358 |
+| **Etapa 3 (1B)** | Jumper Etapa 2 $\rightarrow$ 3 | **`b19`** (Pin 1 LM358) | **`g22`** (Pin 5 LM358) | Lleva salida del DAC a entrada `IN2+` |
+| **Etapa 3 (1B)** | Puente Seguidor 1B | **`h20`** (Pin 7 LM358) | **`h21`** (Pin 6 LM358) | Realimentación unitaria `OUT2` a `IN2-` |
+| **Etapa 4 (TX)** | Resistor $R_{drv}$ ($150\ \Omega$) | **`i20`** (Pin 7 LM358) | **`i28`** | Limita corriente del LED a $<20\text{ mA}$ |
+| **Etapa 4 (TX)** | **LED Rojo $5\text{ mm}$** | **Ánodo:** **`j28`** (Jumper) | **Cátodo:** **Riel Azul (`-`)** | En Torre 3D TX (o directo en `j28` y `-`) |
+| **Etapa 5 (RX)** | **LDR GL5528** | **Pata 1:** **`d40`** (Jumper) | **Pata 2:** **`d41`** (Jumper) | En Torre 3D RX (va entre Pin 7 y Pin 6 del 555) |
+| **Etapa 6 (555)** | **Chip NE555** (8 pines) | Pines 1–4: **`e39` a `e42`** | Pines 8–5: **`f39` a `f42`** | Muesca mirando hacia la fila 39 |
+| **Etapa 6 (555)** | Cable GND 555 | **`b39`** (Pin 1 NE555) | **Riel Azul (`-`)** | Tierra del temporizador 555 |
+| **Etapa 6 (555)** | Cable VCC 555 | **`h39`** (Pin 8 NE555) | **Riel Rojo (`+`)** | Alimentación $+5.0\text{ V}$ |
+| **Etapa 6 (555)** | Cable RESET 555 | **`b42`** (Pin 4 NE555) | **Riel Rojo (`+`)** | Habilita oscilación (¡No dejar suelto!) |
+| **Etapa 6 (555)** | Condensador $C_2$ ($10\text{ nF}$) | **`h42`** (Pin 5 NE555) | **Riel Azul (`-`)** | Filtro de voltaje de control |
+| **Etapa 6 (555)** | Resistor $R_1$ ($1\text{ k}\Omega$) | **Riel Rojo (`+`)** | **`h40`** (Pin 7 NE555) | Carga hacia Pin 7 (`DISCHARGE`) |
+| **Etapa 6 (555)** | Puente Trigger-Threshold | **`c40`** (Pin 2 NE555) | **`g41`** (Pin 6 NE555) | Une Pin 2 con Pin 6 para modo astable |
+| **Etapa 6 (555)** | Jumper LDR a Pin 7 | **`d40`** (de LDR Pata 1) | **`g40`** (Pin 7 NE555) | Conecta terminal superior de LDR a Pin 7 |
+| **Etapa 6 (555)** | Jumper LDR a Pin 6 | **`d41`** (de LDR Pata 2) | **`h41`** (Pin 6 NE555) | Conecta terminal inferior de LDR a Pin 6/2 |
+| **Etapa 6 (555)** | Condensador $C_1$ ($100\text{ nF}$) | **`b40`** (Pin 2 NE555) | **Riel Azul (`-`)** | Condensador de temporización principal |
+| **Etapa 7 (Audio)** | Condensador $C_{ac}$ ($10\ \mu\text{F}$) | **Positivo (`+`):** **`c41`** (Pin 3) | **Negativo (`-`):** **`c54`** | Acoplo AC desde Pin 3 del 555 |
+| **Etapa 7 (Audio)** | **Buzzer Pasivo** | **Positivo (`+`):** **`e54`** | **Negativo (`-`):** **Riel Azul (`-`)** | Transductor acústico final |
 
 ---
 
