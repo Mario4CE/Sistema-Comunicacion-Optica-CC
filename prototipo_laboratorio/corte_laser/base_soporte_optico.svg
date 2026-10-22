@@ -2,83 +2,142 @@
 <!--
   ============================================================================
   PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113 - ITCR)
-  PIEZA DE CORTE LÁSER (Req. M.13 y B.2): Base Organizadora y Guía Óptica (45 cm)
-  AUTOR: Mario Cerdas y equipo de trabajo
-  LABORATORIO: Equipo de Corte Láser - Escuela de Ingeniería Electrónica
-  MATERIAL: Acrílico o MDF de 3.0 mm de espesor (Dimensiones: 380 mm x 160 mm)
-  CONVENCIÓN DE COLORES LÁSER:
-    - Rojo  (#FF0000, stroke-width 0.1mm) : Corte pasante completo
-    - Azul  (#0000FF, stroke-width 0.2mm) : Grabado vectorial de delimitación de las 7 etapas (Req. B.2)
+  SERVICIO: LAIMI 2 (Edificio F4, Aula F4-05) - Trotec Speedy 360
+  CARNÉ SOLICITANTE: 2022437519 (Mario Cerdas)
+  FRACCIÓN DE MATERIAL: 1/8 de Lámina (250 mm x 200 mm) - MDF o Acrílico 3.0 mm
+  MODO DE COLOR: RGB Estricto (Normativa LAIMI vigente)
+    1. CORTE PASANTE:     Rojo RGB (255, 0, 0)   | #FF0000 | Grosor: 0.025 mm
+    2. MARCADO VECTORIAL: Azul RGB (0, 0, 255)   | #0000FF | Grosor: 0.025 mm
+    3. GRABADO DE TEXTO:  Negro RGB (0, 0, 0)    | #000000 | Relleno sólido
   ============================================================================
 -->
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="380mm" height="160mm"
-     viewBox="0 0 380 160">
+     width="250mm" height="200mm"
+     viewBox="0 0 250 200">
 
-  <!-- 1. CAPA DE CORTE PASANTE (ROJO #FF0000) -->
-  <g id="CORTE_LASER" fill="none" stroke="#FF0000" stroke-width="0.1">
-    <!-- Contorno exterior de la placa base (370 mm x 150 mm con esquinas redondeadas) -->
-    <rect x="5" y="5" width="370" height="150" rx="6" ry="6" />
+  <!-- ===================================================================== -->
+  <!-- 1. CAPA DE CORTE PASANTE (ROJO RGB #FF0000 - Grosor: 0.025 mm)        -->
+  <!-- ===================================================================== -->
+  <g id="CAPA_CORTE_ROJO" fill="none" stroke="#FF0000" stroke-width="0.025">
+    <!-- Contorno exterior optimizado para fracción 1/8 de lámina (244 mm x 194 mm, margen 3 mm) -->
+    <rect x="3" y="3" width="244" height="194" rx="5" ry="5" />
 
-    <!-- Perforaciones de fijación para Arduino UNO (M3, diámetro 3.2 mm) -->
-    <circle cx="28" cy="30" r="1.6" />
-    <circle cx="28" cy="78" r="1.6" />
-    <circle cx="80" cy="35" r="1.6" />
-    <circle cx="80" cy="63" r="1.6" />
+    <!-- 4 Perforaciones M3 para Arduino UNO R3 (diámetro 3.2 mm / radio 1.6 mm) -->
+    <circle cx="16.5" cy="31.0" r="1.6" />
+    <circle cx="64.8" cy="32.2" r="1.6" />
+    <circle cx="21.6" cy="83.0" r="1.6" />
+    <circle cx="49.6" cy="83.0" r="1.6" />
 
-    <!-- Perforaciones M3 para el Acoplador 3D Emisor (Etapa 4: LED Rojo) -->
-    <circle cx="255" cy="40" r="1.6" />
-    <circle cx="255" cy="59" r="1.6" />
+    <!-- 2 Perforaciones M3 para Acoplador 3D Emisor TX (Etapa 4: LED Rojo) -->
+    <circle cx="154.0" cy="54.5" r="1.6" />
+    <circle cx="154.0" cy="73.5" r="1.6" />
 
-    <!-- Perforaciones M3 para el Acoplador 3D Receptor (Etapa 5: LDR) -->
-    <circle cx="255" cy="101" r="1.6" />
-    <circle cx="255" cy="120" r="1.6" />
+    <!-- 2 Perforaciones M3 para Acoplador 3D Receptor RX (Etapa 5: LDR GL5528) -->
+    <circle cx="154.0" cy="120.5" r="1.6" />
+    <circle cx="154.0" cy="139.5" r="1.6" />
 
-    <!-- Ranuras de sujeción para bridas del arco de Fibra Óptica Plástica (Longitud 30-60 cm) -->
-    <rect x="310" y="38" width="3" height="10" />
-    <rect x="310" y="112" width="3" height="10" />
-    <rect x="352" y="75" width="10" height="3" />
-
-    <!-- Orificio acústico de resonancia para Buzzer Piezoeléctrico Pasivo (Etapa 7) -->
-    <circle cx="55" cy="122" r="6.0" />
+    <!-- Ranuras pasantes para bridas plásticas del arco de Fibra Óptica (45 cm - Req. I.9) -->
+    <rect x="171" y="61.0" width="3" height="7" rx="0.5" ry="0.5" />
+    <rect x="171" y="126.5" width="3" height="7" rx="0.5" ry="0.5" />
+    <rect x="204" y="42.0" width="7" height="3" rx="0.5" ry="0.5" />
+    <rect x="236" y="93.5" width="3" height="7" rx="0.5" ry="0.5" />
+    <rect x="204" y="150.0" width="7" height="3" rx="0.5" ry="0.5" />
   </g>
 
-  <!-- 2. CAPA DE GRABADO VECTORIAL DE DELIMITACIÓN DE LAS 7 ETAPAS (AZUL #0000FF - Req. B.2) -->
-  <g id="GRABADO_DELIMITACION_ETAPAS" fill="none" stroke="#0000FF" stroke-width="0.25" font-family="Arial, sans-serif" font-size="4.2">
-    <!-- Recuadros delimitadores de cada una de las 7 etapas (Requerimiento B.2) -->
+  <!-- ===================================================================== -->
+  <!-- 2. CAPA DE MARCADO VECTORIAL (AZUL RGB #0000FF - Grosor: 0.025 mm)    -->
+  <!-- ===================================================================== -->
+  <g id="CAPA_MARCADO_AZUL" fill="none" stroke="#0000FF" stroke-width="0.025">
+    <!-- A. Contorno guía para Arduino UNO (Etapa 1) -->
+    <rect x="14" y="17" width="53.4" height="68.6" rx="2" ry="2" />
+
+    <!-- Líneas guía de conexión digital D8..D11 hacia Protoboard -->
+    <line x1="67.4" y1="56" x2="82" y2="56" />
+    <line x1="67.4" y1="60" x2="82" y2="60" />
+    <line x1="67.4" y1="64" x2="82" y2="64" />
+    <line x1="67.4" y1="68" x2="82" y2="68" />
+
+    <!-- B. Contorno guía para Protoboard Grande (Filas 0 a 60, Columnas a-j: 55 mm x 166 mm) -->
+    <rect x="82" y="17" width="55" height="166" rx="1.5" ry="1.5" />
+
+    <!-- Subdivisiones internas de las Etapas en el Protoboard (Req. B.2) -->
+    <!-- Etapa 2: DAC R-2R (Filas 0 a 16) -->
+    <rect x="84" y="21" width="51" height="36" />
+    <!-- Etapa 3: Buffer / Interfaz OpAmp LM358 (Filas 17 a 28) -->
+    <rect x="84" y="59" width="51" height="28" />
+    <!-- Etapa 4 y 5: Zona de interconexión óptica (Filas 29 a 36) -->
+    <rect x="84" y="89" width="51" height="22" />
+    <!-- Etapa 6: Oscilador NE555 Astable (Filas 37 a 49) -->
+    <rect x="84" y="113" width="51" height="34" />
+    <!-- Etapa 7: Buzzer Pasivo + C=10uF (Filas 50 a 60) -->
+    <rect x="84" y="149" width="51" height="31" />
+
+    <!-- C. Huellas de Acopladores 3D (Lado Derecho) -->
+    <rect x="146" y="51" width="16" height="26" rx="1.5" ry="1.5" />
+    <rect x="146" y="117" width="16" height="26" rx="1.5" ry="1.5" />
+
+    <!-- Líneas guía de jumpers entre Protoboard y Acopladores 3D -->
+    <line x1="137" y1="64" x2="146" y2="64" />
+    <line x1="146" y1="130" x2="137" y2="130" />
+
+    <!-- Trayectoria guía del Arco de Fibra Óptica Plástica (45 cm - Req. I.9) -->
+    <path d="M 162 64 C 210 64, 234 52, 235 97 C 234 142, 210 130, 162 130" />
+
+    <!-- D. Cuadro de Identificación y Normas de Laboratorio (Inferior Izquierda) -->
+    <rect x="14" y="96" width="58" height="87" rx="2" ry="2" />
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 3. CAPA DE GRABADO DE TEXTO (NEGRO RGB #000000 - Relleno Sólido)      -->
+  <!-- ===================================================================== -->
+  <g id="CAPA_GRABADO_NEGRO" fill="#000000" stroke="none" font-family="Arial, Helvetica, sans-serif">
+    <!-- Encabezado superior -->
+    <text x="82" y="13" font-size="3.2" font-weight="bold">PROTOBOARD GRANDE (FILAS 0 A 60 | COLS a-e / f-j)</text>
+
     <!-- Etapa 1: Arduino -->
-    <rect x="15" y="18" width="75" height="68" stroke-dasharray="2,1" />
-    <text x="18" y="24" stroke="#0000FF">ETAPA 1: PATRON 4 BITS (ARDUINO)</text>
+    <text x="16" y="24" font-size="3.0" font-weight="bold">ETAPA 1: PATRÓN 4 BITS</text>
+    <text x="16" y="28" font-size="2.5">ARDUINO UNO (D8..D11)</text>
+    <text x="68.5" y="53" font-size="2.3" font-weight="bold">D8..D11</text>
 
-    <!-- Etapa 2: DAC R-2R + OpAmp 1A -->
-    <rect x="96" y="18" width="68" height="68" stroke-dasharray="2,1" />
-    <text x="99" y="24" stroke="#0000FF">ETAPA 2: DAC R-2R + OPAMP 1A</text>
+    <!-- Etapas sobre el Protoboard (0 a 60) -->
+    <text x="86" y="27" font-size="2.7" font-weight="bold">ETAPA 2: DAC R-2R + 1A</text>
+    <text x="86" y="31.5" font-size="2.2">Filas 02-15 | 3x10k + 5x20k</text>
 
-    <!-- Etapa 3: Interfaz OpAmp 1B -->
-    <rect x="170" y="18" width="58" height="68" stroke-dasharray="2,1" />
-    <text x="173" y="24" stroke="#0000FF">ETAPA 3: INTERFAZ 1B</text>
+    <text x="86" y="65" font-size="2.7" font-weight="bold">ETAPA 3: INTERFAZ OPAMP</text>
+    <text x="86" y="69.5" font-size="2.2">Filas 18-26 | LM358N (1A/1B)</text>
 
-    <!-- Etapa 4: Generador Óptico (150 Ohm + LED Rojo) -->
-    <rect x="234" y="18" width="52" height="68" stroke-dasharray="2,1" />
-    <text x="237" y="24" stroke="#0000FF">ETAPA 4: LED ROJO</text>
+    <text x="86" y="95" font-size="2.5" font-weight="bold">ETAPA 4: SALIDA LED (F.28-30)</text>
+    <text x="86" y="106" font-size="2.5" font-weight="bold">ETAPA 5: ENTRADA LDR (F.33-35)</text>
 
-    <!-- Guía del Medio Óptico Curvo (Longitud de arco = 45 cm dentro de [30, 60] cm) -->
-    <path d="M 270 49 C 375 49, 375 111, 270 111" stroke-dasharray="3,2" />
-    <text x="292" y="82" stroke="#0000FF">MEDIO OPTICO POF (45 cm)</text>
+    <text x="86" y="120" font-size="2.7" font-weight="bold">ETAPA 6: OSCILADOR 555</text>
+    <text x="86" y="124.5" font-size="2.2">Filas 38-48 | NE555 + C=100nF</text>
 
-    <!-- Etapa 5: Receptor Óptico Pasivo (LDR) -->
-    <rect x="234" y="92" width="52" height="54" stroke-dasharray="2,1" />
-    <text x="237" y="98" stroke="#0000FF">ETAPA 5: RECEPTOR LDR</text>
+    <text x="86" y="156" font-size="2.7" font-weight="bold">ETAPA 7: BUZZER PASIVO</text>
+    <text x="86" y="160.5" font-size="2.2">Filas 51-59 | C=10uF + Piezo</text>
 
-    <!-- Etapa 6: Generador de Onda Cuadrada (555 Astable) -->
-    <rect x="115" y="92" width="113" height="54" stroke-dasharray="2,1" />
-    <text x="118" y="98" stroke="#0000FF">ETAPA 6: OSCILADOR 555 ASTABLE</text>
+    <!-- Acopladores 3D y Fibra Óptica -->
+    <text x="142" y="48" font-size="2.6" font-weight="bold">TORRE 3D TX (LED)</text>
+    <text x="142" y="148" font-size="2.6" font-weight="bold">TORRE 3D RX (LDR)</text>
+    <text x="176" y="95" font-size="3.0" font-weight="bold">FIBRA ÓPTICA (45 cm)</text>
+    <text x="176" y="100" font-size="2.3">Req. I.9 (Rango 30-60 cm)</text>
 
-    <!-- Etapa 7: Buzzer Piezoeléctrico Pasivo -->
-    <rect x="15" y="92" width="94" height="54" stroke-dasharray="2,1" />
-    <text x="18" y="98" stroke="#0000FF">ETAPA 7: BUZZER PASIVO</text>
+    <!-- Bloque Informativo Inferior Izquierda -->
+    <text x="17" y="103" font-size="3.0" font-weight="bold">EL2113 - PROYECTO CC</text>
+    <text x="17" y="108" font-size="2.3">Comunicaciones Ópticas - ITCR</text>
+    <text x="17" y="113" font-size="2.3" font-weight="bold">Carné: 2022437519</text>
 
-    <!-- Rótulo de Entrada de Fuente de Laboratorio (Req. P.17 y Q.18) -->
-    <text x="15" y="152" stroke="#0000FF">EL2113 ITCR - ALIMENTACION EXCLUSIVA CON FUENTE DC DE LABORATORIO (NO 5V ARDUINO / NO BATERIAS)</text>
+    <text x="17" y="122" font-size="2.4" font-weight="bold">REGLAS LAB (Req. P.17 / Q.18):</text>
+    <text x="17" y="127" font-size="2.1">• Fuente Bodega DC (+5.0 V)</text>
+    <text x="17" y="131.5" font-size="2.1">• Prohibido usar 5V Arduino</text>
+    <text x="17" y="136" font-size="2.1">• Prohibido usar baterías</text>
+    <text x="17" y="140.5" font-size="2.1">• GND común Arduino-Fuente</text>
+
+    <text x="17" y="150" font-size="2.4" font-weight="bold">TORNILLERÍA CHASIS:</text>
+    <text x="17" y="154.5" font-size="2.1">• 8x Tornillos M3 x 10mm/12mm</text>
+    <text x="17" y="159" font-size="2.1">• 8x Tuercas M3 (Orif. 3.2mm)</text>
+
+    <text x="17" y="170" font-size="2.4" font-weight="bold">MANUFACTURA LAIMI F4-05:</text>
+    <text x="17" y="174.5" font-size="2.1">• 1/8 Lámina (250 x 200 mm)</text>
+    <text x="17" y="179" font-size="2.1">• Espesor: 3.0 mm (MDF/Acrílico)</text>
   </g>
 </svg>
