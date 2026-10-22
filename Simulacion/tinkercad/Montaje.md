@@ -55,8 +55,9 @@ En el panel lateral derecho de TinkerCAD Circuits (filtro **Componentes $\righta
 * **Pin 7 (`Salida 2`):** Es la salida acondicionada y aislada de la Etapa 3 ($V_{interfaz}$).
 
 ### D. Etapa 4: Generador Óptico (Req. G.7 y H.8)
-* Conecta la resistencia de **$150\ \Omega$** desde el **Pin 7 (`Salida 2`)** del LM358 hacia el **Ánodo** del **LED Rojo**.
+* Conecta la resistencia de **$150\ \Omega$** desde el **Pin 7 (`Salida 2`)** del LM358 hacia el **Ánodo** del **LED Rojo** (en protoboard físico: fila `28`, columna `i` a `j`).
 * Conecta el **Cátodo** del LED Rojo al riel negativo (`- / GND`).
+* **Diferencia entre TinkerCAD y el Montaje Físico Real:** En TinkerCAD el LED y la LDR se pinchan visualmente sobre la placa porque el simulador no modela fibra óptica. En la maqueta física sobre la base de corte láser ([`2022437519_base_soporte_optico.pdf`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf)), puedes alojar el LED y la LDR dentro de las torres 3D atornilladas ([`2022437519-01.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-01.stl)) llevando **2 cables jumper Hembra–Macho** desde esos mismos agujeros de la protoboard (`0` a `60`, columnas `a`–`j`), o bien dejarlos pinchados en la protoboard y cubrirlos por arriba con los capuchones 3D ([`2022437519-02.stl`](file:///d:/Proyecto%20CC/prototipo_laboratorio/impresion_3d/2022437519-02.stl)).
 
 ### E. Etapa 5 y Etapa 6: Receptor LDR y Temporizador 555 Astable (Req. J.10 y K.11)
 * **Pin 1 (`Tierra`) del 555:** Al riel negativo (`- / GND`).
