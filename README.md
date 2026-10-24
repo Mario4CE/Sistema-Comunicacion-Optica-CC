@@ -3,6 +3,7 @@
 Repositorio del proyecto de Investigación Dirigida para el curso **Circuitos Eléctricos en Corriente Continua (EL2113)**, Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR).
 
 **Responsable:** Mario Cerdas  
+**Estado Actual del Prototipo:** Base de soporte en corte láser recibida de LAIMI e integrada; Arduino UNO fijado con tornillería M3 y protoboard con el circuito completo montada sobre el chasis delimitado. Piezas de impresión 3D en proceso de manufactura en LAIMI (retiro programado para mañana 2026-10-24) para el acople coaxial de la fibra óptica ($45\text{ cm}$).  
 **Objetivo:** Transmitir arreglos de longitud variable de datos digitales de 4 bits (de señales periódicas y aperiódicas generadas en MATLAB) mediante una señal luminosa guiada por fibra óptica plástica ($30\text{--}60\text{ cm}$), recuperarla con un receptor óptico pasivo (LDR) y convertirla en una señal audible mediante un oscilador 555 y un buzzer pasivo.
 
 ---

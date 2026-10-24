@@ -6,7 +6,7 @@
 **Estudiante / Responsable:** Mario Cerdas  
 **Repositorio Git:** `Sistema-Comunicacion-Optica-CC`  
 **Rama Activa de Trabajo:** `mario-dev`  
-**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes (BOM) completada al 100%; Ensamble físico preliminar del circuito en protoboard completado (electrónica conectada); Pendiente acoplamiento de fibra óptica, impresión 3D y corte láser.
+**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes electrónicos y tornillería mecánica completada al 100%; Placa base organizadora en corte láser fabricada y recibida de LAIMI; Ensamble físico e integración en el chasis completado (Arduino UNO fijado con tornillos y tuercas M3, y protoboard con circuito de 7 etapas montada sobre la base); Piezas de impresión 3D en manufactura en LAIMI (retiro programado para mañana 2026-10-24) para la fijación definitiva de los acopladores ópticos y el tramo de fibra de $45\text{ cm}$.
 
 ---
 
@@ -152,7 +152,7 @@
 
 ---
 
-### [2026-10-22] - Sesión 10 (HOY): Adecuación a Normativa Oficial LAIMI (Corte Láser e Impresión 3D), Renders 3D y Matriz de Coordenadas (`0`–`60`, `a`–`j`)
+### [2026-10-22] - Sesión 10: Adecuación a Normativa Oficial LAIMI (Corte Láser e Impresión 3D), Renders 3D y Matriz de Coordenadas (`0`–`60`, `a`–`j`)
 * **Cumplimiento Estricto de Normativa LAIMI — Corte y Grabado Láser (Trotec Speedy 360):**
   * Se rediseñó la placa base organizadora a dimensiones exactas de **$250\text{ mm} \times 200\text{ mm}$**, calzando en la fracción oficial de **$\mathbf{1/8}\text{ de lámina}$ de LAIMI** ($200\text{ mm} \times 250\text{ mm}$) para minimizar el desperdicio de material y reducir costos.
   * Se generó el archivo vectorial obligatorio en formato **`.PDF` en espacio de color RGB** (`prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf`), separando estrictamente las 3 capas exigidas por LAIMI:
@@ -171,7 +171,24 @@
 
 ---
 
-## 2. Inventario Físico de Componentes Adquiridos (Sesión 2026-10-15)
+### [2026-10-23] - Sesión 11 (HOY): Compra de Tornillería M3, Recepción de Base en Corte Láser LAIMI y Ensamble Estructural en el Chasis
+* **Adquisición de Tornillería Mecánica para el Chasis:**
+  * Se adquirió en ferretería el juego completo de tornillos métricos **`M3 x 10 mm` / `M3 x 12 mm`** con sus respectivas **tuercas hexagonales `M3`** para la fijación rígida del Arduino UNO y la sujeción de las torres acopladoras 3D en los orificios pasantes de $\varnothing 3.2\text{ mm}$ de la base.
+* **Fabricación y Recepción de la Base de Soporte en Corte Láser (LAIMI F4-05):**
+  * Se gestionó presencialmente la orden de corte y grabado en el aula F4-05 (LAIMI 2) entregando el archivo oficial [`2022437519_base_soporte_optico.pdf`](file:///d:/Proyecto%20CC/prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf).
+  * La cortadora láser Trotec Speedy 360 procesó con éxito el material de $3.0\text{ mm}$ en la fracción oficial de $1/8$ de lámina ($250\text{ mm} \times 200\text{ mm}$).
+  * **La pieza de corte láser fue entregada el mismo día (HOY):** Contorno exterior cortado a escuadra perfecta, los 8 orificios pasantes de $\varnothing 3.2\text{ mm}$ limpios, las 5 ranuras para bridas de sujeción del arco de fibra óptica y el grabado láser nítido de las 7 etapas delimitadas (cumplimiento de Requerimientos B.2 y M.13).
+* **Gestión de Impresión 3D en LAIMI:**
+  * Se tramitó la orden de impresión 3D de los acopladores ópticos en las impresoras Prusa MK4 utilizando los archivos normalizados con carné estudiantil (`2022437519-01.stl` / `-02.stl`).
+  * El trabajo quedó encolado/en proceso de manufactura oficial de curso; **la recolección física de las piezas 3D está programada para mañana (2026-10-24)** en el horario de atención de LAIMI.
+* **Montaje Físico y Ensamble Estructural sobre la Base Láser:**
+  * **Fijación del Arduino UNO:** Se fijó la placa Arduino UNO de forma rígida a la placa base mediante los tornillos y tuercas M3 a través de los 4 orificios pasantes, garantizando estabilidad mecánica total para el puerto USB de programación y conexión a tierra común (Req. P.17/Q.18).
+  * **Instalación del Circuito en Protoboard:** Se montó la protoboard de 830 puntos (con el circuito electrónico completo de las 7 etapas ya interconectado: escalera R-2R, LM358N, NE555 astable, condensadores y buzzer pasivo) sobre el área central grabada con la delimitación de las 7 etapas.
+  * **Estado del Prototipo:** El circuito físico y la plataforma mecánica se encuentran completamente estructurados e integrados en la base organizadora, **quedando el sistema listo a falta exclusiva de retirar mañana las piezas de impresión 3D** para instalar las torres acopladoras, alojar el LED y la LDR de forma coaxial e insertar el tramo de fibra óptica plástica ($45\text{ cm}$).
+
+---
+
+## 2. Inventario Físico de Componentes Adquiridos
 
 | Ítem | Componente | Especificación / Modelo | Cantidad | Función Circuital (Etapa) | Estado de Verificación |
 |:---:|:---|:---|:---:|:---|:---:|
@@ -191,12 +208,15 @@
 | 14 | **Transductor Acústico** | Buzzer piezoeléctrico PASIVO ($12\text{ mm}$) | 1 unid. | Etapa 7: Conversión final a sonido audible | **Prueba DC: Confirma buzzer pasivo** |
 | 15 | **Protoboard** | Placa de pruebas 830 puntos | 1 unid. | Plataforma física de ensamble experimental | Continuidad de rieles verificada |
 | 16 | **Cables Jumpers** | Jumpers Macho-Macho 24 AWG | 1 juego (65) | Conexión e interconexión entre etapas | Surtido de colores listo |
+| 17 | **Tornillos y Tuercas M3** | Métricos `M3 x 10/12 mm` con tuercas | 8 juegos | Fijación mecánica de Arduino y torres 3D | Comprados (2026-10-23) / Instalados en Arduino |
+| 18 | **Placa Base Láser** | Base $250\times 200\text{ mm}$ en corte/grabado LAIMI | 1 unid. | Chasis soporte con 7 etapas delimitadas (Req. B.2/M.13) | **Entregada por LAIMI (2026-10-23)** / Montada |
+| 19 | **Acopladores Ópticos 3D** | Torres coaxiales `2022437519-01.stl` (Prusa MK4) | 1 juego | Inmunización óptica e inserción de fibra ($45\text{ cm}$) | En manufactura LAIMI / Retiro 2026-10-24 |
 
 ---
 
 ## 3. Matriz Maestra de Control y Trazabilidad de Commits en Git
 
-A continuación se presenta el registro cronológico completo de los 42 commits realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
+A continuación se presenta el registro cronológico de los commits y versiones realizados en el repositorio, detallando el hash, la fecha, el autor, el módulo impactado y la descripción técnica de cada cambio:
 
 | N° | Hash | Fecha | Módulo / Etapa | Descripción del Cambio / Alcance Técnico | Archivos Clave Impactados |
 |:---:|:---:|:---:|:---|:---|:---|
@@ -242,6 +262,10 @@ A continuación se presenta el registro cronológico completo de los 42 commits 
 | **40** | `2377cba` | 2026-10-22 | Lista Materiales | Detalle de tornillería métrica `M3 x 10mm/12mm`, tuercas M3, jumpers Hembra–Macho y tarifas de manufactura LAIMI en el BOM. | `docs/lista_de_materiales_BOM.md` |
 | **41** | `b1bb2fe` | 2026-10-22 | Documentación | Vinculación del montaje virtual de TinkerCAD con coordenadas físicas (`0`–`60`, `a`–`j`) y archivos oficiales de LAIMI. | `Simulacion/tinkercad/Montaje.md` |
 | **42** | `a36e6b8` | 2026-10-22 | Documentación | Indexación en `README.md` de los archivos oficiales `.PDF` y `.STL` con carné `2022437519` y renders 3D de ensamblaje. | `README.md` |
+| **43** | `b47597b` | 2026-10-22 | Documentación / Bitácora | Registro en bitácora de la Sesión 10 (adecuación normativa LAIMI, matriz de protoboard 0-60 y renders 3D). | `BITACORA.md` |
+| **44** | `8a1f05a` | 2026-10-22 | Corte Láser LAIMI | Limpieza del cajetín de identificación y reubicación de rótulos de etapas fuera de la huella del protoboard en archivo vectorial. | `prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf` |
+| **45** | `5dafb14` | 2026-10-22 | Impresión 3D | Incorporación de visor 3D interactivo en HTML5 (`visor_interactivo_3d.html`) para previsualización de piezas STL sin software externo. | `prototipo_laboratorio/impresion_3d/visor_interactivo_3d.html` |
+| **46** | `c605fc2` | 2026-10-23 | Ensamble Mecánico | Adquisición de tornillería M3, recepción de base láser LAIMI, atornillado de Arduino y montaje de protoboard en chasis. | `BITACORA.md`, `README.md`, `docs/lista_de_materiales_BOM.md`, `docs/diseno_prototipado_3d_laser.md` |
 
 ---
 
@@ -249,22 +273,22 @@ A continuación se presenta el registro cronológico completo de los 42 commits 
 
 | Requerimiento Oficial | Descripción Normativa | Estado | Artefacto / Archivo de Verificación |
 |:---|:---|:---:|:---|
-| **A.1 / B.2** | Sistema dividido en 7 etapas delimitadas e identificables | **CUMPLE** | Grabado láser en `base_soporte_optico.svg`, esquemáticos y guías de montaje. |
+| **A.1 / B.2** | Sistema dividido en 7 etapas delimitadas e identificables | **CUMPLE** | Grabado láser en base física entregada (`2022437519_base_soporte_optico.pdf`), protoboard montada en el chasis. |
 | **C.3 / D.4** | Arreglos de longitud variable en MATLAB y tiempo entre 1 ms y 10 s | **CUMPLE** | `matlab/generador_patrones.m` y comandos `'P'`, `'S'`, `'T<ms>'` en `generador_patrones_tinkercad.ino`. |
 | **E.5** | DAC implementado con componentes pasivos y un componente activo | **CUMPLE** | Red R-2R ($10\text{ k}\Omega / 20\text{ k}\Omega$) + OpAmp 1A del LM358N (`docs/memoria_de_calculo.md`). |
 | **F.6** | Etapa de interfaz implementada únicamente con OpAmp | **CUMPLE** | OpAmp 1B del LM358N en configuración seguidora de aislamiento unitario ($A_v = 1$). |
 | **G.7 / H.8** | Generador óptico con componentes pasivos y LED justificado con Física 2/3 | **CUMPLE** | Resistor $150\ \Omega$ + LED rojo ($650\text{ nm}$) justificado por Planck-Einstein y ventana PMMA. |
 | **I.9 / J.10** | Medio óptico de 30 a 60 cm y receptor óptico puramente pasivo | **CUMPLE** | Fibra plástica POF cortada a $45\text{ cm}$ y fotorresistencia LDR pasiva (GL5528). |
 | **K.11 / L.12** | Oscilador comercial integrado con pasivos y salida en buzzer pasivo | **CUMPLE** | Temporizador NE555 astable ($177\text{--}3443\text{ Hz}$) + condensador $10\ \mu\text{F}$ + Buzzer pasivo. |
-| **M.13 / N.14** | Prototipado en Escuela de Electrónica (corte láser, impresión 3D, escáner) | **CUMPLE** | Plano láser `base_soporte_optico.svg`, cabezal 3D `acoplador_optico_led_ldr.stl` y propuesta de escáner. |
-| **Ñ.15 / O.16** | Montaje en protoboard y error de conversión DAC menor al 10% | **CUMPLE** | Protoboard 830 puntos, resistencias 1% y error simulado $< 0.01\%$ (medido en LTspice). |
+| **M.13 / N.14** | Prototipado en Escuela de Electrónica (corte láser, impresión 3D, escáner) | **CUMPLE** | Base en corte láser recibida de LAIMI; Arduino fijado con M3; protoboard montada; piezas 3D para retiro mañana. |
+| **Ñ.15 / O.16** | Montaje en protoboard y error de conversión DAC menor al 10% | **CUMPLE** | Protoboard montada en el chasis organizador, circuito completo de 7 etapas cableado y verificado. |
 | **P.17 / Q.18** | Prohibido usar 5V de Arduino y baterías; uso de fuente de laboratorio | **CUMPLE** | Cable 5V desconectado; alimentación desde Fuente DC de Laboratorio de bodega ($+5\text{ V} / +9\text{ V}$). |
 
 ---
 
 ## 5. Próximos Pasos Planificados
 
-1. **Subida de Evidencia Fotográfica:** Subir al repositorio en GitHub la fotografía del circuito ensamblado en la protoboard.
-2. **Fabricación e Integración Mecánica:** Fabricar las piezas en el taller de prototipado de la Escuela de Electrónica (`base_soporte_optico.svg` en corte láser y `acoplador_optico_led_ldr.stl` en impresión 3D PLA) e integrar el tramo de fibra óptica plástica ($45\text{ cm}$) entre el LED y la LDR.
-3. **Medición Experimental en Laboratorio:** Conectar la fuente de laboratorio de la bodega de Electrónica y registrar los puntos de prueba TP1 a TP6 con multímetro y osciloscopio para completar la tabla del informe.
-4. **Compilación Final del Informe IEEE:** Compilar `docs/informe_ieee/informe_ieee_el2113.tex` con los datos experimentales reales y generar el entregable `.zip` final.
+1. **Retiro de Piezas 3D en LAIMI:** Retirar mañana (2026-10-24) en el aula F4-05 las torres acopladoras ópticas (`2022437519-01.stl` / `-02.stl`) fabricadas en las impresoras Prusa MK4.
+2. **Fijación de Torres 3D e Inserción de Fibra Óptica:** Atornillar las torres 3D a la placa base con los tornillos y tuercas M3 restantes, colocar el LED emisor y la LDR en sus alojamientos e insertar el tramo de fibra óptica plástica ($45\text{ cm}$) asegurándolo con bridas plásticas en las ranuras de la base láser.
+3. **Medición Experimental en Laboratorio (Req. P.17/Q.18 y O.16):** Trasladar la maqueta armada al laboratorio de Electrónica, conectar la Fuente DC Regulada de Laboratorio de bodega ($+5.0\text{ V} / +9.0\text{ V}$), y registrar con multímetro y osciloscopio digital las formas de onda y tensiones en los puntos de prueba TP1 a TP6.
+4. **Compilación Final del Informe IEEE:** Incorporar los datos experimentales reales y las fotografías de la maqueta completa ensamblada en `docs/informe_ieee/informe_ieee_el2113.tex` y generar el entregable final en PDF y formato IEEE.

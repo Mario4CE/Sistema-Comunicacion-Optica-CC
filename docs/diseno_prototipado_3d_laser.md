@@ -8,6 +8,12 @@
 
 ## 1. ¿Qué Tornillos Comprar para Fijar el Arduino y las Impresiones 3D?
 
+> [!NOTE]
+> **Estado de Ejecución y Montaje (Actualizado 2026-10-23):**
+> * **Tornillos y Tuercas M3:** Adquiridos y en uso. Se fijó exitosamente el Arduino UNO a la placa base mediante 4 tornillos y tuercas M3.
+> * **Corte y Grabado Láser (LAIMI F4-05):** Pieza recibida conforme (`2022437519_base_soporte_optico.pdf`). Se integró la protoboard de 830 puntos con el circuito completo montado sobre el área delimitada de las 7 etapas.
+> * **Impresión 3D (LAIMI F4-05):** Archivos entregados en LAIMI para impresión en Prusa MK4 (`2022437519-01.stl` / `-02.stl`). Retiro programado para mañana (2026-10-24) para colocar las torres acopladoras e insertar la fibra óptica plástica ($45\text{ cm}$).
+
 Tanto los 4 agujeros de montaje del **Arduino UNO** como los 4 agujeros de las **torres acopladoras 3D** están diseñados con un diámetro pasante de **$3.2\text{ mm}$**, mientras que la lámina de corte láser tiene **$3.0\text{ mm}$ de espesor** y la base de las piezas 3D mide **$3.0\text{ mm}$ de espesor**.
 
 ### Lista de Compra en Ferretería o Tienda de Electrónica:
