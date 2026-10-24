@@ -265,7 +265,7 @@ A continuación se presenta el registro cronológico de los commits y versiones 
 | **43** | `b47597b` | 2026-10-22 | Documentación / Bitácora | Registro en bitácora de la Sesión 10 (adecuación normativa LAIMI, matriz de protoboard 0-60 y renders 3D). | `BITACORA.md` |
 | **44** | `8a1f05a` | 2026-10-22 | Corte Láser LAIMI | Limpieza del cajetín de identificación y reubicación de rótulos de etapas fuera de la huella del protoboard en archivo vectorial. | `prototipo_laboratorio/corte_laser/2022437519_base_soporte_optico.pdf` |
 | **45** | `5dafb14` | 2026-10-22 | Impresión 3D | Incorporación de visor 3D interactivo en HTML5 (`visor_interactivo_3d.html`) para previsualización de piezas STL sin software externo. | `prototipo_laboratorio/impresion_3d/visor_interactivo_3d.html` |
-| **46** | `c605fc2` | 2026-10-23 | Ensamble Mecánico | Adquisición de tornillería M3, recepción de base láser LAIMI, atornillado de Arduino y montaje de protoboard en chasis. | `BITACORA.md`, `README.md`, `docs/lista_de_materiales_BOM.md`, `docs/diseno_prototipado_3d_laser.md` |
+| **46** | `dc0a80a` | 2026-10-23 | Ensamble Mecánico | Adquisición de tornillería M3, recepción de base láser LAIMI, atornillado de Arduino y montaje de protoboard en chasis. | `BITACORA.md`, `README.md`, `docs/lista_de_materiales_BOM.md`, `docs/diseno_prototipado_3d_laser.md` |
 
 ---
 
