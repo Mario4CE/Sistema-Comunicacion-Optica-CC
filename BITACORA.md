@@ -185,6 +185,8 @@
   * **Fijación del Arduino UNO:** Se fijó la placa Arduino UNO de forma rígida a la placa base mediante los tornillos y tuercas M3 a través de los 4 orificios pasantes, garantizando estabilidad mecánica total para el puerto USB de programación y conexión a tierra común (Req. P.17/Q.18).
   * **Instalación del Circuito en Protoboard:** Se montó la protoboard de 830 puntos (con el circuito electrónico completo de las 7 etapas ya interconectado: escalera R-2R, LM358N, NE555 astable, condensadores y buzzer pasivo) sobre el área central grabada con la delimitación de las 7 etapas.
   * **Estado del Prototipo:** El circuito físico y la plataforma mecánica se encuentran completamente estructurados e integrados en la base organizadora, **quedando el sistema listo a falta exclusiva de retirar mañana las piezas de impresión 3D** para instalar las torres acopladoras, alojar el LED y la LDR de forma coaxial e insertar el tramo de fibra óptica plástica ($45\text{ cm}$).
+* **Limpieza del proyecto:**
+  * Se eliminan documentos basura o que ya cumplieron con su proposito ya sea porque es una tarea finalizada o porque se tomo otra alternativa
 
 ---
 
