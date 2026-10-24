@@ -1,16 +1,4 @@
-// ============================================================================
-// PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113 - ITCR)
-// SERVICIO: LAIMI 2 – Impresión 3D (Edificio F4, Aula F4-05, Sede Cartago)
-// EQUIPO DESTINO: Impresora 3D Prusa MK4
-// ARCHIVO STL OFICIAL LAIMI: 2022437519-02.stl (Carné: 2022437519 - Pieza 02)
-//
-// Descripción:
-//   Genera el modelo 3D paramétrico del par de capuchones cilíndricos compactos
-//   (Opción B: Montaje directo sobre protoboard). Permite clavar las patas del
-//   LED rojo de 5 mm y de la LDR GL5528 directamente en las filas de la
-//   protoboard (a-j, 0-60) y encajar este capuchón negro por encima para
-//   sujetar la fibra óptica plástica (POF) de 2.2 mm y bloquear la luz ambiental.
-//
+
 // Parámetros de Solicitud en LAIMI F4-05:
 //   - Carné: 2022437519
 //   - Uso: Curso (EL2113 - Circuitos Eléctricos en Corriente Continua)

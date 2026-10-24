@@ -1,20 +1,5 @@
-// ============================================================================
-// PROYECTO: Sistema de Comunicación por Medios Ópticos (EL2113 - ITCR)
-// SERVICIO: LAIMI 2 – Impresión 3D (Edificio F4, Aula F4-05, Sede Cartago)
-// EQUIPO DESTINO: Impresora 3D Prusa MK4 (Volumen máx: 250 x 200 x 210 mm)
-// ARCHIVO STL OFICIAL LAIMI: 2022437519-01.stl (Carné: 2022437519 - Pieza 01)
-//
-// Descripción:
-//   Genera el modelo 3D paramétrico del par de torres de acoplamiento óptico
-//   axial (Opción A) que alinean concéntricamente el LED rojo de 5 mm (Etapa 4)
-//   y la fotorresistencia LDR GL5528 (Etapa 5) con la fibra óptica plástica (POF),
-//   aislando la luz ambiental del laboratorio e incorporando una pestaña con
-//   perforaciones M3 (3.2 mm) para atornillarse con tornillos M3 x 10mm/12mm
-//   sobre la placa base de corte láser.
-//
-// Parámetros de Solicitud en LAIMI F4-05:
-//   - Carné: 2022437519
-//   - Uso: Curso (EL2113 - Circuitos Eléctricos en Corriente Continua)
+
+// Parámetros de Solicitud 
 //   - Material: PLA (o PETG)
 //   - Resolución eje Z: 0.2 mm (óptimo balance tiempo/calidad en Prusa MK4)
 //   - Relleno (Infill): 20% a 30%
