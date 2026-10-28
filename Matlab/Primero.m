@@ -1,4 +1,3 @@
-%% ========================================================================
 % DESCRIPCION:
 % Este script digitaliza cualquier senal analogica a 4 bits (convirtiendola 
 % en numeros del 0 al 15) usando la cantidad de muestras que se le indique. 
@@ -17,16 +16,15 @@
 %
 % Salida:
 %   - Codigo C++ en consola listo para copiar:
-%     PATRON_PERIODICO_MATLAB[] y PATRON_APERIODICO_MATLAB[].
+%     PATRON_PERIODICO_MATLAB y PATRON_APERIODICO_MATLAB.
 %   - Graficas comparativas (Periodica, Aperiodica y Escalera).
-% ========================================================================
+
 
 clear; clc; close all;
 
-fprintf('======================================================================\n');
-fprintf('  GENERADOR MATLAB DE ARREGLOS DE 4 BITS (PERIODICOS Y APERIODICOS)   \n');
-fprintf('  Sistema de Comunicacion por Medios Opticos (EL2113)                 \n');
-fprintf('======================================================================\n\n');
+fprintf('  GENERADOR MATLAB DE ARREGLOS DE 4 BITS   \n');
+fprintf('  Sistema de Comunicacion por Medios Opticos  \n');
+
 
 %% 1. PARAMETROS GENERALES
 N_bits = 4;                          % Numero de bits del sistema
@@ -75,9 +73,7 @@ arreglo_escalera_4b = 0:(niveles - 1);
 escalera_reconstruida_v = arreglo_escalera_4b * delta_V;
 
 %% 5. EXPORTACION A C++ PARA ARDUINO
-fprintf('// ===================================================================\n');
 fprintf('// ARREGLOS EXPORTADOS DESDE MATLAB PARA ARDUINO\n');
-fprintf('// ===================================================================\n');
 fprintf('const unsigned long TIEMPO_MUESTRA_MATLAB_MS = %d; // Rango [1, 10000] ms\n\n', duracion_muestra_ms);
 
 % Imprime los arreglos ya en sintaxis de C++

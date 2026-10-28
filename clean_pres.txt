@@ -1,0 +1,142 @@
+--- PAGE 1 ---
+Investigaci´ on dirigida: Sistema de comunicaci´ on por
+medios ´ opticos
+Circuitos El´ ectricos en Corriente Continua
+Ing. Fabi´ an A. Picado Garc ´ ıa
+Escuela de Ingenier ´ ıa en Electr´ onica
+Instituto Tecnol´ ogico de Costa Rica
+II Semestre 2026
+Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 1 / 14
+--- PAGE 2 ---
+Agenda
+1. Descripci´ on del reto
+2. Objetivos
+3. Aspectos administrativos
+4. Requerimientos
+5. ¡Manos a la obra!
+Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 2 / 14
+--- PAGE 3 ---
+Fibra ´ optica
+La fibra ´ optica consiste en un medio de transmisi´ on de informaci´ on basado en pulsos de
+luz que se env ´ ıan por un material habilitado para reflejar de manera interna dicha
+intesidad luminosa de un extremo a otro.
+Descripci´ on del reto Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 3 / 14
+--- PAGE 4 ---
+Sistema de medici´ on
+A partir de los conocimientos que se van a ir adquiriendo semana a semana sobre el
+an´ alisis de circuitos el´ ectricos en corriente continua, los y las estudiantes deber´ an
+desarrollar un sistema que pueda enviar y recibir informaci´ on a trav´ es de un medio
+´ optico.. Para ello deber´ an tomar como datos de entrada un patr´ on almacenado en un
+Arduino (a nivel de software) para finalmente enviar dicha informaci´ on de manera ´ optica y
+presentarlo en un formato audible al final del medio de transmisi´ on.
+Descripci´ on del reto Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 4 / 14
+--- PAGE 5 ---
+Investigaci´ on dirigida
+Los y las estudiantes deber´ an implementar un sistema que permita dar soluci´ on al reto de
+sistema de comunicaci´ on por medios ´ opticos. La din´ amica de investigaci´ on dirigida
+consistir´ a en un reto que los diferentes grupos de trabajo ir´ an trabajando durante el
+semestre, con acompa˜ namiento del profesor. Se proponen dos puntos de control (semanas
+6 y 13) totalmente opcionales y sin calificaci´ on alguna, ´ unicamente con el esp ´ ıritu de
+acompa˜ nar y dar realimentaci´ on, para concluir en una presentaci´ on final en semana 19,
+cuya modalidad consistir´ a en que cada grupo de trabajo defender´ a la implementaci´ on
+realizada ante el profesor. Dicha presentaci´ on final tendr´ a un valor del 20% en la nota
+final del curso.
+Descripci´ on del reto Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 5 / 14
+--- PAGE 6 ---
+Objetivos
+1. Practicar la simulaci´ on de circuitos el´ ectricos en corriente continua mediante
+herramientas LTSpice y TinkerCAD.
+2. Conocer sobre el funcionamiento de amplificadores operacionales en corriente
+continua.
+3. Ejecutar las diferentes t´ ecnicas de an´ alisis de circuitos para dar soluci´ on a un
+problema real de ingenier ´ ıa.
+4. Utilizar Arduino como plataforma digital de patrones de prueba.
+5. Comprender sobre el funcionamiento de herramientas para corte laser e impresi´ on 3D.
+6. Explorar el funcionamiento de sistemas de fibra ´ optica.
+Objetivos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 6 / 14
+--- PAGE 7 ---
+Aspectos administrativos
+• Se invita a los y las estudiantes a organizarse en grupos de trabajo, de entre 3 a 4
+integrantessin excepci´ on.
+• Una vez conformado los grupos de trabajo, se debe notificar por escrito al profesor
+los nombres de cada uno de los y las integrantes, mediante correo electr´ onico
+fapicado@itcr.ac.cr.
+• El profesor a cargo brindar´ a acompa˜ namiento en todo momento, mediante el uso del
+horario de consulta.
+• Adicionalmente, se brindar´ a el espacio para dos puntos de control durante el
+semestre en semanas 6 y 19. Dichas fechas ser´ an de uso totalmente a elecci´ on del
+grupo de trabajo, con el objetivo de adquirir realimentaci´ on por parte del profesor.
+• La presentaci´ on final en modadlidad de defensa ser´ a en semana 19.
+• Al concluir, cada grupo de trabajo debe entregar un archivo comprimido .ZIP con los
+archivos de simulaci´ on utilizados en LTSpice y TinkerCAD, as ´ ı como el c´ odigo fuente
+realizado para el Arduino y apoyo en Matlab, as ´ ı como la documentaci´ on realizada
+en el informe de formato PDF.
+Aspectos administrativos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 7 / 14
+--- PAGE 8 ---
+Etapas del sistema: diagrama
+Requerimientos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 8 / 14
+--- PAGE 9 ---
+Etapas del sistema: descripci´ on (I)
+1. Etapa de patr´ on de datos de prueba, la cual ser´ a elaborada en software y manejada
+por un microcontrolador Arduino. Se utilizar´ an cuatro pines de salidadigitalpara
+generar c´ odigos digitales de 4 bits.
+2. Etapa de convertidor digital a anal´ ogico, cuya funci´ on ser´ a tomar los cuatro pines de
+salida y agruparlos de manera adecuada, tal que la salida de esta etapa es solo una
+se˜ nal anal´ ogica.
+3. Etapa de interfase, con la finalidad de aislar de manera el´ ectrica el comportamiento
+entre la etapa anterior y posterior.
+4. Etapa de generador ´ optico, cuyo objetivo ser´ a conformar una intensidad de luz
+proporcional a la entrada de tensi´ on. Es decir, convierte la tensi´ on en una fuente
+luminosa variable.
+Requerimientos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 9 / 14
+--- PAGE 10 ---
+Etapas del sistema: descripci´ on (II)
+5. Etapa de receptor ´ optico, la cual se encarga de recibir la intensidad de luz enviada
+por el medio ´ optico y entrega una resistencia el´ ectrica correspondiente.
+6. Etapa de generador de onda cuadrada, cuya finalidad consiste en utilizar la
+resistencia de la etapa anterior para producir una se˜ nal de onda cuadrada con
+frecuencia variable o proporcional.Nota: ambas etapas, receptor ´ optico y generador
+de onda cuadrada, trabajar´ an muy cercanamente.
+7. Etapa debuzzerpiezoel´ ectrico, quien finalmente se encarga de presentar la onda
+cuadrada de la etapa anterior en un formato audible.
+Requerimientos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 10 / 14
+--- PAGE 11 ---
+Etapas del sistema: requisitos espec ´ ıficos
+Referirse a la secci´ on 4 del enunciado.
+Requerimientos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 11 / 14
+--- PAGE 12 ---
+Comentarios (I)
+1. El equipo de trabajo deber´ a mostrar todos los c´ alculos, ecuaciones y dem´ as an´ alisis
+desarrollados que les haya permitido llegar a la implementaci´ on final. Esto se
+conocer´ a como el an´ alisis te´ orico.
+2. La elecci´ on de los valores de cada componente pasivo deber´ a ser el resultado de un
+an´ alisis que demuestre dicha escogencia.
+3. El equipo de trabajo deber´ a contar con un modelo del sistema en herramientas de
+simulaci´ on, de modo tal que permita observar el comportamiento ideal de las
+diferentes etapas, tanto separado como en conjunto. Del mismo modo, dicho modelo
+de simulaci´ on debe ser congruente con los resultados arrojados por los c´ alculos,
+ecuaciones y an´ alisis desarrollados previamente. Esto se conocer´ a como el an´ alisis
+experimental-virtual.
+Requerimientos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 12 / 14
+--- PAGE 13 ---
+Comentarios (II)
+4. El c´ odigo que se desarrolle para la etapa de patr´ on de datos de prueba deber´ a ser
+completamenteimplementado por el grupo de trabajo. En otras palabras, no se
+permiten soluciones dadas por herramientas o agentes de IA, como ChatGPT, entre
+otros.Sin excepci´ on. Se les invita a comentar cada l ´ ınea de c´ odigo, de modo tal
+que refleje un entendimiento a profundidad de la soluci´ on presentada.
+5. Cada grupo de trabajo deber´ a integrar dentro de sus prototipos al menosunapieza o
+secci´ on elaborada con corte l´ aser yunapieza o secci´ on elabora con impresi´ on 3D.
+Para ello har´ an uso de los servicios y personas asistentes de la Escuela de Electr´ onica.
+Requerimientos Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 13 / 14
+--- PAGE 14 ---
+¡Manos a la obra!
+¿Alguna duda o consulta?
+• Recuerden comenzar con la conformaci´ on de los grupos de trabajo.
+• Nodejen el trabajo en la investigaci´ on dirigida para el final.
+• Aprovechen el uso de los espacios de consultas.
+• Finalmente, lean con cuidado y detenimiento el instructivo de la Investigaci´ on
+Dirigida que se encuentra en el tecDigital. Dicho documento contiene mayor
+cantidad de detalle y constituye la referencia oficial de la actividad. Recuerden que la
+nota final en esta actividad representa un 20% de la nota del curso.
+¡Manos a la obra! Ing. Fabi´ an A. Picado Garc ´ ıa II Semestre 2026 14 / 14

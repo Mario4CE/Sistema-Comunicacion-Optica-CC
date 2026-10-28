@@ -10,10 +10,8 @@
 
 \title{Diseño, Modelado y Validación de un Sistema de Comunicación por Medios Ópticos de 4 Bits}
 
-\author{Mario~Cerdas%
-% Descomentar y completar si el informe incluye más integrantes de grupo:
-% ,~[Nombre~Segundo~Integrante],~y~[Nombre~Tercer~Integrante]%
-\thanks{Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR), Cartago, Costa Rica. Curso EL-2113: Circuitos Eléctricos en Corriente Continua, II Semestre 2026. Profesor: Ing. Fabián Alberto Picado García.}}
+\author{Mario~Cerdas,~Sebasti\'an~Quir\'os~Fern\'andez,~e~Ian~Fuentes~N\'u\~nez%
+\thanks{Los autores pertenecen a la Escuela de Ingenier\'ia Electr\'onica, Instituto Tecnol\'ogico de Costa Rica (ITCR), Cartago, Costa Rica. Carn\'es y correos: M.~Cerdas (2022437519), S.~Quir\'os~Fern\'andez (2024073526, s.quiros.4@estudiantec.cr), I.~Fuentes~N\'u\~nez (2025100912, I.fuentes.1@estudiantec.cr). Curso EL-2113: Circuitos El\'ectricos en Corriente Continua, II Semestre 2026. Profesor: Ing. Fabi\'an Alberto Picado Garc\'ia.}}
 
 \begin{document}
 
@@ -106,7 +104,7 @@ En el Cuadro~\ref{tab:resultados} se contrastan los resultados del análisis te�
 \end{tabular}
 \end{table}
 
-Como se evidencia en el Cuadro~\ref{tab:resultados}, la concordancia entre las ecuaciones nodales de Kirchhoff y la simulación integral en LTspice presenta un error relativo inferior a $0.002\%$ en el DAC ($< 10\%$ exigido en el requerimiento O.16). En el estado 0 se registra un nivel de saturación baja normal de $5.0\text{ mV}$ inherente a la etapa de salida del LM358 con fuente simple. La columna $V_{\text{exp}}$ provee la plantilla para consignar las lecturas del multímetro digital en el laboratorio de pruebas físicas. A partir del código $0110_2$ ($1.8750\text{ V} > V_D$), el LED rojo entra en conducción activa y modula la resistencia de la LDR desde $40\text{ k}\Omega$ hasta $1.58\text{ k}\Omega$, barriendo la frecuencia acústica de salida desde $176.7\text{ Hz}$ hasta $3443.0\text{ Hz}$.
+Como se evidencia en el Cuadro~\ref{tab:resultados}, la concordancia entre las ecuaciones nodales de Kirchhoff y la simulación integral en LTspice presenta un error relativo inferior a $0.002\%$ en el DAC ($< 10\%$ exigido en el requerimiento O.16). En el estado 0 se registra un nivel de saturación baja normal de $5.0\text{ mV}$ inherente a la etapa de salida del LM358 con fuente simple. La columna $V_{\text{exp}}$ provee la plantilla para consignar las lecturas del multímetro digital en el laboratorio de pruebas físicas. Asimismo, habiéndose completado el ensamble físico integral del circuito sobre la placa protoboard fijada al chasis organizador, se ejecutaron pruebas preliminares de banco empleando una batería como fuente autónoma para verificar la continuidad nodal, modulación del LED y respuesta acústica audible en el buzzer, previo al registro experimental cuantitativo definitivo ($V_{\text{exp}}$) con la fuente DC regulada de laboratorio. A partir del código $0110_2$ ($1.8750\text{ V} > V_D$), el LED rojo entra en conducción activa y modula la resistencia de la LDR desde $40\text{ k}\Omega$ hasta $1.58\text{ k}\Omega$, barriendo la frecuencia acústica de salida desde $176.7\text{ Hz}$ hasta $3443.0\text{ Hz}$.
 
 \section{Conclusiones}
 \begin{enumerate}

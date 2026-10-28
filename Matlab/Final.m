@@ -1,4 +1,4 @@
-%% ========================================================================
+%
 % DESCRIPCION:
 % Este script es un simulador completo de nuestro sistema de comunicacion 
 % optica. Lo que hace es calcular matematicamente que deberia pasar en 
@@ -16,13 +16,10 @@
 %   - El codigo asume que hay un amplificador operacional (LM358) trabajando  
 %     como seguidor de voltaje entre el DAC y el LED para que el voltaje no
 %     se caiga al conectar la carga.
-% ========================================================================
 
 clear; clc; close all;
 
-fprintf('===============================================================\n');
 fprintf('  SIMULACION DEL SISTEMA DE COMUNICACION POR MEDIOS OPTICOS   \n');
-fprintf('===============================================================\n\n');
 
 %% 1. PARAMETROS DEL SISTEMA
 % --- Etapa 1 y 2: DAC R-2R ---
@@ -70,7 +67,6 @@ duty_cycle_pct = ((R1_555 + R_ldr_estimada) ./ (R1_555 + 2 * R_ldr_estimada)) * 
 
 %% 3. TABLA DE RESULTADOS EN CONSOLA
 fprintf('Dec | Binario [b3 b2 b1 b0] | V_DAC (V) | I_LED (mA) | R_LDR (kOhm) | Frecuencia (Hz) | Duty Cycle (%%)\n');
-fprintf('--------------------------------------------------------------------------------------------------\n');
 for i = 1:num_niveles
     fprintf(' %2d |       %d  %d  %d  %d       |  %6.4f   |   %5.2f    |    %6.2f    |     %7.1f     |     %5.1f\n', ...
         datos_decimales(i), ...
@@ -78,7 +74,6 @@ for i = 1:num_niveles
         voltajes_dac(i), corriente_led_mA(i), R_ldr_estimada(i)/1e3, ...
         frecuencia_555_Hz(i), duty_cycle_pct(i));
 end
-fprintf('--------------------------------------------------------------------------------------------------\n\n');
 
 %% 4. GENERACION DE GRAFICAS
 figure('Name', 'Sistema de Comunicacion Optica - EL2113', 'Color', [1 1 1], 'Position', [100 100 1000 700]);

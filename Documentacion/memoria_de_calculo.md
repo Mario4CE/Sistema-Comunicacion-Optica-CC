@@ -2,7 +2,12 @@
 **Proyecto:** Investigación Dirigida — Sistema de Comunicación por Medios Ópticos  
 **Curso:** EL-2113 Circuitos Eléctricos en Corriente Continua  
 **Institución:** Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR)  
-**Autor:** Mario Cerdas y equipo de trabajo  
+**Equipo de Trabajo:**
+- **Mario Cerdas** (Carné: 2022437519)
+- **Sebastián Quirós Fernández** (Carné: 2024073526, `s.quiros.4@estudiantec.cr`)
+- **Ian Fuentes Núñez** (Carné: 2025100912, `I.fuentes.1@estudiantec.cr`)  
+**Profesor:** Ing. Fabián Alberto Picado García  
+**Semestre:** II Semestre 2026  
 
 ---
 
@@ -223,9 +228,13 @@ $$f_c = \frac{1}{2\pi \cdot R_L \cdot C_{acoplo}}$$
 
 ---
 
-## 7. Esquema de Alimentación con Fuentes de Laboratorio (Req. P.17 y Q.18)
+## 7. Esquema de Alimentación con Fuentes de Laboratorio (Req. P.17 y Q.18) y Pruebas Preliminares
 
-En estricto cumplimiento de los requerimientos **P.17** y **Q.18**:
+### 7.1 Validación Preliminar de Banco y Ensamble Físico
+El circuito físico fue ensamblado en su totalidad sobre la placa protoboard fijada a la base organizadora de corte láser. Para verificar la continuidad eléctrica nodal, descartar cortocircuitos y comprobar de forma preliminar la modulación óptica del LED transmisor, el acople por la fibra POF de $45\text{ cm}$, la respuesta fotoconductora de la LDR y la emisión de tonos audibles por el buzzer pasivo, se llevaron a cabo **pruebas preliminares de banco utilizando una batería como fuente autónoma portátil**. Esta prueba previa de encendido confirmó la correcta interconexión entre las siete etapas del sistema.
+
+### 7.2 Cumplimiento Normativo Estricto para Evaluación Oficial (Req. P.17 y Q.18)
+En estricto cumplimiento de los requerimientos **P.17** y **Q.18** de la rúbrica oficial:
 1. **El Arduino UNO/Nano NO alimenta ninguna etapa analógica de transmisión ni de recepción.** Su pin de `+5V` permanece desconectado del protoboard.
-2. **No se emplean baterías AA, AAA ni de 9V.**
+2. **Queda terminantemente prohibido el uso de baterías AA, AAA o de 9V para la captura de mediciones cuantitativas finales y para la defensa presencial ante el profesor.** La prueba con batería se limitó exclusivamente a la verificación funcional previa al ingreso al laboratorio.
 3. Las etapas de transmisión (LM358 en Etapas 2 y 3, y Driver LED en Etapa 4) y de recepción (Temporizador NE555 en Etapa 6) se alimentan exclusivamente mediante la **Fuente de Alimentación DC Regulada de Laboratorio provista por la bodega de la Escuela de Electrónica**, uniendo el terminal negativo (`COM / GND`) de la fuente de laboratorio con el pin `GND` del Arduino para mantener una única referencia de potencial ($0\text{ V}$).

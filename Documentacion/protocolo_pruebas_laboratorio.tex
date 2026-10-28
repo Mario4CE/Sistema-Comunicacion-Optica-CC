@@ -1,0 +1,229 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\geometry{top=2.0cm, bottom=2.0cm, left=2.0cm, right=2.0cm}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{pifont}
+
+\definecolor{tecblue}{RGB}{0, 43, 91}
+\definecolor{alertred}{RGB}{180, 0, 0}
+\definecolor{okgreen}{RGB}{0, 120, 40}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{EL-2113 Circuitos en CC} -- Protocolo de Pruebas de Laboratorio}
+\rhead{Sistema de Comunicación Óptica}
+\cfoot{\thepage}
+
+\titleformat{\section}{\large\bfseries\color{tecblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{tecblue}}{\thesubsection.}{0.5em}{}
+
+\newcommand{\cmark}{\textcolor{okgreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{alertred}{\ding{55}}}
+\newcommand{\squarebox}{\raisebox{-0.1ex}{\Large $\square$}}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{\color{tecblue}PROTOCOLO MAESTRO DE PRUEBAS DE LABORATORIO}}\\[0.2cm]
+    {\large \textbf{Validación Experimental y Cumplimiento Normativo (Req. A.1--Q.18)}}\\[0.15cm]
+    \textbf{Curso:} Circuitos Eléctricos en Corriente Continua (EL-2113) \quad|\quad \textbf{Fecha:} Octubre 2026\\[0.1cm]
+    \textbf{Escuela de Ingeniería Electrónica -- Instituto Tecnológico de Costa Rica (ITCR)}\\[0.1cm]
+    \textbf{Equipo de Trabajo:} Mario Cerdas (2022437519), Sebasti\'an Quir\'os Fern\'andez (2024073526), Ian Fuentes N\'u\~nez (2025100912)\\[0.1cm]
+    \textbf{Base F\'isica:} Maqueta Corte L\'aser LAIMI + Kit 3D M3 \quad|\quad \textbf{Estado:} Ensamble 100\% completado y prevalidado con bater\'ia
+\end{center}
+
+\vspace{-0.2cm}
+\begin{tcolorbox}[colback=tecblue!5, colframe=tecblue, title=\textbf{OBJETIVO DE LA SESIÓN EXPERIMENTAL}]
+Validar de forma secuencial y cuantitativa las 7 etapas del prototipo físico del sistema de comunicación óptica, verificar el margen de error menor al $10\%$ en el convertidor DAC (Req. O.16), comprobar la modulación acústica audible en el buzzer pasivo, y corroborar el estricto apego a las prohibiciones de alimentación (Req. P.17 y Q.18).
+\end{tcolorbox}
+
+\section{Materiales e Instrumentación a Solicitar en Bodega de Laboratorio}
+
+Al presentarse en la ventanilla/bodega del laboratorio de la Escuela de Electrónica, solicite con su carné los siguientes equipos y accesorios:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Fuente de Alimentación DC Regulada de Laboratorio (Doble Canal independiente):}
+    \begin{itemize}
+        \item \textbf{Canal 1 (CH1):} Ajustar a \textbf{$+5.00\text{ V}$} DC con límite de corriente fijado en $150\text{ mA}$ (alimenta el temporizador NE555, pines 8 y 4).
+        \item \textbf{Canal 2 (CH2):} Ajustar a \textbf{$+8.50\text{ V}\text{ a }+9.00\text{ V}$} DC con límite de corriente en $100\text{ mA}$ (alimenta el pin 8 del LM358N para evitar saturación de riel en estados 12 a 15).
+        \item \textbf{Tierra común:} Conectar los bornes negativos (negros) de ambos canales entre sí y referenciarlos al bus común de tierra (\texttt{GND}) de la protoboard.
+    \end{itemize}
+    \item \textbf{Multímetro Digital de Precisión (DMM):} Con un par de puntas tipo aguja/banana y al menos un par de terminales tipo caimán para mediciones fijas de tensión DC y resistencia ($\Omega$).
+    \item \textbf{Osciloscopio Digital (2 Canales, $\ge 50\text{ MHz}$):} Con 2 sondas pasivas $10\times$ calibradas, puntas de agarre retráctil y cables de tierra con caimán corto.
+    \item \textbf{Cables de Conexión de Laboratorio:}
+    \begin{itemize}
+        \item 3 cables Banana--Caimán (Rojo, Azul/Amarillo y Negro).
+        \item 4 cables Caimán--Caimán para derivaciones de señal y puesta a tierra.
+    \end{itemize}
+    \item \textbf{Herramientas y Accesorios Propios:}
+    \begin{itemize}
+        \item Computadora portátil con cable USB para Arduino UNO, con el sketch \texttt{Logica.ino} listo y MATLAB abierto.
+        \item Regla graduada o flexómetro (para certificar los $45\text{ cm}$ de la fibra óptica, Req. I.9).
+        \item Destornillador plano/estrella pequeño (para ajustar la fijación de las torres M3 en la base láser).
+    \end{itemize}
+\end{enumerate}
+
+\section{Fase 0: Inspección Previa y Conexión Segura (Pre-Flight Checks)}
+
+\begin{itemize}[label=\squarebox]
+    \item \textbf{Ensamble e Integridad Previa (Prueba de Banco):} El circuito físico de 7 etapas se encuentra 100\% ensamblado sobre la protoboard y la base láser. Se realizaron pruebas previas con una batería como fuente para verificar continuidad eléctrica nodal, encendido del LED y respuesta en el buzzer pasivo.
+    \item \textbf{Prohibición P.17 Verificada:} Confirmar visualmente que el pin \textbf{$+5\text{V}$ del Arduino UNO está totalmente desconectado} de la protoboard.
+    \item \textbf{Tierra Compartida:} Unir firmemente el pin \texttt{GND} del Arduino UNO con el bus de tierra general (\texttt{GND}) de la protoboard y el negativo de la fuente de laboratorio.
+    \item \textbf{Límites de Corriente:} Antes de activar la salida de la fuente, fijar el límite de corriente en $100\text{ mA}$ en ambos canales para proteger los circuitos integrados ante posibles cortocircuitos accidentales.
+    \item \textbf{Tensiones de Encendido:} Activar primero CH1 ($+5.0\text{ V}$) y luego CH2 ($+9.0\text{ V}$). Observar en la fuente que el consumo global en reposo se mantenga por debajo de $40\text{ mA}$.
+\end{itemize}
+
+\section{Fase 1: Verificación de la Etapa 1 -- Microcontrolador Arduino (Req. C.3 y D.4)}
+
+\begin{enumerate}[leftmargin=*]
+    \item Abrir el Monitor Serial del Arduino IDE a \textbf{9600 baudios}.
+    \item Enviar el comando \texttt{T1500} para configurar una permanencia cómoda de $1.5\text{ s}$ por nivel.
+    \item \textbf{Comprobación de límites de retención (Req. C.3):}
+    \begin{itemize}
+        \item Probar \texttt{T1} ($1\text{ ms}$, límite inferior) $\to$ observar respuesta rápida en osciloscopio.
+        \item Probar \texttt{T10000} ($10\text{ s}$, límite superior) $\to$ observar cambio pausado.
+        \item Probar \texttt{T1500} para continuar con la toma ordenada de datos.
+    \end{itemize}
+    \item \textbf{Comprobación de patrones de MATLAB (Req. D.4):}
+    \begin{itemize}
+        \item Presionar \texttt{P}: Verificar que ejecuta el ciclo de la \textbf{señal periódica} (20 muestras).
+        \item Presionar \texttt{S}: Verificar que ejecuta el ciclo de la \textbf{señal aperiódica} (18 muestras).
+        \item Presionar \texttt{A}: Regresar al modo \textbf{escalera completa} (16 estados, 0 a 15).
+    \end{itemize}
+\end{enumerate}
+
+\section{Fase 2: Verificación del DAC R--2R y Buffer LM358 (Req. E.5, F.6 y O.16)}
+
+Colocar el sistema en modo manual enviando el código numérico correspondiente por el Monitor Serial (o utilizar el comando \texttt{M} para pausar). Con el multímetro digital referenciado a \texttt{GND}, medir la tensión continua en la salida de la Etapa 2 (Pin 1 del LM358N) y en la salida de la Interfaz Etapa 3 (Pin 7 del LM358N).
+
+\begin{table}[h!]
+\centering
+\caption{Registro Experimental de Tensiones del DAC R--2R y Margen de Error (Req. O.16)}
+\label{tab:dac_exp}
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{ccccccc}
+\toprule
+\textbf{Dec} & \textbf{Binario} & $V_{\text{teo}}$ \textbf{(V)} & $V_{\text{sim}}$ \textbf{(V)} & $V_{\text{exp}}$ \textbf{Pin 1 (V)} & $\text{Error Relativo } E_{\text{rel}}$ \textbf{(\%)} & \textbf{Cumple O.16 ($< 10\%$)} \\
+\midrule
+0  & 0000 & 0.0000 & 0.0050 & \hspace{1.8cm} & Sat. Baja ($V_{OL} \approx 5\text{ mV}$) & [\quad] Sí \quad [\quad] No \\
+1  & 0001 & 0.3125 & 0.3125 &                & & [\quad] Sí \quad [\quad] No \\
+2  & 0010 & 0.6250 & 0.6250 &                & & [\quad] Sí \quad [\quad] No \\
+3  & 0011 & 0.9375 & 0.9375 &                & & [\quad] Sí \quad [\quad] No \\
+4  & 0100 & 1.2500 & 1.2500 &                & & [\quad] Sí \quad [\quad] No \\
+5  & 0101 & 1.5625 & 1.5625 &                & & [\quad] Sí \quad [\quad] No \\
+6  & 0110 & 1.8750 & 1.8750 &                & & [\quad] Sí \quad [\quad] No \\
+7  & 0111 & 2.1875 & 2.1875 &                & & [\quad] Sí \quad [\quad] No \\
+8  & 1000 & 2.5000 & 2.5000 &                & & [\quad] Sí \quad [\quad] No \\
+9  & 1001 & 2.8125 & 2.8125 &                & & [\quad] Sí \quad [\quad] No \\
+10 & 1010 & 3.1250 & 3.1250 &                & & [\quad] Sí \quad [\quad] No \\
+11 & 1011 & 3.4375 & 3.4375 &                & & [\quad] Sí \quad [\quad] No \\
+12 & 1100 & 3.7500 & 3.7500 &                & & [\quad] Sí \quad [\quad] No \\
+13 & 1101 & 4.0625 & 4.0624 &                & & [\quad] Sí \quad [\quad] No \\
+14 & 1110 & 4.3750 & 4.3749 &                & & [\quad] Sí \quad [\quad] No \\
+15 & 1111 & 4.6875 & 4.6874 &                & & [\quad] Sí \quad [\quad] No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Fórmula de Cálculo del Error Relativo:}
+\begin{equation*}
+    E_{\text{rel}}(\%) = \left| \frac{V_{\text{exp}} - V_{\text{teo}}}{V_{\text{teo}}} \right| \times 100\%
+\end{equation*}
+
+\noindent\textbf{Prueba de Efecto de Carga (Req. F.6):}
+\begin{itemize}[label=\squarebox]
+    \item Fijar el código 15 ($4.6875\text{ V}$).
+    \item Medir tensión en Pin 1 (salida DAC): $V_1 = \underline{\hspace{2cm}}\text{ V}$.
+    \item Conectar y desconectar la carga de $150\ \Omega$ + LED en el Pin 7: Corroborar que $V_1$ en el Pin 1 se mantiene constante sin caerse (demuestra que la Etapa 3 aísla perfectamente la impedancia $R_{th} = 10\text{ k}\Omega$).
+\end{itemize}
+
+\section{Fase 3: Verificación del Generador y Enlace Óptico (Req. G.7, H.8 e I.9)}
+
+\begin{itemize}[label=\squarebox]
+    \item \textbf{Umbral de Conducción del LED Rojo:} Observar que para los códigos 0 a 5 ($V \le 1.56\text{ V}$), el LED permanece apagado. En el código 6 ($1.875\text{ V} > V_D \approx 1.80\text{ V}$), el LED comienza a emitir fotones visibles.
+    \item \textbf{Corriente Máxima del LED (Código 15):} Medir la caída de tensión sobre $R_{driver} = 150\ \Omega$:
+    \begin{equation*}
+        V_{R_{drv}} = \underline{\hspace{2cm}}\text{ V} \implies I_{LED} = \frac{V_{R_{drv}}}{150\ \Omega} = \underline{\hspace{2cm}}\text{ mA} \quad (\text{Valor esperado: } 18.5\text{--}19.2\text{ mA})
+    \end{equation*}
+    \item \textbf{Longitud del Medio Óptico (Req. I.9):} Medir con la regla la fibra óptica plástica montada sobre las torres y ranuras:
+    \begin{equation*}
+        L_{\text{fibra}} = \underline{\hspace{2.5cm}}\text{ cm} \quad (\text{Debe cumplir estrictamente } 30\text{ cm} \le L \le 60\text{ cm})
+    \end{equation*}
+\end{itemize}
+
+\section{Fase 4: Receptor Óptico y Oscilador Astable NE555 (Req. J.10, K.11 y L.12)}
+
+Conectar el Canal 1 del osciloscopio en el Pin 3 del temporizador NE555 y el multímetro en medición de resistencia sobre los terminales de la LDR.
+
+\begin{table}[h!]
+\centering
+\caption{Registro Experimental del Receptor LDR, Frecuencia y Audio Acústico}
+\label{tab:555_exp}
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{ccccccc}
+\toprule
+\textbf{Estado} & \textbf{Condición Óptica} & $R_{\text{LDR, sim}}$ & $R_{\text{LDR, exp}}$ \textbf{(k$\Omega$)} & $f_{\text{555, sim}}$ \textbf{(Hz)} & $f_{\text{555, exp}}$ \textbf{(Hz)} & \textbf{Tono Audible / Percepción} \\
+\midrule
+Código 0  & Oscuridad / LED Apagado & $40.0\text{ k}\Omega$ & & $176.7\text{ Hz}$ & & Tono Grave Profundo \\
+Código 6  & Inicio Conducción LED   & $28.7\text{ k}\Omega$ & & $244.9\text{ Hz}$ & & Tono Medio-Bajo \\
+Código 10 & Iluminación Intermedia  & $3.68\text{ k}\Omega$ & & $1711.6\text{ Hz}$ & & Tono Medio \\
+Código 15 & Máxima Luz Conducida    & $1.58\text{ k}\Omega$ & & $3443.0\text{ Hz}$ & & Tono Agudo Intenso \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Comprobaciones Críticas del Transductor y Acoplo AC:}
+\begin{itemize}[label=\squarebox]
+    \item \textbf{Prueba del Buzzer Pasivo (Req. L.12):} Desconectar momentáneamente el buzzer del circuito y conectarlo directamente a una fuente continua de $+5\text{ V}$ DC:
+    \begin{itemize}
+        \item Si emite un pitido continuo $\to$ \xmark{} \textbf{Es un buzzer activo (NO permitido)}.
+        \item Si solo emite un "clic" mecánico seco al conectar y queda mudo $\to$ \cmark{} \textbf{Es 100\% pasivo (CUMPLE)}.
+    \end{itemize}
+    \item \textbf{Verificación del Acoplo AC ($C_{\text{acoplo}} = 10\ \mu\text{F}$):} Con el osciloscopio en acoplamiento DC conectado directamente sobre el buzzer, verificar que la onda cuadrada oscila simétricamente alrededor de $0\text{ V}$ ($V_{\text{offset}} \approx 0\text{ V}$), confirmando el filtrado del nivel continuo de reposo ($+2.5\text{ V}$).
+\end{itemize}
+
+\section{Checklist Rápido de Cumplimiento de Requerimientos para la Entrega}
+
+\begin{table}[h!]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{cp{10.5cm}c}
+\toprule
+\textbf{Req.} & \textbf{Descripción Resumida} & \textbf{Estado} \\
+\midrule
+\textbf{A.1 / B.2} & 7 etapas delimitadas en chasis físico y grabado láser. & [\quad] \\
+\textbf{C.3 / D.4} & Patrones de 4 bits de longitud variable en MATLAB y Arduino ($1\text{ ms} \le T \le 10\text{ s}$). & [\quad] \\
+\textbf{E.5}       & DAC con red R--2R ($10\text{ k}\Omega / 20\text{ k}\Omega$) + OpAmp activo 1A del LM358N. & [\quad] \\
+\textbf{F.6}       & Etapa de interfaz de aislamiento exclusivamente con OpAmp 1B del LM358N. & [\quad] \\
+\textbf{G.7 / H.8} & Generador óptico con resistencia $150\ \Omega$ y LED rojo justificado por Planck y PMMA. & [\quad] \\
+\textbf{I.9 / J.10}& Fibra óptica plástica de $45\text{ cm}$ ($30\text{--}60\text{ cm}$) y fotorresistencia LDR pasiva. & [\quad] \\
+\textbf{K.11 / L.12}& Oscilador comercial integrado NE555 astable y buzzer piezoeléctrico pasivo. & [\quad] \\
+\textbf{M.13 / N.14}& Prototipado físico en LAIMI: Base en corte láser y kit 3D de 8 piezas atornilladas M3. & [\quad] \\
+\textbf{\~N.15 / O.16}& Circuito montado en protoboard y error de conversión DAC menor al $10\%$. & [\quad] \\
+\textbf{P.17 / Q.18}& Pin 5V de Arduino desconectado, sin baterías; alimentado por Fuente DC de Laboratorio. & [\quad] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\noindent\rule{\textwidth}{0.4pt}
+\begin{center}
+\textbf{Firma de Integrantes:} \underline{\hspace{4.5cm}} \qquad \textbf{Visto Bueno Profesor/Asistente:} \underline{\hspace{4.5cm}}
+\end{center}
+
+\end{document}

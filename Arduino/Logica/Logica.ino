@@ -1,15 +1,4 @@
 /**
- * PROYECTO: Sistema de Comunicacion por Medios Opticos
- * CURSO: EL-2113 Circuitos Electricos en Corriente Continua
- * INSTITUCION: Escuela de Ingenieria Electronica, ITCR
- * SEMESTRE: II Semestre 2026
- * PROFESOR: Ing. Fabian Alberto Picado Garcia
- * 
- * EQUIPO DE TRABAJO:
- *   - Mario Cerdas (Carne: 2022437519)
- *   - Sebastian Quiros Fernandez (Carne: 2024073526, s.quiros.4@estudiantec.cr)
- *   - Ian Fuentes Nunez (Carne: 2025100912, I.fuentes.1@estudiantec.cr)
- * 
  * DESCRIPCION:
  * Este programa toma arreglos de longitud variable con datos de 4 bits (b0 a b3)
  * obtenidos en MATLAB (tanto de senales periodicas como aperiodicas) y saca
