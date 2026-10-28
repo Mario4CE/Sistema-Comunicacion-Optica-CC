@@ -1,4 +1,15 @@
 /**
+ * PROYECTO: Sistema de Comunicacion por Medios Opticos
+ * CURSO: EL-2113 Circuitos Electricos en Corriente Continua
+ * INSTITUCION: Escuela de Ingenieria Electronica, ITCR
+ * SEMESTRE: II Semestre 2026
+ * PROFESOR: Ing. Fabian Alberto Picado Garcia
+ * 
+ * EQUIPO DE TRABAJO:
+ *   - Mario Cerdas (Carne: 2022437519)
+ *   - Sebastian Quiros Fernandez (Carne: 2024073526, s.quiros.4@estudiantec.cr)
+ *   - Ian Fuentes Nunez (Carne: 2025100912, I.fuentes.1@estudiantec.cr)
+ * 
  * DESCRIPCION:
  * Este programa toma arreglos de longitud variable con datos de 4 bits (b0 a b3)
  * obtenidos en MATLAB (tanto de senales periodicas como aperiodicas) y saca
@@ -20,7 +31,6 @@
  *   - '0'..'15': Pone manualmente un valor de 4 bits en las salidas.
  *   - 'T<ms>'  : Cambia el tiempo por dato entre 1 ms y 10000 ms
  *                (ej: 'T500' para 500 ms, 'T2000' para 2 s).
- * ============================================================================
  */
 
 // Pines de salida digital hacia la red R-2R
@@ -71,9 +81,7 @@ void seleccionarArreglo(const uint8_t* nuevoArreglo, size_t nuevaLongitud, char 
 bool configurarTiempoPermanencia(unsigned long nuevoTiempoMs);
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: setup
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Configura los 4 pines digitales como salidas para el DAC R-2R, pone el
  *   primer valor en los pines, inicia la comunicacion serial a 9600 baudios
@@ -89,7 +97,6 @@ bool configurarTiempoPermanencia(unsigned long nuevoTiempoMs);
  *   - Los pines D8 a D11 van conectados a las entradas del DAC R-2R.
  *   - Solo se debe compartir tierra (GND) con el circuito analogico, sin
  *     usar los 5V del Arduino para alimentar op-amps.
- * ----------------------------------------------------------------------------
  */
 void setup() {
   // Pines del DAC como salidas
@@ -111,7 +118,7 @@ void setup() {
   Serial.println("======================================================");
   Serial.println("  SISTEMA DE COMUNICACION POR MEDIOS OPTICOS (EL2113)");
   Serial.println("  Etapa 1: Generador de Patrones de 4 Bits");
-  Serial.println("======================================================");
+  Serial.println( );
   Serial.println("Comandos disponibles:");
   Serial.println("  'A' -> Modo Escalera (16 datos: 0 a 15)");
   Serial.println("  'P' -> Arreglo MATLAB Senal Periodica (20 datos)");
@@ -127,9 +134,7 @@ void setup() {
 }
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: loop
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Ciclo principal del programa. Revisa si entraron comandos por el puerto
  *   serial y va avanzando por el arreglo seleccionado ('A', 'P' o 'S') o
@@ -144,7 +149,6 @@ void setup() {
  * Restricciones:
  *   - No usar delay() para no trabar la lectura del Monitor Serial.
  *   - El tiempo de cambio debe mantenerse entre 1 ms y 10000 ms.
- * ----------------------------------------------------------------------------
  */
 void loop() {
   // Revisar si el usuario mando algun comando
@@ -185,9 +189,7 @@ void loop() {
 }
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: seleccionarArreglo
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Cambia el puntero al arreglo que se quiere transmitir, guarda su longitud,
  *   reinicia el indice en cero y saca de una vez el primer valor por los pines.
@@ -202,7 +204,6 @@ void loop() {
  *
  * Restricciones:
  *   - El puntero no puede ser NULL y la longitud debe ser al menos 1.
- * ----------------------------------------------------------------------------
  */
 void seleccionarArreglo(const uint8_t* nuevoArreglo, size_t nuevaLongitud, char nuevoModo) {
   if (nuevoArreglo == NULL || nuevaLongitud == 0) return;
@@ -220,9 +221,7 @@ void seleccionarArreglo(const uint8_t* nuevoArreglo, size_t nuevaLongitud, char 
 }
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: configurarTiempoPermanencia
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Verifica que el nuevo tiempo este dentro del rango permitido (1 ms a 10 s)
  *   y actualiza el intervalo de cambio entre muestras.
@@ -236,7 +235,6 @@ void seleccionarArreglo(const uint8_t* nuevoArreglo, size_t nuevaLongitud, char 
  *
  * Restricciones:
  *   - nuevoTiempoMs debe estar entre 1 y 10000.
- * ----------------------------------------------------------------------------
  */
 bool configurarTiempoPermanencia(unsigned long nuevoTiempoMs) {
   if (nuevoTiempoMs >= TIEMPO_MIN_MS && nuevoTiempoMs <= TIEMPO_MAX_MS) {
@@ -248,9 +246,7 @@ bool configurarTiempoPermanencia(unsigned long nuevoTiempoMs) {
 }
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: aplicarBits
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Separa un numero de 0 a 15 en sus 4 bits individuales usando mascaras y
  *   desplazamientos, y escribe HIGH o LOW en los pines D8, D9, D10 y D11.
@@ -264,7 +260,6 @@ bool configurarTiempoPermanencia(unsigned long nuevoTiempoMs) {
  * Restricciones:
  *   - El valor debe ser de 4 bits (0 a 15). Se le aplica una mascara 0x0F
  *     por seguridad para ignorar los 4 bits superiores.
- * ----------------------------------------------------------------------------
  */
 void aplicarBits(uint8_t valor) {
   // Asegurar que solo pasen los primeros 4 bits (00001111)
@@ -278,9 +273,7 @@ void aplicarBits(uint8_t valor) {
 }
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: imprimirEstado
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Calcula el voltaje teorico a la salida del DAC R-2R y muestra en el
  *   Monitor Serial el dato en decimal, en binario de 4 bits y el voltaje.
@@ -294,7 +287,6 @@ void aplicarBits(uint8_t valor) {
  * Restricciones:
  *   - El puerto serial debe estar iniciado.
  *   - Se asume Vref = 5.0 V de las salidas digitales del Arduino.
- * ----------------------------------------------------------------------------
  */
 void imprimirEstado(uint8_t valor) {
   uint8_t dato = valor & 0x0F;
@@ -318,9 +310,7 @@ void imprimirEstado(uint8_t valor) {
 }
 
 /**
- * ----------------------------------------------------------------------------
  * Funcion: procesarComandosSeriales
- * ----------------------------------------------------------------------------
  * Descripcion:
  *   Lee lo que el usuario escriba en el Monitor Serial hasta el salto de linea
  *   y ejecuta la accion correspondiente: cambiar de arreglo ('A', 'P', 'S'),
@@ -337,7 +327,6 @@ void imprimirEstado(uint8_t valor) {
  *   - El Monitor Serial debe estar configurado con "Ambos NL & CR" o "Nueva linea".
  *   - El tiempo en 'T<ms>' debe ser un entero entre 1 y 10000.
  *   - El valor manual debe ser un entero entre 0 y 15.
- * ----------------------------------------------------------------------------
  */
 void procesarComandosSeriales() {
   if (Serial.available() > 0) {
