@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Visor 3D Interactivo - Piezas STL LAIMI (2022437519)</title>
+  <title>Visor 3D Interactivo - Kit Unificado 2022437519-01.stl (Torres M3 + Clips Fibra)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -56,14 +56,14 @@
     }
     canvas:active { cursor: grabbing; }
     .sidebar {
-      width: 320px;
+      width: 360px;
       background: #1e293b;
       border-left: 1px solid #334155;
       padding: 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .card {
       background: #0f172a;
@@ -72,12 +72,22 @@
       padding: 14px;
     }
     .card h3 { font-size: 13px; color: #38bdf8; margin-bottom: 8px; }
-    .card ul { list-style: none; font-size: 12px; color: #cbd5e1; line-height: 1.7; }
+    .card ul { list-style: none; font-size: 12px; color: #cbd5e1; line-height: 1.65; }
+    .badge {
+      display: inline-block;
+      background: #16a34a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
     .hint {
       position: absolute;
       bottom: 16px;
       left: 16px;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       border: 1px solid #334155;
       padding: 8px 14px;
       border-radius: 8px;
@@ -90,13 +100,16 @@
 <body>
   <header>
     <div class="title-group">
-      <h1>🧊 Visor 3D Interactivo — Archivos STL para LAIMI (Carné: 2022437519)</h1>
-      <p>Arrastra con el mouse para rotar la pieza en 3D y usa la rueda para acercar/alejar</p>
+      <h1>🧊 Visor 3D — Archivo Único: <code>2022437519-01.stl</code> (Kit Completo)</h1>
+      <p>Incluye en 1 solo archivo las 2 Torres Horizontales Atornilladas M3 (TX y RX) + 6 Grapas/Clips a presión para sujetar la fibra sin gazas</p>
     </div>
     <div class="controls">
-      <button id="btn-m1" class="active" onclick="setModel('01')">Pieza 1: 2022437519-01.stl (Torres M3 - Opción A)</button>
-      <button id="btn-m2" onclick="setModel('02')">Pieza 2: 2022437519-02.stl (Capuchones - Opción B)</button>
+      <button id="btn-kit" class="active" onclick="setModel('kit')">📦 Kit Completo en 2022437519-01.stl (8 piezas)</button>
+      <button id="btn-tower" onclick="setModel('tower')">🔬 Detalle Torre Horizontal M3</button>
+      <button id="btn-clips" onclick="setModel('clips')">📎 Detalle Grapas/Clips de Fibra</button>
       <button id="btn-cut" onclick="toggleCutaway()">🔍 Ver Corte Interno (Rayos X)</button>
+      <button onclick="document.getElementById('stl-input').click()" style="background:#0284c7;border-color:#38bdf8;color:#fff;">📂 Abrir archivo .STL del disco</button>
+      <input type="file" id="stl-input" accept=".stl" style="display:none" onchange="loadSTLFile(event)" />
     </div>
   </header>
 
@@ -106,25 +119,22 @@
 
     <aside class="sidebar">
       <div class="card">
-        <h3 id="spec-title">📄 Archivo: 2022437519-01.stl</h3>
+        <span class="badge">✓ 1 SOLO ARCHIVO STL (100% MANIFOLD)</span>
+        <h3 id="spec-title">📄 Archivo: 2022437519-01.stl (Kit Completo)</h3>
         <ul id="spec-list">
-          <li>• <strong>Contenido:</strong> 2 Torres acopladoras (1 para LED, 1 para LDR).</li>
-          <li>• <strong>Altura total:</strong> 28.0 mm</li>
-          <li>• <strong>Diámetro del cilindro:</strong> 12.0 mm</li>
-          <li>• <strong>Ancho pestaña M3:</strong> 26.0 mm (espesor 3.0 mm)</li>
-          <li>• <strong>Agujeros para tornillos:</strong> Ø 3.2 mm (para tornillos M3 x 10mm)</li>
-          <li>• <strong>Cavidad inferior LED/LDR:</strong> Ø 5.2 mm (con reborde Ø 6.2 mm)</li>
-          <li>• <strong>Conducto superior Fibra:</strong> Ø 2.2 mm</li>
+          <li>• <strong>1× Torre TX (LED 5 mm):</strong> Base M3 a 19.0 mm entre centros, boca Ø 7.2 mm, cámara Ø 6.2 mm (10 mm prof. total) y boquilla de fibra Ø 3.2 &rarr; 2.7 mm.</li>
+          <li>• <strong>1× Torre RX (LDR GL5528):</strong> Base M3 a 19.0 mm entre centros, boca Ø 7.2 mm, cámara Ø 6.4 mm (10 mm prof. total) y boquilla de fibra Ø 3.2 &rarr; 2.7 mm.</li>
+          <li>• <strong>3× Clips Transversales (Naranja/Verde):</strong> Se insertan a presión en las 2 ranuras de <code>7 × 3 mm</code> frente a las torres TX y RX (+1 repuesto), sujetando el cable a <code>Z = 6.0 mm</code>.</li>
+          <li>• <strong>3× Clips Longitudinales (Verde):</strong> Se insertan a presión en las 3 ranuras de <code>7 × 3 mm</code> del arco derecho de la base, sujetando el cable de fibra sin usar gazas.</li>
         </ul>
       </div>
 
       <div class="card">
-        <h3>🛠️ ¿Cómo abrir el archivo .STL en tu PC?</h3>
+        <h3>📎 ¿Cómo funcionan las Grapas/Clips sin gazas?</h3>
         <ul>
-          <li><strong>1. En este navegador:</strong> Ya estás viendo la geometría 3D exacta aquí mismo.</li>
-          <li><strong>2. Windows (Doble clic):</strong> Haz clic derecho sobre <code>2022437519-01.stl</code> &rarr; <em>Abrir con</em> &rarr; <strong>Visor 3D</strong> o <strong>Paint 3D</strong>.</li>
-          <li><strong>3. En línea sin instalar nada:</strong> Entra a <code>viewstl.com</code> y arrastra el archivo <code>2022437519-01.stl</code>.</li>
-          <li><strong>4. Para editar el código (.scad):</strong> Se abre con el programa gratuito <strong>OpenSCAD</strong> o cualquier editor de texto (VS Code / Bloc de notas).</li>
+          <li><strong>1. Espiga inferior hendida:</strong> Entra a presión en los huecos rectangulares de <code>7.0 × 3.0 mm</code> que ya están cortados en tu base láser de MDF.</li>
+          <li><strong>2. Pinza superior en "C":</strong> Arriba tiene una cuna elástica de <code>Ø 2.36 mm</code> con cuello de <code>1.72 mm</code>; solo presionas el cable negro de fibra (<code>~2.2 mm</code>) desde arriba hasta que hace <em>"clic"</em>.</li>
+          <li><strong>3. Cero soportes:</strong> Todas las piezas están acostadas en <code>Z = 0</code> para imprimirse limpias y con máxima elasticidad en PLA.</li>
         </ul>
       </div>
     </aside>
@@ -134,13 +144,60 @@
     const canvas = document.getElementById('canvas3d');
     const ctx = canvas.getContext('2d');
 
-    let currentModel = '01';
+    let currentModel = 'kit';
+    let customSTLFaces = null;
     let cutaway = false;
-    let rotX = -0.55;
-    let rotZ = 0.65;
-    let zoom = 9.5;
+    let rotX = -0.68;
+    let rotZ = 0.52;
+    let zoom = 8.2;
     let isDragging = false;
     let lastX = 0, lastY = 0;
+
+    function parseASCIISTL(text) {
+      const faces = [];
+      const lines = text.split(/\r?\n/);
+      let pts = [];
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('vertex ')) {
+          const parts = line.split(/\s+/);
+          pts.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])]);
+          if (pts.length === 3) {
+            faces.push({ pts, color: [56, 189, 248] });
+            pts = [];
+          }
+        }
+      }
+      return faces;
+    }
+
+    function loadSTLFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const parsed = parseASCIISTL(e.target.result);
+        if (parsed.length > 0) {
+          customSTLFaces = parsed;
+          currentModel = 'custom';
+          document.getElementById('btn-kit').classList.remove('active');
+          document.getElementById('btn-tower').classList.remove('active');
+          document.getElementById('btn-clips').classList.remove('active');
+          document.getElementById('spec-title').textContent = '📄 STL cargado: ' + file.name + ' (' + parsed.length + ' triángulos)';
+          zoom = 8.2;
+          render();
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    window.addEventListener('dragover', e => e.preventDefault());
+    window.addEventListener('drop', e => {
+      e.preventDefault();
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        loadSTLFile({ target: { files: e.dataTransfer.files } });
+      }
+    });
 
     function resize() {
       canvas.width = canvas.clientWidth;
@@ -167,38 +224,16 @@
     });
     canvas.addEventListener('wheel', e => {
       e.preventDefault();
-      zoom = Math.max(4, Math.min(22, zoom - e.deltaY * 0.01));
+      zoom = Math.max(4, Math.min(26, zoom - e.deltaY * 0.01));
       render();
     }, { passive: false });
 
     function setModel(m) {
       currentModel = m;
-      document.getElementById('btn-m1').classList.toggle('active', m === '01');
-      document.getElementById('btn-m2').classList.toggle('active', m === '02');
-      const title = document.getElementById('spec-title');
-      const list = document.getElementById('spec-list');
-      if (m === '01') {
-        title.textContent = '📄 Archivo: 2022437519-01.stl';
-        list.innerHTML = `
-          <li>• <strong>Contenido:</strong> 2 Torres acopladoras (LED + LDR).</li>
-          <li>• <strong>Altura total:</strong> 28.0 mm</li>
-          <li>• <strong>Diámetro barril:</strong> 12.0 mm</li>
-          <li>• <strong>Pestaña base M3:</strong> 26.0 × 12.0 × 3.0 mm</li>
-          <li>• <strong>Agujeros M3:</strong> Ø 3.2 mm (tornillos M3x10mm)</li>
-          <li>• <strong>Cavidad inferior LED/LDR:</strong> Ø 5.2 mm</li>
-          <li>• <strong>Conducto superior Fibra:</strong> Ø 2.2 mm</li>
-        `;
-      } else {
-        title.textContent = '📄 Archivo: 2022437519-02.stl';
-        list.innerHTML = `
-          <li>• <strong>Contenido:</strong> 2 Capuchones directos para protoboard.</li>
-          <li>• <strong>Altura total:</strong> 22.0 mm</li>
-          <li>• <strong>Diámetro exterior:</strong> 9.6 mm (compacto)</li>
-          <li>• <strong>Sin pestañas:</strong> Se calza directo sobre el LED/LDR en la protoboard.</li>
-          <li>• <strong>Cavidad inferior LED/LDR:</strong> Ø 5.25 mm</li>
-          <li>• <strong>Conducto superior Fibra:</strong> Ø 2.2 mm</li>
-        `;
-      }
+      document.getElementById('btn-kit').classList.toggle('active', m === 'kit');
+      document.getElementById('btn-tower').classList.toggle('active', m === 'tower');
+      document.getElementById('btn-clips').classList.toggle('active', m === 'clips');
+      zoom = m === 'kit' ? 8.2 : 14.5;
       render();
     }
 
@@ -208,89 +243,159 @@
       render();
     }
 
-    function buildSinglePartFaces(offsetY, isModel01) {
+    function buildWingWithHole(isRight, dx, dy) {
       const faces = [];
-      const nSeg = 32;
-      const maxAngle = cutaway ? Math.PI : Math.PI * 2;
-      const rExt = isModel01 ? 6.0 : 4.8;
-      const hTotal = isModel01 ? 28.0 : 22.0;
+      const z0 = 0, z1 = 3.0;
+      const outer = isRight
+        ? [[5.5, 9], [5.5, -9], [11.5, -9], [13, -7.5], [13, 7.5], [11.5, 9]]
+        : [[-5.5, -9], [-5.5, 9], [-11.5, 9], [-13, 7.5], [-13, -7.5], [-11.5, -9]];
+      const xc1 = isRight ? 9.0 : -10.0;
+      const xc2 = isRight ? 10.0 : -9.0;
+      const rSlot = 1.9;
+      const nSlot = 20;
+      const inner = [];
+      for (let i = 0; i < nSlot / 2; i++) {
+        const th = -Math.PI / 2 + (Math.PI * i) / (nSlot / 2);
+        inner.push([xc2 + rSlot * Math.cos(th), rSlot * Math.sin(th)]);
+      }
+      for (let i = 0; i < nSlot / 2; i++) {
+        const th = Math.PI / 2 + (Math.PI * i) / (nSlot / 2);
+        inner.push([xc1 + rSlot * Math.cos(th), rSlot * Math.sin(th)]);
+      }
 
-      // Base flange for Model 01
-      if (isModel01) {
-        const bx = 13.0, by = 6.0, bz = 3.0;
-        const yMin = -by + offsetY;
-        const yMax = (cutaway ? 0 : by) + offsetY;
-        const v = [
-          [-bx, yMin, 0], [bx, yMin, 0], [bx, yMax, 0], [-bx, yMax, 0],
-          [-bx, yMin, bz], [bx, yMin, bz], [bx, yMax, bz], [-bx, yMax, bz]
-        ];
-        const boxIdx = [
-          [0,1,5,4], [1,2,6,5], [2,3,7,6], [3,0,4,7], [4,5,6,7], [3,2,1,0]
-        ];
-        boxIdx.forEach(idx => {
-          faces.push({ pts: idx.map(i => v[i]), color: [38, 52, 74] });
+      for (let i = 1; i < outer.length; i++) {
+        const j = (i + 1) % outer.length;
+        const [x0, y0] = outer[i];
+        const [x1, y1] = outer[j];
+        faces.push({
+          pts: [[x0 + dx, y0 + dy, z0], [x1 + dx, y1 + dy, z0], [x1 + dx, y1 + dy, z1], [x0 + dx, y0 + dy, z1]],
+          color: [38, 52, 74]
         });
       }
 
-      // Stepped cylinder layers
-      const steps = isModel01
-        ? [[0, 2.0, 3.1], [2.0, 14.0, 2.6], [14.0, 28.0, 1.1]]
-        : [[0, 1.8, 3.05], [1.8, 10.0, 2.625], [10.0, 22.0, 1.1]];
+      for (let i = 0; i < inner.length; i++) {
+        const j = (i + 1) % inner.length;
+        const [x0, y0] = inner[i];
+        const [x1, y1] = inner[j];
+        faces.push({
+          pts: [[x0 + dx, y0 + dy, z0], [x1 + dx, y1 + dy, z0], [x1 + dx, y1 + dy, z1], [x0 + dx, y0 + dy, z1]],
+          color: [56, 189, 248]
+        });
+      }
+
+      const cx = isRight ? 9.5 : -9.5;
+      for (let i = 0; i < inner.length; i++) {
+        const j = (i + 1) % inner.length;
+        const [ix0, iy0] = inner[i];
+        const [ix1, iy1] = inner[j];
+        const ang = Math.atan2(iy0, ix0 - cx);
+        const ox0 = isRight ? (Math.cos(ang) > 0 ? 12.6 : 5.5) : (Math.cos(ang) > 0 ? -5.5 : -12.6);
+        const oy0 = Math.max(-8.8, Math.min(8.8, iy0 * 4.7));
+        const ox1 = isRight ? (Math.cos(ang) > 0 ? 12.6 : 5.5) : (Math.cos(ang) > 0 ? -5.5 : -12.6);
+        const oy1 = Math.max(-8.8, Math.min(8.8, iy1 * 4.7));
+        faces.push({
+          pts: [[ix0 + dx, iy0 + dy, z1], [ix1 + dx, iy1 + dy, z1], [ox1 + dx, oy1 + dy, z1], [ox0 + dx, oy0 + dy, z1]],
+          color: [45, 62, 89]
+        });
+      }
+      return faces;
+    }
+
+    function buildHorizontalCouplerFaces(dx, dy, rBody) {
+      const faces = [];
+      faces.push(...buildWingWithHole(false, dx, dy));
+      if (!cutaway) {
+        faces.push(...buildWingWithHole(true, dx, dy));
+      }
+
+      const oct = cutaway
+        ? [[-5.5, 0], [0, 0], [0, 12], [-4.0, 12], [-5.5, 10.5], [-5.5, 3.0]]
+        : [[-5.5, 0], [5.5, 0], [5.5, 3.0], [5.5, 10.5], [4.0, 12.0], [-4.0, 12.0], [-5.5, 10.5], [-5.5, 3.0]];
+
+      for (let i = 0; i < oct.length; i++) {
+        const j = (i + 1) % oct.length;
+        if (cutaway && oct[i][0] === 0 && oct[j][0] === 0) continue;
+        const [xa, za] = oct[i];
+        const [xb, zb] = oct[j];
+        faces.push({
+          pts: [[xa + dx, -9 + dy, za], [xb + dx, -9 + dy, zb], [xb + dx, 9 + dy, zb], [xa + dx, 9 + dy, za]],
+          color: [30, 41, 59]
+        });
+      }
+
+      const zC = 6.0;
+      const nSeg = 24;
+      const segments = [
+        [-9.0, -5.5, 3.6, 3.6, [245, 158, 11]],
+        [-5.5,  1.0, rBody, rBody, [234, 88, 12]],
+        [ 1.0,  3.0, 1.35, 1.6, [220, 38, 38]],
+        [ 3.0,  7.5, 1.6, 1.6, [239, 68, 68]],
+        [ 7.5,  9.0, 1.6, 2.4, [248, 113, 113]]
+      ];
 
       for (let i = 0; i < nSeg; i++) {
-        const a0 = (i / nSeg) * maxAngle;
-        const a1 = ((i + 1) / nSeg) * maxAngle;
+        const a0 = cutaway ? (Math.PI / 2 + (Math.PI * i) / nSeg) : ((2 * Math.PI * i) / nSeg);
+        const a1 = cutaway ? (Math.PI / 2 + (Math.PI * (i + 1)) / nSeg) : ((2 * Math.PI * (i + 1)) / nSeg);
         const c0 = Math.cos(a0), s0 = Math.sin(a0);
         const c1 = Math.cos(a1), s1 = Math.sin(a1);
 
-        // Outer wall
-        faces.push({
-          pts: [
-            [rExt*c0, rExt*s0 + offsetY, 0],
-            [rExt*c1, rExt*s1 + offsetY, 0],
-            [rExt*c1, rExt*s1 + offsetY, hTotal],
-            [rExt*c0, rExt*s0 + offsetY, hTotal]
-          ],
-          color: [30, 41, 59]
-        });
-
-        // Top cap
-        const rTop = 1.1;
-        faces.push({
-          pts: [
-            [rTop*c0, rTop*s0 + offsetY, hTotal],
-            [rExt*c0, rExt*s0 + offsetY, hTotal],
-            [rExt*c1, rExt*s1 + offsetY, hTotal],
-            [rTop*c1, rTop*s1 + offsetY, hTotal]
-          ],
-          color: [51, 65, 85]
-        });
-
-        // Inner cavities (visible especially in cutaway)
-        steps.forEach(([zb, zt, rin], idx) => {
-          const innerCol = idx === 2 ? [239, 68, 68] : [245, 158, 11];
+        segments.forEach(([ya, yb, ra, rb, col]) => {
           faces.push({
             pts: [
-              [rin*c0, rin*s0 + offsetY, zb],
-              [rin*c0, rin*s0 + offsetY, zt],
-              [rin*c1, rin*s1 + offsetY, zt],
-              [rin*c1, rin*s1 + offsetY, zb]
+              [ra * c0 + dx, ya + dy, zC + ra * s0],
+              [rb * c0 + dx, yb + dy, zC + rb * s0],
+              [rb * c1 + dx, yb + dy, zC + rb * s1],
+              [ra * c1 + dx, ya + dy, zC + ra * s1]
             ],
-            color: cutaway ? innerCol : [15, 23, 42]
+            color: cutaway ? col : [17, 24, 39]
           });
         });
       }
       return faces;
     }
 
+    function buildClipFaces(dx, dy, isTransverse) {
+      const faces = [];
+      const zMax = isTransverse ? 2.75 : 5.60;
+      const wEsp = isTransverse ? 6.85 : 2.90;
+      const wSh  = isTransverse ? 10.4 : 7.8;
+      const yFib = isTransverse ? 6.0  : 4.6;
+      const wSlot = isTransverse ? 3.2 : 1.0;
+      const ySh = Math.max(1.8, yFib - 2.6);
+      const yTop = yFib + 2.55;
+
+      const poly = [
+        [1.65, yTop], [0.86, yFib + 1.0],
+        [1.18, yFib], [0.8, yFib - 0.9], [0, yFib - 1.18], [-0.8, yFib - 0.9], [-1.18, yFib],
+        [-0.86, yFib + 1.0], [-1.65, yTop],
+        [-2.55, yTop], [-2.95, yFib + 0.6], [-2.95, ySh],
+        [-wSh/2, ySh], [-wSh/2, 0],
+        [-wEsp/2, 0], [-wEsp/2 - 0.12, -1.5], [-wEsp/2 + 0.22, -3.1],
+        [-wSlot/2, -3.1], [-wSlot/2, -0.4], [wSlot/2, -0.4], [wSlot/2, -3.1],
+        [wEsp/2 - 0.22, -3.1], [wEsp/2 + 0.12, -1.5], [wEsp/2, 0],
+        [wSh/2, 0], [wSh/2, ySh],
+        [2.95, ySh], [2.95, yFib + 0.6], [2.55, yTop]
+      ];
+
+      const colWall = isTransverse ? [16, 185, 129] : [59, 130, 246];
+      for (let i = 0; i < poly.length; i++) {
+        const j = (i + 1) % poly.length;
+        const [x0, y0] = poly[i];
+        const [x1, y1] = poly[j];
+        faces.push({
+          pts: [[x0 + dx, y0 + dy, 0], [x1 + dx, y1 + dy, 0], [x1 + dx, y1 + dy, zMax], [x0 + dx, y0 + dy, zMax]],
+          color: colWall
+        });
+      }
+      return faces;
+    }
+
     function project([x, y, z]) {
-      // Rotate Z
       const cz = Math.cos(rotZ), sz = Math.sin(rotZ);
       const x1 = x * cz - y * sz;
       const y1 = x * sz + y * cz;
-      const z1 = z - 12;
+      const z1 = z - 5.0;
 
-      // Rotate X
       const cx = Math.cos(rotX), sx = Math.sin(rotX);
       const y2 = y1 * cx - z1 * sx;
       const z2 = y1 * sx + z1 * cx;
@@ -305,20 +410,30 @@
 
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const isM1 = currentModel === '01';
-      const allFaces = [
-        ...buildSinglePartFaces(-10, isM1),
-        ...buildSinglePartFaces(10, isM1)
-      ];
+      let allFaces = [];
+      if (currentModel === 'custom' && customSTLFaces) {
+        allFaces = customSTLFaces;
+      } else if (currentModel === 'kit') {
+        allFaces.push(...buildHorizontalCouplerFaces(-15, -11, 3.1));
+        allFaces.push(...buildHorizontalCouplerFaces(-15,  11, 3.2));
+        [-15, 0, 15].forEach(cy => {
+          allFaces.push(...buildClipFaces(10, cy, true));
+          allFaces.push(...buildClipFaces(23, cy, false));
+        });
+      } else if (currentModel === 'tower') {
+        allFaces.push(...buildHorizontalCouplerFaces(0, 0, 3.1));
+      } else {
+        allFaces.push(...buildClipFaces(-7, 0, true));
+        allFaces.push(...buildClipFaces( 7, 0, false));
+      }
 
       const projected = allFaces.map(f => {
         const p = f.pts.map(project);
         const avgDepth = p.reduce((acc, v) => acc + v[2], 0) / p.length;
-        // Normal estimation in screen space for shading
         const ux = p[1][0] - p[0][0], uy = p[1][1] - p[0][1];
         const vx = p[2][0] - p[0][0], vy = p[2][1] - p[0][1];
         const nz = ux * vy - uy * vx;
-        const shade = 0.75 + 0.25 * Math.tanh(nz / 200);
+        const shade = 0.78 + 0.22 * Math.tanh(nz / 200);
         return { p, avgDepth, color: f.color, shade };
       });
 
@@ -336,7 +451,7 @@
         const b = Math.round(f.color[2] * f.shade);
         ctx.fillStyle = `rgb(${r},${g},${b})`;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.24)';
         ctx.lineWidth = 0.7;
         ctx.stroke();
       });
