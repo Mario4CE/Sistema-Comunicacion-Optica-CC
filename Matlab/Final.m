@@ -49,7 +49,7 @@ C_555 = 100e-9;         % Condensador (100 nF)
 
 %% 2. CALCULO DE NIVELES TEORICOS
 datos_decimales = (0:num_niveles-1)';
-bits_matriz = de2bi(datos_decimales, N_bits, 'right-msb'); % Binario: [b3 b2 b1 b0]
+bits_matriz = de2bi(datos_decimales, N_bits, 'left-msb'); % Binario estandar: [b3 b2 b1 b0] con MSB a la izquierda
 
 % 1. Voltaje teorico a la salida de la escalera R-2R
 voltajes_dac = V_ref * (datos_decimales / num_niveles);

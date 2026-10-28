@@ -41,15 +41,15 @@ const size_t LONGITUD_ESCALERA = sizeof(PATRON_ESCALERA) / sizeof(PATRON_ESCALER
 
 // Arreglo 2: Senal periodica senoidal sacada de MATLAB (20 muestras)
 const uint8_t PATRON_PERIODICO_MATLAB[20] = {
-   7, 10, 12, 13, 14, 14, 13, 12, 10,  8,
-   7,  5,  3,  2,  1,  1,  2,  3,  5,  7
+   7, 10, 12, 13, 14, 14, 14, 12, 11,  9,
+   6,  4,  3,  1,  1,  1,  2,  3,  5,  7
 };
 const size_t LONGITUD_PERIODICO = sizeof(PATRON_PERIODICO_MATLAB) / sizeof(PATRON_PERIODICO_MATLAB[0]);
 
 // Arreglo 3: Senal aperiodica amortiguada sacada de MATLAB (18 muestras)
 const uint8_t PATRON_APERIODICO_MATLAB[18] = {
-   5, 11, 14, 12,  6,  2,  7, 10,  9,  6,
-   2,  4,  6,  6,  4,  2,  2,  3
+   5, 10, 10,  8,  5,  2,  3,  4,  4,  3,
+   2,  1,  2,  2,  2,  2,  1,  1
 };
 const size_t LONGITUD_APERIODICO = sizeof(PATRON_APERIODICO_MATLAB) / sizeof(PATRON_APERIODICO_MATLAB[0]);
 
