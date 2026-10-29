@@ -16,12 +16,14 @@ build/
 # Archivos temporales de LTspice
 *.raw
 *.op.raw
+*.log.raw
 *.log
 *.fft
 *.net
 *.plt
 *.tmp
 *.bak
+*.db
 
 # Archivos temporales de MATLAB
 *.asv
