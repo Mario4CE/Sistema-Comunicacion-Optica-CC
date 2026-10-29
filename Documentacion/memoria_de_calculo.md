@@ -213,6 +213,16 @@ Seleccionando los componentes pasivos de soporte $R_1 = 1.0\text{ k}\Omega$ (lim
 * En máxima luz ($R_{LDR} = 1.58\text{ k}\Omega$ en el estado $D=15$ del sistema integrado): $f_{teo} = \frac{1.443}{(1000 + 3160)\times 10^{-7}} = 3474.3\text{ Hz}$; en la simulación se obtiene **$f_{sim} = 3443.0\text{ Hz}$** (error de $0.90\%$, tono agudo).
 * En el barrido paramétrico individual con $R_{LDR} = 1.50\text{ k}\Omega$, la frecuencia teórica es $3607.5\text{ Hz}$ y la simulada es **$3574.6\text{ Hz}$** (error de $0.91\%$).
 
+La siguiente tabla resume los resultados del barrido paramétrico de la fotorresistencia en la simulación individual de la etapa receptora (`receptor_555_ldr.asc`):
+
+| Resistencia LDR ($R_{LDR}$) | Frecuencia Teórica ($f_{teo}$) | Frecuencia Simulada ($f_{sim}$) | Error Relativo | Ciclo de Trabajo (Duty) | Umbrales $V_{THR}$ |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| $1.5\text{ k}\Omega$ | $3607.5\text{ Hz}$ | $3574.6\text{ Hz}$ | $0.91\%$ | $62.08\%$ | $1.665\text{ V}\text{--}3.335\text{ V}$ |
+| $5.0\text{ k}\Omega$ | $1311.8\text{ Hz}$ | $1300.8\text{ Hz}$ | $0.84\%$ | $54.19\%$ | $1.665\text{ V}\text{--}3.335\text{ V}$ |
+| $10.0\text{ k}\Omega$ | $687.1\text{ Hz}$ | $681.5\text{ Hz}$ | $0.82\%$ | $52.04\%$ | $1.666\text{ V}\text{--}3.335\text{ V}$ |
+| $20.0\text{ k}\Omega$ | $352.0\text{ Hz}$ | $349.1\text{ Hz}$ | $0.81\%$ | $50.89\%$ | $1.666\text{ V}\text{--}3.334\text{ V}$ |
+| $40.0\text{ k}\Omega$ | $178.1\text{ Hz}$ | $176.7\text{ Hz}$ | $0.81\%$ | $50.29\%$ | $1.666\text{ V}\text{--}3.334\text{ V}$ |
+
 ### 6.2 Acoplamiento AC al Buzzer Piezoeléctrico Pasivo (Req. L.12) y Análisis de Frecuencia de Corte
 Se utiliza un **buzzer piezoeléctrico pasivo** acoplado mediante un condensador serie $C_{acoplo} = 10\ \mu\text{F}$ que forma un filtro pasa-altos de primer orden con la impedancia del transductor, bloqueando la componente continua ($V_{DC} \approx 2.5\text{ V}$) y entregando la onda cuadrada puramente alterna al transductor acústico.
 
