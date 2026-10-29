@@ -9,7 +9,7 @@
 * **Ian Fuentes Núñez** (Carné: 2025100912, `I.fuentes.1@estudiantec.cr`)  
 **Repositorio Git:** `Sistema-Comunicacion-Optica-CC`  
 **Rama Activa de Trabajo:** `mario-dev`  
-**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes electrónicos y tornillería mecánica completada al 100%; Placa base organizadora en corte láser fabricada y recibida de LAIMI; Ensamble físico e integración en el chasis completado al 100% (Arduino UNO fijado con tornillos y tuercas M3, protoboard con el circuito completo de 7 etapas interconectadas sobre la base de corte láser y enlace de fibra plástica POF de $45\text{ cm}$ alineado); Pruebas en laboratorio iniciadas por Mario Cerdas e Ian Fuentes con identificación de fallas en el voltaje de salida; Corrección circuital integral ejecutada por Mario en TinkerCAD y prototipo físico ajustando los lazos y puentes del amplificador LM358N (Pin 1 a 2, Pin 6 a 7 y enlace Pin 1 a 5); Pruebas preliminares posteriores superadas exitosamente comprobando la entrega de los niveles de voltaje correctos; Reunión de trabajo del equipo programada para el próximo lunes 2 de noviembre para completar las mediciones experimentales cuantitativas finales de laboratorio con la Fuente DC Regulada (Req. P.17 y Q.18) y dar cierre definitivo al proyecto.
+**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y verificada mediante mediciones automáticas en LTspice (DAC con error < 0.0012%, receptor 555 con error < 0.91% y sistema óptico completo de 176.7 Hz a 3443.0 Hz); archivo esquemático del receptor corregido en codificación UTF-8 sin BOM y carpeta LTspice saneada dejando únicamente los 9 archivos fuente esenciales; Adquisición física de componentes electrónicos y tornillería mecánica completada al 100%; Placa base organizadora en corte láser fabricada y recibida de LAIMI; Ensamble físico e integración en el chasis completado al 100% (Arduino UNO fijado con tornillos y tuercas M3, protoboard con el circuito completo de 7 etapas interconectadas sobre la base de corte láser y enlace de fibra plástica POF de $45\text{ cm}$ alineado); Pruebas en laboratorio iniciadas con corrección de lazos y puentes del amplificador LM358N (Pin 1 a 2, Pin 6 a 7 y enlace Pin 1 a 5); Pruebas preliminares posteriores superadas exitosamente comprobando la entrega de los niveles de voltaje correctos; Reunión de trabajo del equipo programada para el próximo lunes 2 de noviembre para completar las mediciones experimentales cuantitativas finales de laboratorio con la Fuente DC Regulada (Req. P.17 y Q.18) y dar cierre definitivo al proyecto.
 
 ---
 
@@ -209,6 +209,24 @@
 
 ---
 
+### [2026-10-29] - Sesión 15 (HOY): Verificación Integral de Simulaciones en LTspice, Corrección de Codificación UTF-8 y Depuración de Temporales
+* **Auditoría y Corrección de Codificación en Esquemático (`receptor_555_ldr.asc`):**
+  * Se identificó que el archivo `receptor_555_ldr.asc` contenía una cabecera con marca de orden de bytes (UTF-8 BOM `0xEF 0xBB 0xBF`), lo que provocaba que LTspice en Windows abortara la apertura con el error `Unknown schematic syntax: Version 4.1`.
+  * Se procesó el archivo eliminando el BOM y preservando la sintaxis limpia en ANSI/UTF-8 puro, restableciendo la apertura inmediata y ejecución de la simulación tanto en entorno gráfico interactivo como en modo batch (`-Run -b`).
+* **Validación de Resultados de Simulación en las Tres Etapas:**
+  1. **DAC R-2R con Buffer LM358 (`dac_r2r_buffer.asc`):** Se verificaron los 16 estados analógicos ($0\text{ V}$ a $4.6875\text{ V}$ con escalones de $0.3125\text{ V}$). El error relativo máximo registrado fue de **$0.0012\%$** (cumpliendo sobradamente el Req. O.16 de $< 10\%$). En el estado 0 se registró el piso de saturación baja de $5.0\text{ mV}$ característico del LM358 con fuente simple. La corriente del LED se modula desde $0.03\text{ mA}$ (corte en código 5) hasta $18.66\text{ mA}$ (código 15), protegiendo el diodo por debajo de los $20\text{ mA}$.
+  2. **Receptor 555 con LDR (`receptor_555_ldr.asc`):** Se verificó el barrido paramétrico de 5 pasos ($R_{LDR} \in [1.5\text{ k}\Omega, 40\text{ k}\Omega]$) modulando la frecuencia audible entre **$176.7\text{ Hz}$** y **$3574.6\text{ Hz}$**, con un error respecto a la teoría menor al **$0.91\%$**. Se comprobaron los umbrales de conmutación del comparador interno ($V_{THR(\max)} = 3.335\text{ V} \approx \frac{2}{3}V_{CC}$ y $V_{THR(\min)} = 1.665\text{ V} \approx \frac{1}{3}V_{CC}$) y ciclos de trabajo coherentes entre $50.3\%$ y $62.1\%$.
+  3. **Sistema Completo Óptico de 7 Etapas (`sistema_completo_optico.asc` / `.cir`):** Se validó la respuesta integrada de las 7 etapas en conjunto. La variación fotoconductora de la LDR modulada por el LED rojo barrió su resistencia desde $40.0\text{ k}\Omega$ hasta $1.58\text{ k}\Omega$, logrando una excursión frecuencial acústica en el buzzer pasivo de **$176.7\text{ Hz}$ a $3443.0\text{ Hz}$** con error $< 0.90\%$.
+* **Saneamiento y Depuración de la Carpeta `LTspice/`:**
+  * Se eliminaron todos los archivos temporales y binarios transitorios pesados generados por las simulaciones (`*.raw`, `*.op.raw`, `*.log.raw`, `*.db`, `*.log`, `*.net`), reduciendo el consumo innecesario de almacenamiento (> 35 MB) y dejando en la carpeta de LTspice exclusivamente los 9 archivos fuente esenciales (`.asc`, `.cir`, `.inc`, `.lib` y `.md`).
+  * Se actualizó `.gitignore` incorporando las reglas de exclusión para evitar la subida involuntaria de archivos temporales al repositorio.
+* **Actualización Documental:**
+  * Se sincronizó `LTspice/VERIFICACION.md` detallando las mediciones de duty cycle y umbrales del 555.
+  * Se incorporó la tabla resumen de resultados en `Documentacion/memoria_de_calculo.md`.
+  * Se actualizó la descripción de la carpeta en `README.md`.
+
+---
+
 ## 2. Inventario Físico de Componentes Adquiridos
 
 | Ítem | Componente | Especificación / Modelo | Cantidad | Función Circuital (Etapa) | Estado de Verificación |
@@ -290,7 +308,14 @@
 | **49** | `bdfdcbc` | 2026-10-24 | Documentación | Registro de actividades de limpieza y mantenimiento en bitácora. | `BITACORA.md` |
 | **50** | `91ca47d` | 2026-10-24 | Kit 3D / IEEE / Docs | Unificación del kit 3D de 8 piezas (`Atornillada.scad` / `2022437519-01.stl`), reorganización del firmware Arduino, actualización de `README.md` y plantilla experimental en `informe_ieee_el2113.tex`. | `Prototipos/Impresion_3D/Atornillada.scad`, `Documentacion/informe_ieee_el2113.tex`, `BITACORA.md` |
 | **51** | `21754a2` | 2026-10-27 | Ensamble Físico / Pruebas / Docs | Ensamble físico 100% completado del circuito, pruebas funcionales preliminares con batería superadas, formalización de integrantes del equipo (Sebastián Quirós Fernández e Ian Fuentes Núñez) y actualización de toda la documentación del proyecto. | `BITACORA.md`, `README.md`, `Documentacion/informe_ieee_el2113.tex`, `Documentacion/memoria_de_calculo.md`, `Arduino/Logica/Logica.ino`, `Matlab/Primero.m`, `Matlab/Final.m` |
-| **52** | *(Local)* | 2026-10-28 | Pruebas Lab / Corrección Voltaje / Docs | Registro de pruebas en laboratorio con Ian Fuentes, diagnóstico y corrección circuital de puentes del LM358N en TinkerCAD y físico (`puentes_lm358.svg`), validación preliminar de niveles de voltaje correctos y estimación de reunión el lunes para pruebas finales y cierre del proyecto. | `BITACORA.md`, `README.md`, `TinkerCAD/puentes_lm358.*`, `Documentacion/` |
+| **52** | `46944a3` | 2026-10-28 | Pruebas Lab / Corrección Voltaje / Docs | Registro de pruebas en laboratorio con Ian Fuentes, diagnóstico y corrección circuital de puentes del LM358N en TinkerCAD y físico (`puentes_lm358.svg`), validación preliminar de niveles de voltaje correctos y estimación de reunión el lunes para pruebas finales y cierre del proyecto. | `BITACORA.md`, `README.md`, `TinkerCAD/puentes_lm358.*`, `Documentacion/` |
+| **53** | `7e19a42` | 2026-10-28 | Evidencia de Trabajo / Limpieza | Incorporación de fotografías de evidencia de laboratorio e integración y depuración de archivos basura. | `Prototipos/Circuito/`, `BITACORA.md` |
+| **54** | `209281e` | 2026-10-29 | Simulación LTspice / Fix Codificación | Corrección de cabecera UTF-8 en `receptor_555_ldr.asc` (eliminación de marca BOM) para permitir la apertura inmediata sin errores de sintaxis en LTspice de Windows. | `LTspice/receptor_555_ldr.asc` |
+| **55** | `aa06504` | 2026-10-29 | Mantenimiento / Exclusiones Git | Limpieza de archivos temporales pesados de simulación (`.raw`, `.op.raw`, `.db`, `.log`) en LTspice y actualización de `.gitignore` para evitar su seguimiento. | `.gitignore` |
+| **56** | `c14ed7a` | 2026-10-29 | Documentación / LTspice | Actualización técnica de `LTspice/VERIFICACION.md` incorporando las mediciones completas de ciclo de trabajo y umbrales de conmutación del NE555. | `LTspice/VERIFICACION.md` |
+| **57** | `7c19f14` | 2026-10-29 | Memoria de Cálculo | Sincronización de la memoria de cálculo con los resultados del barrido paramétrico de fotorresistencia en el temporizador 555. | `Documentacion/memoria_de_calculo.md` |
+| **58** | `daad84d` | 2026-10-29 | Documentación / README | Actualización del estado de validación al 100% de los esquemáticos de simulación en el archivo principal `README.md`. | `README.md` |
+| **59** | `4d6d204` | 2026-10-29 | Bitácora / Sesión 15 | Registro de la sesión 15 con el diagnóstico y verificación de las 3 simulaciones en LTspice, saneamiento de carpeta y trazabilidad completa de commits. | `BITACORA.md` |
 
 ---
 
