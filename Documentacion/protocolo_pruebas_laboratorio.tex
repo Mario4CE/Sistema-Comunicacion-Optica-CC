@@ -39,7 +39,7 @@
     \textbf{Curso:} Circuitos Eléctricos en Corriente Continua (EL-2113) \quad|\quad \textbf{Fecha:} Octubre 2026\\[0.1cm]
     \textbf{Escuela de Ingeniería Electrónica -- Instituto Tecnológico de Costa Rica (ITCR)}\\[0.1cm]
     \textbf{Equipo de Trabajo:} Mario Cerdas (2022437519), Sebasti\'an Quir\'os Fern\'andez (2024073526), Ian Fuentes N\'u\~nez (2025100912)\\[0.1cm]
-    \textbf{Base F\'isica:} Maqueta Corte L\'aser LAIMI + Kit 3D M3 \quad|\quad \textbf{Estado:} Ensamble 100\% completado y prevalidado con bater\'ia
+    \textbf{Base F\'isica:} Maqueta Corte L\'aser LAIMI + Kit 3D M3 \quad|\quad \textbf{Estado:} Ensamble 100\% completado, puentes LM358N corregidos y validado
 \end{center}
 
 \vspace{-0.2cm}
@@ -76,7 +76,8 @@ Al presentarse en la ventanilla/bodega del laboratorio de la Escuela de Electró
 \section{Fase 0: Inspección Previa y Conexión Segura (Pre-Flight Checks)}
 
 \begin{itemize}[label=\squarebox]
-    \item \textbf{Ensamble e Integridad Previa (Prueba de Banco):} El circuito físico de 7 etapas se encuentra 100\% ensamblado sobre la protoboard y la base láser. Se realizaron pruebas previas con una batería como fuente para verificar continuidad eléctrica nodal, encendido del LED y respuesta en el buzzer pasivo.
+    \item \textbf{Ensamble e Integridad Previa (Prueba de Banco):} El circuito físico de 7 etapas se encuentra 100\% ensamblado sobre la protoboard y la base láser. Tras la corrección de los lazos del LM358N, las pruebas de banco validaron que entrega los voltajes correctos de la escalera.
+    \item \textbf{Verificación de Puentes del LM358N (Corrección de Voltaje):} Confirmar visualmente que los tres puentes del operacional dual estén firmemente insertados según el diagrama \texttt{puentes\_lm358.svg}: 1) Pin 1 con Pin 2 (buffer DAC Etapa 2), 2) Pin 6 con Pin 7 (buffer interfaz Etapa 3), y 3) Pin 1 con Pin 5 (acople directo inter-etapas).
     \item \textbf{Prohibición P.17 Verificada:} Confirmar visualmente que el pin \textbf{$+5\text{V}$ del Arduino UNO está totalmente desconectado} de la protoboard.
     \item \textbf{Tierra Compartida:} Unir firmemente el pin \texttt{GND} del Arduino UNO con el bus de tierra general (\texttt{GND}) de la protoboard y el negativo de la fuente de laboratorio.
     \item \textbf{Límites de Corriente:} Antes de activar la salida de la fuente, fijar el límite de corriente en $100\text{ mA}$ en ambos canales para proteger los circuitos integrados ante posibles cortocircuitos accidentales.

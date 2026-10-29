@@ -9,7 +9,7 @@
 * **Ian Fuentes Núñez** (Carné: 2025100912, `I.fuentes.1@estudiantec.cr`)  
 **Repositorio Git:** `Sistema-Comunicacion-Optica-CC`  
 **Rama Activa de Trabajo:** `mario-dev`  
-**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes electrónicos y tornillería mecánica completada al 100%; Placa base organizadora en corte láser fabricada y recibida de LAIMI; Ensamble físico e integración en el chasis completado al 100% (Arduino UNO fijado con tornillos y tuercas M3, protoboard con el circuito completo de 7 etapas interconectadas sobre la base de corte láser y enlace de fibra plástica POF de $45\text{ cm}$ alineado); Pruebas funcionales preliminares de banco ejecutadas con éxito empleando una batería como fuente autónoma portátil (comprobando continuidad, encendido/modulación del LED rojo, fotoconducción de la LDR y respuesta audible en el buzzer piezoeléctrico pasivo); Documentación oficial actualizada (informe IEEE, memoria de cálculo, README y bitácora) con los compañeros de trabajo integrados, a la espera de las mediciones cuantitativas finales en el laboratorio con la Fuente DC Regulada (Req. P.17 y Q.18).
+**Estado General:** Fase de Simulación y Modelado Matemático 100% completada y validada; Adquisición física de componentes electrónicos y tornillería mecánica completada al 100%; Placa base organizadora en corte láser fabricada y recibida de LAIMI; Ensamble físico e integración en el chasis completado al 100% (Arduino UNO fijado con tornillos y tuercas M3, protoboard con el circuito completo de 7 etapas interconectadas sobre la base de corte láser y enlace de fibra plástica POF de $45\text{ cm}$ alineado); Pruebas en laboratorio iniciadas por Mario Cerdas e Ian Fuentes con identificación de fallas en el voltaje de salida; Corrección circuital integral ejecutada por Mario en TinkerCAD y prototipo físico ajustando los lazos y puentes del amplificador LM358N (Pin 1 a 2, Pin 6 a 7 y enlace Pin 1 a 5); Pruebas preliminares posteriores superadas exitosamente comprobando la entrega de los niveles de voltaje correctos; Reunión de trabajo del equipo programada para el próximo lunes 2 de noviembre para completar las mediciones experimentales cuantitativas finales de laboratorio con la Fuente DC Regulada (Req. P.17 y Q.18) y dar cierre definitivo al proyecto.
 
 ---
 
@@ -181,6 +181,34 @@
 
 ---
 
+### [2026-10-28] - Sesión 14: Pruebas Experimentales en Laboratorio, Diagnóstico/Corrección de Voltaje en TinkerCAD y Físico, y Validación Preliminar Exitosa
+* **Sesión Experimental en Laboratorio con Ian Fuentes:**
+  * Mario Cerdas e Ian Fuentes acudieron al laboratorio de la Escuela de Ingeniería Electrónica del ITCR con el prototipo integrado en la base láser para llevar a cabo la toma de mediciones experimentales cuantitativas ($V_{\text{exp}}$) y la caracterización osciloscópica requerida por la rúbrica oficial.
+  * **Incidencias y Pruebas Inconclusas:** Debido a limitaciones de tiempo de disponibilidad de puesto y a la aparición de un comportamiento eléctrico inesperado en el circuito de acondicionamiento, no fue posible completar la totalidad de las pruebas de laboratorio programadas para la sesión.
+  * **Detección de Falla en el Voltaje:** Durante la energización con la fuente de laboratorio y el barrido digital desde Arduino, se detectaron discrepancias severas en los niveles de tensión analógicos entregados por el DAC y la etapa de interfaz (lecturas erráticas y falta de progresión monótona esperada), lo que impedía validar el margen de error menor al $10\%$ (Req. O.16).
+* **Diagnóstico y Corrección Circuital en Simulación (TinkerCAD) y en Montaje Físico:**
+  * Tras la sesión de laboratorio, Mario realizó una auditoría y depuración exhaustiva nodo a nodo del circuito, contrastando la implementación física contra el diseño teórico y reproduciendo las fallas en el simulador virtual interactivo de **TinkerCAD Circuits**.
+  * **Causa Raíz Identificada:** Se detectaron problemas en los lazos de realimentación y puentes de conexión del amplificador operacional dual **LM358N** (DIP-8), donde la ausencia o conexión inadecuada de puentes dejaba los amplificadores en lazo abierto o con realimentación flotante, provocando que no actuaran como seguidores de tensión unitarios ($A_v = 1$).
+  * **Correcciones Efectuadas en TinkerCAD y en la Protoboard:**
+    1. **Puente 1 (Seguidor DAC - Etapa 2):** Conexión directa entre el **Pin 1 (Salida 1)** y el **Pin 2 (Entrada Inversora 1)** del LM358N. Esto cierra el lazo de realimentación negativa del OpAmp 1A, configurándolo como buffer unitario estricto para la tensión analógica $V_4$ proveniente de la escalera R-2R en el Pin 3.
+    2. **Puente 2 (Seguidor Interfaz - Etapa 3):** Conexión directa entre el **Pin 6 (Entrada Inversora 2)** y el **Pin 7 (Salida 2)** del LM358N. Esto conforma el buffer seguidor del OpAmp 1B que maneja la corriente hacia la resistencia limitadora de $150\ \Omega$ y el LED rojo.
+    3. **Cable de Enlace Inter-etapas en U (Etapa 2 a Etapa 3):** Conexión en puente desde el **Pin 1 (Salida OpAmp 1A)** hacia el **Pin 5 (Entrada No Inversora OpAmp 1B)**, desacoplando la impedancia Thévenin de la red R-2R ($R_{th} = 10\text{ k}\Omega$) y eliminando por completo el efecto de carga del diodo emisor.
+    4. **Revisión de Polarización y Referencias:** Verificación del riel $V_{CC}$ en Pin 8 ($+9.0\text{ V}$) y el retorno común de tierra en Pin 4 (GND compartido entre fuente, Arduino y protoboard).
+  * **Generación de Evidencias y Documentación Técnica:**
+    * Se elaboró el diagrama vectorial ilustrativo [`TinkerCAD/puentes_lm358.svg`](file:///d:/Proyecto%20CC/TinkerCAD/puentes_lm358.svg) y su versión gráfica [`TinkerCAD/puentes_lm358.jpg`](file:///d:/Proyecto%20CC/TinkerCAD/puentes_lm358.jpg), donde se detalla con código de colores la ubicación exacta de cada puente sobre el chip DIP-8 en la protoboard.
+    * Se actualizó el circuito interactivo en línea en la plataforma TinkerCAD ([`TinkerCAD/Enlace.txt`](file:///d:/Proyecto%20CC/TinkerCAD/Enlace.txt)).
+* **Pruebas Preliminares de Validación del Voltaje:**
+  * Mario efectuó pruebas preliminares de banco sobre el prototipo físico debidamente corregido.
+  * Se comprobó de forma concluyente que el circuito ahora entrega con total exactitud los niveles de tensión teóricos esperados para los distintos estados de la escalera ($0\text{ V}$ hasta $\approx 4.69\text{ V}$), restaurando la linealidad, la monotonía y la modulación luminosa precisa del LED rojo.
+* **Planificación del Equipo y Próxima Sesión de Cierre:**
+  * Se coordinó una reunión conjunta de trabajo del equipo para el próximo **lunes 2 de noviembre de 2026** en el laboratorio de la Escuela de Electrónica.
+  * En dicha sesión se completarán las pruebas pendientes:
+    1. Registro sistemático de los 16 voltajes experimentales ($V_{\text{exp}}$) con multímetro digital calibrado de banco para completar el Cuadro I del informe IEEE y calcular el error relativo exacto (Req. O.16).
+    2. Medición de frecuencias de oscilación astable del temporizador 555 con osciloscopio digital.
+    3. Consolidación del informe final IEEE y preparación de la entrega definitiva del proyecto.
+
+---
+
 ## 2. Inventario Físico de Componentes Adquiridos
 
 | Ítem | Componente | Especificación / Modelo | Cantidad | Función Circuital (Etapa) | Estado de Verificación |
@@ -188,7 +216,7 @@
 | 1 | **Microcontrolador** | Arduino UNO R3 (ATmega328P) | 1 unid. | Etapa 1: Generador de patrones digitales de 4 bits | Verificado / Atornillado en base |
 | 2 | **Resistencias Red R** | $10\text{ k}\Omega$ (1/4 W, 1% metal film) | 15 unid. | Etapa 2: Ramas horizontales de la red R-2R | Medido con multímetro: $9.98\text{ k}\Omega$ |
 | 3 | **Resistencias Red 2R** | $20\text{ k}\Omega$ (1/4 W, 1% metal film) | 8 unid. | Etapa 2: Ramas verticales 2R y terminación | Medido con multímetro: $19.96\text{ k}\Omega$ |
-| 4 | **Amplificador Op.** | LM358N (DIP-8, Texas Instruments) | 2 unid. | Etapa 2 (OpAmp 1A) y Etapa 3 (OpAmp 1B) | En protoboard / Totalmente integrado |
+| 4 | **Amplificador Op.** | LM358N (DIP-8, Texas Instruments) | 2 unid. | Etapa 2 (OpAmp 1A) y Etapa 3 (OpAmp 1B) | En protoboard / Puentes de realimentación corregidos (Pin 1-2, 6-7, 1-5) y prevalidado |
 | 5 | **Resistencia Driver** | $150\ \Omega$ (1/4 W, 5%) | 2 unid. | Etapa 4: Limitación de corriente en el LED rojo | Medido: $149.3\ \Omega$ |
 | 6 | **LED Emisor** | LED Rojo difuso $5\text{ mm}$ ($\lambda \approx 650\text{ nm}$) | 3 unid. | Etapa 4: Generador óptico ($V_D \approx 1.8\text{ V}$) | Probado a $10\text{ mA}$: emisión clara |
 | 7 | **Fibra Óptica** | Fibra Óptica Plástica (POF, PMMA $1\text{ mm}$) | 1 m | Medio óptico guiado (tramo cortado a $45\text{ cm}$) | Inspección visual: corte recto a $90^\circ$ |
@@ -199,7 +227,7 @@
 | 12 | **Condensador Filtro** | $10\text{ nF}$ ($0.01\ \mu\text{F}$, código `103`) | 2 unid. | Etapa 6: Filtro de ruido en pin 5 (Control) | Cerámico de disco verificado |
 | 13 | **Condensador Acoplo** | $10\ \mu\text{F}$ ($25\text{ V}$ electrolítico radial) | 2 unid. | Etapa 7: Bloqueo de nivel DC hacia el buzzer | Polaridad verificada |
 | 14 | **Transductor Acústico** | Buzzer piezoeléctrico PASIVO ($12\text{ mm}$) | 1 unid. | Etapa 7: Conversión final a sonido audible | **Prueba DC: Confirma buzzer pasivo** |
-| 15 | **Protoboard** | Placa de pruebas 830 puntos | 1 unid. | Plataforma física de ensamble experimental | **Circuito 100% ensamblado y probado con batería** |
+| 15 | **Protoboard** | Placa de pruebas 830 puntos | 1 unid. | Plataforma física de ensamble experimental | **Circuito 100% ensamblado, corregido y validado con voltajes correctos** |
 | 16 | **Cables Jumpers** | Jumpers Macho-Macho 24 AWG | 1 juego (65) | Conexión e interconexión entre etapas | Interconectando las 7 etapas |
 | 17 | **Tornillos y Tuercas M3** | Métricos `M3 x 10/12 mm` con tuercas | 8 juegos | Fijación de Arduino y torres 3D | 4 fijando Arduino / 4 en torres |
 | 18 | **Placa Base Láser** | Base $250\times 200\text{ mm}$ en corte/grabado LAIMI | 1 unid. | Chasis soporte con 7 etapas delimitadas (Req. B.2/M.13) | **Entregada por LAIMI** / Totalmente integrada |
@@ -261,7 +289,8 @@
 | **48** | `f91bec0` | 2026-10-24 | Limpieza / Ensamble | Limpieza de archivos temporales/obsoletos e incorporación de evidencia fotográfica del circuito con base láser (`CircuitoConBase.jpeg`). | `TinkerCAD/CircuitoConBase.jpeg` |
 | **49** | `bdfdcbc` | 2026-10-24 | Documentación | Registro de actividades de limpieza y mantenimiento en bitácora. | `BITACORA.md` |
 | **50** | `91ca47d` | 2026-10-24 | Kit 3D / IEEE / Docs | Unificación del kit 3D de 8 piezas (`Atornillada.scad` / `2022437519-01.stl`), reorganización del firmware Arduino, actualización de `README.md` y plantilla experimental en `informe_ieee_el2113.tex`. | `Prototipos/Impresion_3D/Atornillada.scad`, `Documentacion/informe_ieee_el2113.tex`, `BITACORA.md` |
-| **51** | *(Local)* | 2026-10-27 | Ensamble Físico / Pruebas / Docs | Ensamble físico 100% completado del circuito, pruebas funcionales preliminares con batería superadas, formalización de integrantes del equipo (Sebastián Quirós Fernández e Ian Fuentes Núñez) y actualización de toda la documentación del proyecto. | `BITACORA.md`, `README.md`, `Documentacion/informe_ieee_el2113.tex`, `Documentacion/memoria_de_calculo.md`, `Arduino/Logica/Logica.ino`, `Matlab/Primero.m`, `Matlab/Final.m` |
+| **51** | `21754a2` | 2026-10-27 | Ensamble Físico / Pruebas / Docs | Ensamble físico 100% completado del circuito, pruebas funcionales preliminares con batería superadas, formalización de integrantes del equipo (Sebastián Quirós Fernández e Ian Fuentes Núñez) y actualización de toda la documentación del proyecto. | `BITACORA.md`, `README.md`, `Documentacion/informe_ieee_el2113.tex`, `Documentacion/memoria_de_calculo.md`, `Arduino/Logica/Logica.ino`, `Matlab/Primero.m`, `Matlab/Final.m` |
+| **52** | *(Local)* | 2026-10-28 | Pruebas Lab / Corrección Voltaje / Docs | Registro de pruebas en laboratorio con Ian Fuentes, diagnóstico y corrección circuital de puentes del LM358N en TinkerCAD y físico (`puentes_lm358.svg`), validación preliminar de niveles de voltaje correctos y estimación de reunión el lunes para pruebas finales y cierre del proyecto. | `BITACORA.md`, `README.md`, `TinkerCAD/puentes_lm358.*`, `Documentacion/` |
 
 ---
 
@@ -271,19 +300,19 @@
 |:---|:---|:---:|:---|
 | **A.1 / B.2** | Sistema dividido en 7 etapas delimitadas e identificables | **CUMPLE** | Ensamble físico 100% completado sobre la base de corte láser entregada ([`base_soporte_optico.pdf`](file:///d:/Proyecto%20CC/Prototipos/Corte_laser/base_soporte_optico.pdf)), Arduino atornillado y protoboard con las 7 etapas interconectadas ([`CircuitoConBase.jpeg`](file:///d:/Proyecto%20CC/TinkerCAD/CircuitoConBase.jpeg) y [`Circuito Completo.jpeg`](file:///d:/Proyecto%20CC/TinkerCAD/Circuito%20Completo.jpeg)). |
 | **C.3 / D.4** | Arreglos de longitud variable en MATLAB y tiempo entre 1 ms y 10 s | **CUMPLE** | [`Matlab/Primero.m`](file:///d:/Proyecto%20CC/Matlab/Primero.m) y comandos `'P'`, `'S'`, `'T<ms>'` en [`Arduino/Logica/Logica.ino`](file:///d:/Proyecto%20CC/Arduino/Logica/Logica.ino). |
-| **E.5** | DAC implementado con componentes pasivos y un componente activo | **CUMPLE** | Red R-2R ($10\text{ k}\Omega / 20\text{ k}\Omega$ al 1%) + OpAmp 1A del LM358N ([`Documentacion/memoria_de_calculo.md`](file:///d:/Proyecto%20CC/Documentacion/memoria_de_calculo.md)). |
-| **F.6** | Etapa de interfaz implementada únicamente con OpAmp | **CUMPLE** | OpAmp 1B del LM358N en configuración seguidora de aislamiento unitario ($A_v = 1$, $Z_{in} \to \infty$, $Z_{out} \approx 0\ \Omega$). |
+| **E.5** | DAC implementado con componentes pasivos y un componente activo | **CUMPLE** | Red R-2R ($10\text{ k}\Omega / 20\text{ k}\Omega$ al 1%) + OpAmp 1A del LM358N; lazo de realimentación unitaria asegurado mediante puente Pin 1--2 ([`puentes_lm358.svg`](file:///d:/Proyecto%20CC/TinkerCAD/puentes_lm358.svg) y [`Documentacion/memoria_de_calculo.md`](file:///d:/Proyecto%20CC/Documentacion/memoria_de_calculo.md)). |
+| **F.6** | Etapa de interfaz implementada únicamente con OpAmp | **CUMPLE** | OpAmp 1B del LM358N en configuración seguidora de aislamiento unitario ($A_v = 1$, $Z_{in} \to \infty$, $Z_{out} \approx 0\ \Omega$); lazo cerrado con puente Pin 6--7 y acople directo Pin 1--5 ([`puentes_lm358.svg`](file:///d:/Proyecto%20CC/TinkerCAD/puentes_lm358.svg)). |
 | **G.7 / H.8** | Generador óptico con componentes pasivos y LED justificado con Física 2/3 | **CUMPLE** | Resistor $150\ \Omega$ + LED rojo ($650\text{ nm}$) justificado por Planck-Einstein ($1.91\text{ eV}$), ventana PMMA y fotoconducción CdS. |
 | **I.9 / J.10** | Medio óptico de 30 a 60 cm y receptor óptico puramente pasivo | **CUMPLE** | Fibra plástica POF cortada a $45\text{ cm}$ y fotorresistencia LDR pasiva (GL5528). |
 | **K.11 / L.12** | Oscilador comercial integrado con pasivos y salida en buzzer pasivo | **CUMPLE** | Temporizador NE555 astable ($177\text{--}3443\text{ Hz}$) + condensador $10\ \mu\text{F}$ + Buzzer pasivo verificado con prueba DC y en pruebas preliminares. |
 | **M.13 / N.14** | Prototipado en Escuela de Electrónica (corte láser, impresión 3D, escáner) | **CUMPLE** | Base láser recibida de LAIMI; Arduino atornillado con M3; protoboard montada; kit 3D de 8 piezas diseñado y unificado ([`Atornillada.scad`](file:///d:/Proyecto%20CC/Prototipos/Impresion_3D/Atornillada.scad) / [`2022437519-01.stl`](file:///d:/Proyecto%20CC/Prototipos/Impresion_3D/2022437519-01.stl)). |
-| **Ñ.15 / O.16** | Montaje en protoboard y error de conversión DAC menor al 10% | **CUMPLE** | Circuito físico 100% ensamblado y funcional en protoboard montada en el chasis; error simulado $< 0.01\%$ (plantilla experimental en [`Documentacion/informe_ieee_el2113.tex`](file:///d:/Proyecto%20CC/Documentacion/informe_ieee_el2113.tex)). |
-| **P.17 / Q.18** | Prohibido usar 5V de Arduino y baterías; uso de fuente de laboratorio | **CUMPLE** | Pruebas preliminares con batería realizadas estrictamente para verificación previa de banco; cable 5V de Arduino desconectado; alimentación final de evaluación programada exclusivamente desde Fuente DC Regulada de Laboratorio ($+5\text{ V} / +9\text{ V}$, tierra común). |
+| **Ñ.15 / O.16** | Montaje en protoboard y error de conversión DAC menor al 10% | **CUMPLE** | Circuito físico 100% ensamblado en protoboard montada en el chasis; tras la falla de voltaje detectada en laboratorio con Ian, Mario corrigió los lazos del LM358 en TinkerCAD y físico, validando preliminarmente que entrega los voltajes correctos; toma formal de $V_{\text{exp}}$ programada para el lunes (plantilla en [`Documentacion/informe_ieee_el2113.tex`](file:///d:/Proyecto%20CC/Documentacion/informe_ieee_el2113.tex)). |
+| **P.17 / Q.18** | Prohibido usar 5V de Arduino y baterías; uso de fuente de laboratorio | **CUMPLE** | Pruebas de laboratorio iniciadas con fuente de laboratorio; tras corregir fallas de voltaje en puentes del LM358 y validar preliminarmente los niveles de tensión en banco, la toma final de mediciones cuantitativas ($V_{\text{exp}}$) y evaluación definitiva se completará el lunes con Fuente DC Regulada de Laboratorio ($+5\text{ V} / +9\text{ V}$, tierra común). |
 
 ---
 
 ## 5. Próximos Pasos Planificados
 
-1. **Medición Experimental Cuantitativa en Laboratorio (Req. P.17/Q.18 y O.16):** Conectar el prototipo completamente ensamblado a la Fuente DC Regulada de Laboratorio de la Escuela de Electrónica ($+5.0\text{ V} / +9.0\text{ V}$, tierra común con Arduino) y medir con multímetro digital calibrado los 16 voltajes reales del DAC ($V_{\text{exp}}$), registrando los datos en el Cuadro I del informe IEEE.
-2. **Caracterización Frecuencial y Espectral del Receptor:** Medir la frecuencia de oscilación de salida del temporizador 555 en el osciloscopio digital del laboratorio para los distintos estados y contrastar los valores con el modelo teórico de la memoria de cálculo.
-3. **Compilación y Entrega Final:** Consolidar el informe final en formato IEEE Transactions ($\le 3$ páginas) en PDF y generar el paquete comprimido `.zip` respetando la estructura oficial del curso para la entrega en el tecDigital y la defensa presencial ante el profesor.
+1. **Sesión Final de Pruebas Experimentales en Laboratorio (Lunes 2 de Noviembre):** Asistencia conjunta del equipo de trabajo al laboratorio de la Escuela de Electrónica para energizar el prototipo corregido exclusivamente con la Fuente DC Regulada de Laboratorio ($+5.0\text{ V} / +9.0\text{ V}$, tierra común con Arduino), medir sistemáticamente con multímetro digital calibrado los 16 voltajes reales del DAC ($V_{\text{exp}}$) completando el Cuadro I del informe IEEE (Req. O.16 y P.17/Q.18) y terminar el proyecto.
+2. **Caracterización Frecuencial y Espectral del Receptor con Osciloscopio:** Medir en el osciloscopio digital la frecuencia de la onda cuadrada generada por el temporizador 555 astable a través de los diferentes niveles ópticos recibidos por la LDR y contrastar los valores con el modelo analítico de la memoria de cálculo.
+3. **Compilación, Empaquetado y Entrega Final:** Consolidar el informe final en formato IEEE Transactions ($\le 3$ páginas) en PDF con los valores de laboratorio reales y generar el paquete comprimido `.zip` respetando la estructura oficial del curso para la entrega formal en el tecDigital y la defensa presencial ante el profesor.
