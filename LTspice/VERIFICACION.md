@@ -46,16 +46,17 @@ Los tres esquemáticos traen **mediciones automáticas (`.meas`)**: después de 
 ### 2.2 `receptor_555_ldr.asc` (`.step` de R_LDR: 1.5k, 5k, 10k, 20k, 40k)
 
 * `FREQ` es la frecuencia simulada, `F_TEO = 1.443 / ((R1 + 2·R_LDR)·C1)` la teórica y `ERR_F` el error en %.
+* `DUTY` es el ciclo de trabajo porcentual ($T_{\text{alto}} / T \times 100$).
 * `VTHR_MAX` ≈ 3.33 V y `VTHR_MIN` ≈ 1.67 V (umbrales 2/3 y 1/3 de Vcc del 555).
 * Señales para graficar: `V(OUT_555)`, `V(THR)` y `V(V_BUZZER)`. Con clic derecho → *Select Steps* se ve un valor de R_LDR a la vez.
 
-| R_LDR | F_TEO | FREQ simulada | Error |
-|:---:|:---:|:---:|:---:|
-| 1.5 kΩ | 3607.5 Hz | 3574.6 Hz | 0.91 % |
-| 5 kΩ | 1311.8 Hz | 1300.8 Hz | 0.84 % |
-| 10 kΩ | 687.1 Hz | 681.5 Hz | 0.82 % |
-| 20 kΩ | 352.0 Hz | 349.1 Hz | 0.81 % |
-| 40 kΩ | 178.1 Hz | 176.7 Hz | 0.81 % |
+| R_LDR | F_TEO | FREQ simulada | Error | Ciclo de Trabajo (Duty) | VTHR_MAX | VTHR_MIN |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1.5 kΩ | 3607.5 Hz | 3574.6 Hz | 0.91 % | 62.08 % | 3.335 V | 1.665 V |
+| 5 kΩ | 1311.8 Hz | 1300.8 Hz | 0.84 % | 54.19 % | 3.335 V | 1.665 V |
+| 10 kΩ | 687.1 Hz | 681.5 Hz | 0.82 % | 52.04 % | 3.335 V | 1.666 V |
+| 20 kΩ | 352.0 Hz | 349.1 Hz | 0.81 % | 50.89 % | 3.334 V | 1.666 V |
+| 40 kΩ | 178.1 Hz | 176.7 Hz | 0.81 % | 50.29 % | 3.334 V | 1.666 V |
 
 ### 2.3 `sistema_completo_optico.asc` (las 7 etapas, T = 20 ms por código)
 
@@ -87,6 +88,11 @@ $lt = "$env:LOCALAPPDATA\Programs\ADI\LTspice\LTspice.exe"
 & $lt -Run -b receptor_555_ldr.asc | Out-Null
 & $lt -Run -b sistema_completo_optico.asc | Out-Null
 Get-Content sistema_completo_optico.log
+```
+
+Para depurar y dejar la carpeta libre de archivos pesados de formas de onda transitorias (`.raw`), bases de datos (`.db`) y registros temporales:
+```powershell
+Get-ChildItem -Include *.raw, *.op.raw, *.log.raw, *.db, *.log, *.net -Recurse | Remove-Item -Force
 ```
 
 ---
