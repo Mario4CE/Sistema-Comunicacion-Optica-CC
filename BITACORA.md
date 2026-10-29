@@ -4,7 +4,7 @@
 **Semestre:** II Semestre 2026  
 **Profesor:** Ing. Fabián Alberto Picado García  
 **Equipo de Trabajo:**
-* **Mario Cerdas** (Carné: 2022437519)
+* **Mario Cerdas** (Carné: 2022437519, `m.cerdas@estudiantec.cr`)
 * **Sebastián Quirós Fernández** (Carné: 2024073526, `s.quiros.4@estudiantec.cr`)
 * **Ian Fuentes Núñez** (Carné: 2025100912, `I.fuentes.1@estudiantec.cr`)  
 **Repositorio Git:** `Sistema-Comunicacion-Optica-CC`  
@@ -155,7 +155,7 @@
 ### [2026-10-27] - Sesión 13 (HOY): Ensamble Físico Completo del Circuito y Pruebas Preliminares de Funcionamiento con Batería
 * **Conformación Oficial del Equipo de Trabajo:**
   * Se formalizó la integración de los compañeros de trabajo en toda la documentación técnica, código y reportes del proyecto:
-    * **Mario Cerdas** (Carné: 2022437519).
+    * **Mario Cerdas** (Carné: 2022437519, `m.cerdas@estudiantec.cr`).
     * **Sebastián Quirós Fernández** (Carné: 2024073526, correo institucional: `s.quiros.4@estudiantec.cr`).
     * **Ian Fuentes Núñez** (Carné: 2025100912, correo institucional: `I.fuentes.1@estudiantec.cr`).
 * **Ensamble Físico Integral del Circuito (100% Completado):**
@@ -224,6 +224,34 @@
   * Se sincronizó `LTspice/VERIFICACION.md` detallando las mediciones de duty cycle y umbrales del 555.
   * Se incorporó la tabla resumen de resultados en `Documentacion/memoria_de_calculo.md`.
   * Se actualizó la descripción de la carpeta en `README.md`.
+
+---
+
+### [2026-10-29] - Sesión 16: Validación Rigurosa de Referencias Académicas, Justificación de Modelos y Humanización del Informe Técnico
+* **Actualización y Unificación de Correos Institucionales:**
+  * Se incorporó el correo institucional de Mario Cerdas (`m.cerdas@estudiantec.cr`) en todos los documentos del proyecto (`informe_ieee_el2113.tex`, `memoria_de_calculo.md`, `protocolo_pruebas_laboratorio.tex`, `README.md` y `BITACORA.md`), asegurando la consistencia de los tres autores ante la Escuela de Ingeniería Electrónica del ITCR.
+* **Auditoría y Validación Rigurosa de Referencias Bibliográficas Académicas:**
+  * Se eliminaron atribuciones genéricas o imprecisas y se sustituyeron por **14 referencias académicas de primer nivel, reales, verificables y de alto impacto**, vinculando cada ecuación, teorema y principio físico con su respectiva obra canónica:
+    1. **Alexander y Sadiku (2018):** Leyes de Kirchhoff, análisis nodal en corriente continua, divisor de tensión y efecto de carga.
+    2. **Hayt, Kemmerly y Durbin (2012):** Redes en escalera lineal, equivalente de Thévenin y respuesta transitoria RC.
+    3. **Sedra, Smith, Carusone y Gaudet (2020):** Escaleras R-2R, cuantización y parámetros reales del amplificador operacional.
+    4. **Franco (2015):** Demostración analítica de impedancia $R_{\text{th}} = R$ en convertidores D/A R-2R y aislamiento con buffers seguidores unitarios.
+    5. **Proakis y Manolakis (2007):** Cuantización uniforme, discretización de señales periódicas/aperiódicas y resolución $\Delta V_{\text{LSB}} = V_{\text{ref}}/2^N$.
+    6. **Kasap (2013):** Física de semiconductores en diodos emisores de luz (LED), relación energía-longitud de onda y reflexión interna total.
+    7. **Tipler y Mosca (2010):** Ley de refracción de Snell, ángulo crítico $\theta_c$ y relación cuántica de Planck-Einstein ($E = hf$).
+    8. **Ziemann, Krauser, Zamzow y Daum (2008, *POF Handbook*, Springer):** Obra definitiva en fibras ópticas plásticas; justifica la ventana de mínima atenuación en PMMA a $\lambda = 650\text{ nm}$ ($\approx 0.15\text{ dB/m}$) debida al compromiso físico entre la dispersión Rayleigh ($\propto \lambda^{-4}$) y los sobretonos vibracionales C--H en el infrarrojo cercano.
+    9. **Rose (1963):** Teoría de fotoconductividad en sulfuro de cadmio (CdS), estados trampa y ley de potencias $R_{\text{LDR}} \propto E_v^{-\gamma}$.
+    10. **Streetman y Banerjee (2016):** Propiedades electrónicas del CdS ($E_g \approx 2.42\text{ eV}$) y respuesta espectral en la banda visible (540--650 nm).
+    11. **Camenzind (2005):** Libro de Hans Camenzind (diseñador e inventor del circuito integrado 555); deducción analítica de los tiempos de carga $t_H$ y descarga $t_L$ y la frecuencia astable $f = 1.443/((R_1+2R_2)C)$.
+    12. **Cady (1964):** Transducción electromecánica de elementos piezoeléctricos pasivos y filtrado pasa-altos capacitivo ($f_c = 1/(2\pi RC)$) para desacoplo de corriente continua.
+    13. **Texas Instruments (2023):** Hoja de datos oficial del LM358N (tensión de saturación baja $V_{\text{OL}} \approx 5\text{ mV}$ con fuente simple y límite superior $V_{\text{OH}} \le V_{\text{CC}} - 1.5\text{ V}$).
+    14. **Texas Instruments (2022):** Hoja de datos oficial del temporizador de precisión NE555.
+* **Humanización y Reescritura del Informe IEEE (`informe_ieee_el2113.tex`):**
+  * Se reescribió el artículo adoptando un tono de ingeniería natural, sobrio, formal y fluido, eliminando clichés robóticos típicos de inteligencia artificial y estructuras repetitivas.
+  * Se narró de forma veraz y contextualizada la experiencia de laboratorio: la detección inicial de voltajes anómalos, la identificación de lazos de realimentación abiertos en el LM358N en protoboard, la depuración interactiva en TinkerCAD Circuits y la inserción de los tres puentes de realimentación (Pin 1 a 2, Pin 6 a 7, Pin 1 a 5), concluyendo con las pruebas de banco que validaron la monotonía de los 16 escalones previo a la sesión de cierre del lunes 2 de noviembre.
+  * Se ajustó el contenido para cumplir de forma estricta con el límite máximo de tres páginas de la plantilla oficial `IEEEtran`.
+* **Ampliación de la Memoria de Cálculo (`memoria_de_calculo.md`):**
+  * Se incorporaron las citas explícitas en cada sección técnica y se redactó la sección final 8 con el desglose formal de las 14 referencias normadas.
 
 ---
 
