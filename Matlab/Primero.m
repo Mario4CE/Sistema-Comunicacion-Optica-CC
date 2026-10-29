@@ -1,3 +1,14 @@
+% =========================================================================
+% PROYECTO: Investigacion Dirigida - Sistema de Comunicacion por Medios Opticos
+% CURSO: EL-2113 Circuitos Electricos en Corriente Continua
+% INSTITUCION: Escuela de Ingenieria Electronica, ITCR
+% EQUIPO DE TRABAJO:
+%   - Mario Cerdas (Carne: 2022437519, m.cerdas@estudiantec.cr)
+%   - Sebastian Quiros Fernandez (Carne: 2024073526, s.quiros.4@estudiantec.cr)
+%   - Ian Fuentes Nunez (Carne: 2025100912, I.fuentes.1@estudiantec.cr)
+% PROFESOR: Ing. Fabian Alberto Picado Garcia
+% =========================================================================
+%
 % DESCRIPCION:
 % Este script digitaliza cualquier senal analogica a 4 bits (convirtiendola 
 % en numeros del 0 al 15) usando la cantidad de muestras que se le indique. 
