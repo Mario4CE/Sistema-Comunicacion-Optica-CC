@@ -364,7 +364,7 @@
 | **58** | `daad84d` | 2026-10-29 | Documentación / README | Actualización del estado de validación al 100% de los esquemáticos de simulación en el archivo principal `README.md`. | `README.md` |
 | **59** | `4d6d204` | 2026-10-29 | Bitácora / Sesión 15 | Registro de la sesión 15 con el diagnóstico y verificación de las 3 simulaciones en LTspice, saneamiento de carpeta y trazabilidad completa de commits. | `BITACORA.md` |
 | **60** | `8efb414` | 2026-11-07 | Memoria de Cálculo LaTeX | Creación de `memoria_de_calculo.tex` para Overleaf/LaTeX y sincronización de `memoria_de_calculo.md`. | `Documentacion/memoria_de_calculo.tex`, `Documentacion/memoria_de_calculo.md` |
-| **61** | `a93b4f1` | 2026-11-07 | Bitácora / README | Registro de la sesión 17 de auditoría matemática, actualización de trazabilidad en bitácora e indexación en `README.md`. | `BITACORA.md`, `README.md` |
+| **61** | `6888b79` | 2026-11-07 | Bitácora / README | Registro de la sesión 17 de auditoría matemática, actualización de trazabilidad en bitácora e indexación en `README.md`. | `BITACORA.md`, `README.md` |
 
 ---
 
