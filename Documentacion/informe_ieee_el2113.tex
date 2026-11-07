@@ -120,38 +120,47 @@ Como $f_c \ll f_{\text{min}} = 176.7\text{ Hz}$, la totalidad del espectro audib
 
 \section{Análisis de Resultados y Validación}
 
-\begin{table}[htbp]
-\caption{Comparación de Tensiones Teóricas, Simulación en LTspice y Plantilla de Mediciones en Laboratorio (16 Estados)}
-\label{tab:resultados}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{2.8pt}
-\renewcommand{\arraystretch}{1.08}
-\begin{tabular}{cccccccc}
-\toprule
-\textbf{Dec} & \textbf{Bin} & $V_{\text{teo}}$ \textbf{(V)} & $V_{\text{sim}}$ \textbf{(V)} & $V_{\text{exp}}$ \textbf{(V)} & \textbf{Error (\%)} & $R_{\text{LDR}}$ \textbf{(k$\Omega$)} & $f_{555}$ \textbf{(Hz)} \\
-\midrule
-0  & 0000 & 0.0000 & 0.0050 & -- & Sat. $V_{OL}$ & 40.00 & 176.7 \\
-1  & 0001 & 0.3125 & 0.3125 & -- & 0.0012        & 40.00 & 176.7 \\
-2  & 0010 & 0.6250 & 0.6250 & -- & 0.0000        & 40.00 & 176.7 \\
-3  & 0011 & 0.9375 & 0.9375 & -- & 0.0004        & 40.00 & 176.7 \\
-4  & 0100 & 1.2500 & 1.2500 & -- & 0.0006        & 40.00 & 176.7 \\
-5  & 0101 & 1.5625 & 1.5625 & -- & 0.0007        & 39.57 & 178.6 \\
-6  & 0110 & 1.8750 & 1.8750 & -- & 0.0008        & 28.73 & 244.9 \\
-7  & 0111 & 2.1875 & 2.1875 & -- & 0.0009        & 16.68 & 416.6 \\
-8  & 1000 & 2.5000 & 2.5000 & -- & 0.0009        &  9.56 & 710.9 \\
-9  & 1001 & 2.8125 & 2.8125 & -- & 0.0009        &  5.71 & 1151.9 \\
-10 & 1010 & 3.1250 & 3.1250 & -- & 0.0010        &  3.68 & 1711.6 \\
-11 & 1011 & 3.4375 & 3.4375 & -- & 0.0010        &  2.62 & 2291.0 \\
-12 & 1100 & 3.7500 & 3.7500 & -- & 0.0010        &  2.08 & 2776.7 \\
-13 & 1101 & 4.0625 & 4.0624 & -- & 0.0010        &  1.79 & 3116.4 \\
-14 & 1110 & 4.3750 & 4.3749 & -- & 0.0010        &  1.65 & 3325.0 \\
-15 & 1111 & 4.6875 & 4.6874 & -- & 0.0010        &  1.58 & 3443.0 \\
-\bottomrule
-\end{tabular}
-\end{table}
+% =========================================================================
+% [ESPACIO RESERVADO PARA LA TABLA I - MEDICIONES DE LABORATORIO]
+% NOTA: La Tabla I (Comparación de Tensiones Teóricas, Simulación en LTspice
+% y Mediciones en Laboratorio para los 16 Estados) se inserta en este punto.
+% Esta sección y el llenado de datos experimentales finales están asignados
+% al compañero de equipo correspondiente.
+%
+% Plantilla base lista para incorporar los valores de V_exp:
+% \begin{table}[htbp]
+% \caption{Comparación de Tensiones Teóricas, Simulación en LTspice y Plantilla de Mediciones en Laboratorio (16 Estados)}
+% \label{tab:resultados}
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{2.8pt}
+% \renewcommand{\arraystretch}{1.08}
+% \begin{tabular}{cccccccc}
+% \toprule
+% \textbf{Dec} & \textbf{Bin} & $V_{\text{teo}}$ \textbf{(V)} & $V_{\text{sim}}$ \textbf{(V)} & $V_{\text{exp}}$ \textbf{(V)} & \textbf{Error (\%)} & $R_{\text{LDR}}$ \textbf{(k$\Omega$)} & $f_{555}$ \textbf{(Hz)} \\
+% \midrule
+% 0  & 0000 & 0.0000 & 0.0050 & -- & Sat. $V_{OL}$ & 40.00 & 176.7 \\
+% 1  & 0001 & 0.3125 & 0.3125 & -- & 0.0012        & 40.00 & 176.7 \\
+% 2  & 0010 & 0.6250 & 0.6250 & -- & 0.0000        & 40.00 & 176.7 \\
+% 3  & 0011 & 0.9375 & 0.9375 & -- & 0.0004        & 40.00 & 176.7 \\
+% 4  & 0100 & 1.2500 & 1.2500 & -- & 0.0006        & 40.00 & 176.7 \\
+% 5  & 0101 & 1.5625 & 1.5625 & -- & 0.0007        & 39.57 & 178.6 \\
+% 6  & 0110 & 1.8750 & 1.8750 & -- & 0.0008        & 28.73 & 244.9 \\
+% 7  & 0111 & 2.1875 & 2.1875 & -- & 0.0009        & 16.68 & 416.6 \\
+% 8  & 1000 & 2.5000 & 2.5000 & -- & 0.0009        &  9.56 & 710.9 \\
+% 9  & 1001 & 2.8125 & 2.8125 & -- & 0.0009        &  5.71 & 1151.9 \\
+% 10 & 1010 & 3.1250 & 3.1250 & -- & 0.0010        &  3.68 & 1711.6 \\
+% 11 & 1011 & 3.4375 & 3.4375 & -- & 0.0010        &  2.62 & 2291.0 \\
+% 12 & 1100 & 3.7500 & 3.7500 & -- & 0.0010        &  2.08 & 2776.7 \\
+% 13 & 1101 & 4.0625 & 4.0624 & -- & 0.0010        &  1.79 & 3116.4 \\
+% 14 & 1110 & 4.3750 & 4.3749 & -- & 0.0010        &  1.65 & 3325.0 \\
+% 15 & 1111 & 4.6875 & 4.6874 & -- & 0.0010        &  1.58 & 3443.0 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+% =========================================================================
 
-En el Cuadro~\ref{tab:resultados} se presenta la comparaci\'on entre los valores te\'oricos anal\'iticos, los resultados de la simulaci\'on circuital en LTspice y la plantilla destinada al registro cuantitativo de mediciones en laboratorio ($V_{\text{exp}}$).
+En esta secci\'on se incorpora la Tabla~I (asignada al compa\~nero de equipo responsable de la toma de datos de laboratorio), en la cual se detalla la comparaci\'on entre los valores te\'oricos anal\'iticos, los resultados de la simulaci\'on circuital en LTspice y el registro cuantitativo de mediciones reales en laboratorio ($V_{\text{exp}}$).
 
 Para los estados activos $D = 1$ a $15$, el error relativo entre el modelo anal\'itico de Kirchhoff y la simulaci\'on num\'erica se sit\'ua por debajo del $0.0012\%$, superando ampliamente la especificaci\'on de tolerancia que exige un error menor al $10\%$. En el c\'odigo 0 ($0000_2$), la tensi\'on te\'orica es estrictamente $0.0000\text{ V}$, mientras que en la simulaci\'on y en el circuito f\'isico se registra un piso de tensi\'on de saturaci\'on baja t\'ipica $V_{\text{OL}} \approx 5.0\text{ mV}$. Dicho offset es inherente a la estructura cuasi-complementaria bipolar de salida del amplificador operacional LM358N operando con fuente de polarizaci\'on simple referenciada a tierra \cite{ti_lm358}.
 
