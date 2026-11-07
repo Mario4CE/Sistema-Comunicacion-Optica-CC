@@ -1,0 +1,723 @@
+\documentclass[11pt,letterpaper]{article}
+
+% --- Paquetes Esenciales ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{cite}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% --- Colores Institucionales y de Énfasis ---
+\definecolor{tecblue}{RGB}{0, 43, 91}
+\definecolor{tecred}{RGB}{179, 35, 23}
+\definecolor{grayborder}{RGB}{200, 200, 200}
+\definecolor{lightgray}{RGB}{245, 247, 250}
+
+% --- Configuración de Hipervínculos ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=tecblue,
+    citecolor=tecred,
+    urlcolor=tecblue,
+    pdfauthor={Mario Cerdas, Sebastian Quiros Fernandez, Ian Fuentes Nunez},
+    pdftitle={Memoria de Calculo y Analisis Teorico Completo - Sistema de Comunicacion por Medios Opticos},
+    pdfsubject={EL-2113 Circuitos Electricos en Corriente Continua - ITCR}
+}
+
+% --- Encabezados y Pies de Página ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small \textcolor{tecblue}{\textbf{ITCR | Escuela de Ingeniería Electrónica}}}
+\fancyhead[R]{\small \textcolor{gray}{EL-2113: Memoria de Cálculo}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% --- Título y Datos Formales ---
+\title{
+    \vspace{-1.0cm}
+    \Huge \textbf{\textcolor{tecblue}{Memoria de Cálculo y Justificación Teórica de Ingeniería}}\\[0.3cm]
+    \Large \textbf{Sistema de Comunicación por Medios Ópticos de 4 Bits}\\[0.2cm]
+    \large Proyecto de Investigación Dirigida --- Curso EL-2113: Circuitos Eléctricos en Corriente Continua
+}
+
+\author{
+    \textbf{Mario Cerdas}\footnote{Carné: 2022437519, Correo: \texttt{m.cerdas@estudiantec.cr}} \quad
+    \textbf{Sebastián Quirós Fernández}\footnote{Carné: 2024073526, Correo: \texttt{s.quiros.4@estudiantec.cr}} \quad
+    \textbf{Ian Fuentes Núñez}\footnote{Carné: 2025100912, Correo: \texttt{I.fuentes.1@estudiantec.cr}}\\[0.3cm]
+    \textit{Profesor: Ing. Fabián Alberto Picado García}\\[0.1cm]
+    \textit{Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR)}\\
+    \textit{Sede Central de Cartago, II Semestre 2026}
+}
+
+\date{\textbf{Última Revisión:} Noviembre de 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent El presente documento constituye la \textbf{Memoria de Cálculo Oficial y Análisis Teórico Integral} para el diseño, dimensionamiento, modelado y validación experimental del prototipo de \emph{Sistema de Comunicación por Medios Ópticos} del curso EL-2113. El sistema procesa secuencias digitales de cuatro bits ($N=4$) provenientes de señales periódicas y aperiódicas cuantizadas en MATLAB y transmitidas mediante un microcontrolador ATmega328P. La cadena de conversión y acondicionamiento implementa una red pasiva en escalera R--2R ($R=10\text{ k}\Omega$, $2R=20\text{ k}\Omega$) acoplada al componente activo OpAmp 1A de un circuito integrado LM358N, aislada mediante un seguidor de tensión (OpAmp 1B) que suprime una atenuación por efecto de carga del $98.52\%$. La señal analógica excita un generador óptico basado en un diodo emisor de luz (LED) rojo difuso ($\lambda \approx 650\text{ nm}$), canalizado a través de una fibra óptica plástica (POF) de polimetilmetacrilato (PMMA) de $45\text{ cm}$ hacia una fotorresistencia de sulfuro de cadmio (LDR GL5528). La variación fotoconductora modula un temporizador NE555 en configuración astable, generando tonos audibles entre $176.7\text{ Hz}$ y $3443.0\text{ Hz}$ sobre un buzzer piezoeléctrico pasivo desacoplado en corriente continua mediante un filtro pasa-altos ($f_c = 15.9\text{ Hz}$). Se detallan todas las deducciones por leyes de Kirchhoff (LCK y LVK), relaciones cuánticas de Planck-Einstein, física óptica de reflexión interna total, respuestas transitorias RC y consideraciones normativas de alimentación de laboratorio (Req. A.1 a Q.18).
+\end{abstract}
+
+\vspace{0.5cm}
+\tableofcontents
+\newpage
+
+% =============================================================================
+\section{Introducción y Arquitectura Modular del Sistema}
+% =============================================================================
+
+El objetivo central de la investigación dirigida consiste en diseñar, modelar en entornos virtuales (LTspice y TinkerCAD) y validar en un prototipo físico tangible un sistema optoelectrónico capaz de transmitir datos analógicos cuantizados mediante luz guiada y reproducir la información recibida en formato acústico. 
+
+Conforme a la especificación oficial del curso (\emph{Requerimientos A.1 a Q.18}), el sistema se estructura de forma estrictamente modular en siete etapas funcionales delimitadas e identificables (Req. A.1 y B.2), como se sintetiza en el Cuadro~\ref{tab:etapas_sistema}.
+
+\begin{table}[htbp]
+\centering
+\caption{Delimitación de las Siete Etapas Funcionales del Sistema.}
+\label{tab:etapas_sistema}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{cp{4.8cm}p{4.2cm}p{4.5cm}}
+\toprule
+\textbf{Etapa} & \textbf{Denominación Funcional} & \textbf{Componentes Clave} & \textbf{Requerimientos Normativos} \\
+\midrule
+1 & Patrón de Datos de Prueba & Arduino UNO (ATmega328P) & C.3, D.4 (4 bits, 1 ms a 10 s, MATLAB) \\
+2 & Convertidor D/A (DAC Pasivo + Activo) & Red R--2R ($10/20\text{ k}\Omega$) + OpAmp 1A & E.5, O.16 (Pasivos + 1 Activo, Error $< 10\%$) \\
+3 & Interfaz de Aislamiento & Seguidor OpAmp 1B (LM358N) & F.6, B.2 (Solo OpAmp, supresión de carga) \\
+4 & Generador Óptico & Resistor $150\ \Omega$ + LED Rojo ($650\text{ nm}$) & G.7, H.8 (Solo pasivos + luz no láser) \\
+5 & Medio y Receptor Óptico Pasivo & Fibra POF PMMA ($45\text{ cm}$) + LDR CdS & I.9, J.10 (30--60 cm, receptor 100\% pasivo) \\
+6 & Generador de Onda Cuadrada & Temporizador NE555 astable & K.11 (CI activo comercial + pasivos) \\
+7 & Transductor Acústico Final & Condensador $10\ \mu\text{F}$ + Buzzer Pasivo & L.12 (Solo buzzer piezoeléctrico pasivo) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =============================================================================
+\section{Etapa 1: Patrón de Datos de Prueba (MATLAB y Arduino)}
+% =============================================================================
+
+\subsection{Fundamento Teórico de Cuantización Uniforme de 4 Bits}
+De acuerdo con la teoría clásica de procesamiento digital de señales \cite{proakis2007,sedra2020}, la discretización en amplitud de una señal continua $x(t)$ acotada en el intervalo dinámico $[0, V_{\text{ref}}]$ con $V_{\text{ref}} = 5.0000\text{ V}$ mediante una palabra binaria de $N = 4\text{ bits}$ genera un espacio finito de estados cuantizados:
+\begin{equation}
+M = 2^N = 2^4 = 16\text{ niveles discretos}\quad (D \in \{0, 1, 2, \dots, 15\})
+\label{eq:niveles}
+\end{equation}
+
+El incremento uniforme de tensión correspondiente al bit menos significativo ($\Delta V_{\text{LSB}}$) representa la resolución analógica mínima del sistema:
+\begin{equation}
+\Delta V_{\text{LSB}} = \frac{V_{\text{ref}}}{2^N} = \frac{5.0000\text{ V}}{16} = 0.3125\text{ V} = 312.5\text{ mV}
+\label{eq:lsb_teorico}
+\end{equation}
+
+La asignación del código entero de 4 bits para una muestra temporal arbitraria $x(t_k)$ se define formalmente mediante el operador de redondeo simétrico y saturación de rango:
+\begin{equation}
+D[k] = \mathrm{sat}_{[0,15]} \left( \mathrm{round}\left( \frac{x(t_k) - V_{\text{min}}}{\Delta V_{\text{LSB}}} \right) \right), \quad k = 0, 1, \dots, L-1
+\label{eq:cuantizador}
+\end{equation}
+donde cada código $D[k]$ se proyecta en su descomposición posicional binaria natural $(b_3 b_2 b_1 b_0)_2$:
+\begin{equation}
+D[k] = \sum_{i=0}^{3} b_i [k] \cdot 2^i = 8\,b_3[k] + 4\,b_2[k] + 2\,b_1[k] + 1\,b_0[k], \quad b_i \in \{0, 1\}
+\label{eq:binario_posicional}
+\end{equation}
+
+\subsection{Relación Señal a Ruido de Cuantización Teórica (SQNR)}
+Para una señal armónica continua senoidal que recorre la totalidad de la escala del conversor, la potencia teórica de la señal es $P_s = (V_{\text{FS}} / (2\sqrt{2}))^2 = V_{\text{FS}}^2 / 8$, y la varianza del error de cuantización bajo la hipótesis de ruido blanco uniforme distribuido en $[-\Delta V/2, \Delta V/2]$ es $\sigma_e^2 = \Delta V^2 / 12$. La relación señal a ruido de cuantización teórica (SQNR) se determina como \cite{proakis2007}:
+\begin{equation}
+\mathrm{SQNR} = 10\log_{10}\left( \frac{P_s}{\sigma_e^2} \right) = 6.02\,N + 1.76\text{ dB}
+\label{eq:sqnr_formula}
+\end{equation}
+Para $N = 4\text{ bits}$:
+\begin{equation}
+\mathrm{SQNR} = 6.02(4) + 1.76 = 24.08 + 1.76 = 25.84\text{ dB}
+\end{equation}
+
+\subsection{Síntesis de Señales en MATLAB y Arreglos C++ (Req. D.4)}
+En el script \texttt{Matlab/Primero.m} se implementan dos funciones de excitación para cumplir el requerimiento \textbf{D.4}:
+\begin{enumerate}
+    \item \textbf{Señal Periódica ($L = 20$ muestras):} Onda senoidal pura definida por $x_p(t) = 2.34 + 2.10\sin(2\pi f_0 t)\text{ V}$, acotada entre $0.24\text{ V}$ y $4.44\text{ V}$, generando el arreglo:
+    \begin{equation*}
+    \texttt{PATRON\_PERIODICO} = \{7, 10, 12, 13, 14, 14, 14, 12, 11, 9, 6, 4, 3, 1, 1, 1, 2, 3, 5, 7\}
+    \end{equation*}
+    \item \textbf{Señal Aperiódica Transitoria ($L = 18$ muestras):} Función amortiguada exponencialmente representativa de un transitorio real $x_a(t) = 0.40 + 4.25 e^{-3.2 t} |\sin(3\pi t + 0.3)|\text{ V}$, produciendo el arreglo:
+    \begin{equation*}
+    \texttt{PATRON\_APERIODICO} = \{5, 10, 10, 8, 5, 2, 3, 4, 4, 3, 2, 1, 2, 2, 2, 2, 1, 1\}
+    \end{equation*}
+\end{enumerate}
+
+\subsection{Temporización No Bloqueante en Firmware Arduino (Req. C.3)}
+El firmware \texttt{Arduino/Logica/Logica.ino} transfiere secuencialmente los bits a los terminales digitales de salida del ATmega328P:
+\begin{equation*}
+\texttt{D8} \to b_0\text{ (LSB)}, \quad \texttt{D9} \to b_1, \quad \texttt{D10} \to b_2, \quad \texttt{D11} \to b_3\text{ (MSB)}
+\end{equation*}
+Para satisfacer el requerimiento \textbf{C.3}, cada palabra binaria se sostiene durante un periodo de retención programable $T_{\text{est}}$ gobernado por el temporizador por hardware del microcontrolador mediante llamadas a \texttt{millis()}, asegurando:
+\begin{equation}
+1\text{ ms} \le T_{\text{est}} \le 10\text{ s} \quad (1\text{ ms} \le T_{\text{est}} \le 10\,000\text{ ms})
+\label{eq:test_req}
+\end{equation}
+Esta arquitectura previene el bloqueo de la CPU inducido por funciones primitivas como \texttt{delay()}, posibilitando la lectura asíncrona de comandos por el puerto serie UART a 9600 baudios.
+
+% =============================================================================
+\section{Etapa 2: Convertidor Digital-Analógico (DAC R--2R y OpAmp 1A)}
+% =============================================================================
+
+\subsection{Justificación Técnica de la Topología en Escalera R--2R (Req. E.5)}
+El requerimiento \textbf{E.5} exige implementar el conversor con elementos pasivos y un elemento activo. Se evaluaron las dos arquitecturas clásicas de conversión D/A \cite{franco2015,sedra2020}:
+
+\begin{table}[htbp]
+\centering
+\caption{Comparación Técnica de Topologías de Conversión D/A.}
+\label{tab:comparacion_dac}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{4.5cm}p{5.5cm}p{5.5cm}}
+\toprule
+\textbf{Parámetro de Diseño} & \textbf{DAC Resistencias Ponderadas ($R, 2R, 4R, 8R$)} & \textbf{DAC Escalera R--2R (Seleccionado)} \\
+\midrule
+Dispersión de componentes & Requiere 4 valores distintos ($10, 20, 40, 80\text{ k}\Omega$). Difícil emparejamiento. & Requiere únicamente \textbf{2 valores estándar}: $R=10\text{ k}\Omega$ y $2R=20\text{ k}\Omega$ (precisión al 1\%). \\
+Impedancia equivalente ($R_{\text{th}}$) & Variable en función del código digital aplicado. & \textbf{Rigurosamente constante}: $R_{\text{th}} = R = 10\text{ k}\Omega$ para los 16 códigos. \\
+Alimentación del OpAmp & Sumador inversor genera tensión negativa ($V_{\text{out}} < 0$). Exige fuente dual $\pm V_{\text{CC}}$. & Seguidor unitario opera con tensión positiva en fuente unipolar referenciada a tierra ($0\text{ V}$). \\
+Sensibilidad a tolerancias & Alta: el bit MSB domina fuertemente y provoca saltos no monótonos. & Baja: la relación $2:1$ garantiza monotonicidad estricta y error $< 0.002\% \ll 10\%$. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Por consiguiente, se selecciona la \textbf{escalera R--2R} acoplada al componente activo **OpAmp 1A** (Pines 1, 2 y 3 del circuito integrado LM358N).
+
+\subsection{Deducción Matemática Rigurosa por Análisis Nodal LCK}
+Considérese el diagrama esquemático de la escalera R--2R de 4 bits con terminación a tierra:
+
+\begin{figure}[htbp]
+\centering
+\small
+\begin{verbatim}
+       V_b0 (D8)        V_b1 (D9)        V_b2 (D10)       V_b3 (D11)
+          │                │                │                │
+        [ 2R ]           [ 2R ]           [ 2R ]           [ 2R ]
+          │                │                │                │
+     V1   ●─────[ R ]──────●─────[ R ]──────●─────[ R ]──────● V4 = V_DAC
+          │               V2               V3                │
+        [ 2R ] (GND)                                         └──► (+) OpAmp 1A
+          │
+         GND
+\end{verbatim}
+\caption{Diagrama circuital de la escalera R--2R de 4 bits.}
+\label{fig:diagrama_r2r}
+\end{figure}
+
+Sean $V_{b0}, V_{b1}, V_{b2}, V_{b3} \in \{0\text{ V}, 5\text{ V}\}$ los niveles de tensión aplicados por el microcontrolador ($V_{bi} = V_{\text{ref}} \cdot b_i$). Asumiendo que la entrada no inversora del OpAmp presenta impedancia idealmente infinita ($I_{\text{in+}} = 0\text{ A}$), se aplica la \textbf{Ley de Corrientes de Kirchhoff (LCK)} en cada nodo ($\sum I_{\text{salientes}} = 0$) \cite{hayt2012,alexander2018}:
+
+\paragraph{1. Ecuación Nodal en el Nodo 1 ($V_1$):}
+\begin{equation}
+\frac{V_1 - 0}{2R} + \frac{V_1 - V_{b0}}{2R} + \frac{V_1 - V_2}{R} = 0
+\label{eq:lck_nodo1}
+\end{equation}
+Multiplicando la ecuación (\ref{eq:lck_nodo1}) por $2R$:
+\begin{equation}
+V_1 + (V_1 - V_{b0}) + 2(V_1 - V_2) = 0 \implies 4V_1 - 2V_2 = V_{b0}
+\end{equation}
+Despejando $V_1$:
+\begin{equation}
+V_1 = \frac{V_2}{2} + \frac{V_{b0}}{4} \label{eq:v1_despejado}
+\end{equation}
+
+\paragraph{2. Ecuación Nodal en el Nodo 2 ($V_2$):}
+\begin{equation}
+\frac{V_2 - V_1}{R} + \frac{V_2 - V_{b1}}{2R} + \frac{V_2 - V_3}{R} = 0
+\label{eq:lck_nodo2}
+\end{equation}
+Multiplicando por $2R$:
+\begin{equation}
+2(V_2 - V_1) + (V_2 - V_{b1}) + 2(V_2 - V_3) = 0 \implies -2V_1 + 5V_2 - 2V_3 = V_{b1}
+\end{equation}
+Sustituyendo la ecuación (\ref{eq:v1_despejado}) en la expresión anterior:
+\begin{equation}
+-2\left( \frac{V_2}{2} + \frac{V_{b0}}{4} \right) + 5V_2 - 2V_3 = V_{b1} \implies -V_2 - \frac{V_{b0}}{2} + 5V_2 - 2V_3 = V_{b1}
+\end{equation}
+\begin{equation}
+4V_2 - 2V_3 = V_{b1} + \frac{V_{b0}}{2} \implies V_2 = \frac{V_3}{2} + \frac{V_{b1}}{4} + \frac{V_{b0}}{8} \label{eq:v2_despejado}
+\end{equation}
+
+\paragraph{3. Ecuación Nodal en el Nodo 3 ($V_3$):}
+\begin{equation}
+\frac{V_3 - V_2}{R} + \frac{V_3 - V_{b2}}{2R} + \frac{V_3 - V_4}{R} = 0
+\label{eq:lck_nodo3}
+\end{equation}
+Multiplicando por $2R$:
+\begin{equation}
+2(V_3 - V_2) + (V_3 - V_{b2}) + 2(V_3 - V_4) = 0 \implies -2V_2 + 5V_3 - 2V_4 = V_{b2}
+\end{equation}
+Sustituyendo la ecuación (\ref{eq:v2_despejado}):
+\begin{equation}
+-2\left( \frac{V_3}{2} + \frac{V_{b1}}{4} + \frac{V_{b0}}{8} \right) + 5V_3 - 2V_4 = V_{b2} \implies -V_3 - \frac{V_{b1}}{2} - \frac{V_{b0}}{4} + 5V_3 - 2V_4 = V_{b2}
+\end{equation}
+\begin{equation}
+4V_3 - 2V_4 = V_{b2} + \frac{V_{b1}}{2} + \frac{V_{b0}}{4} \implies V_3 = \frac{V_4}{2} + \frac{V_{b2}}{4} + \frac{V_{b1}}{8} + \frac{V_{b0}}{16} \label{eq:v3_despejado}
+\end{equation}
+
+\paragraph{4. Ecuación Nodal en el Nodo de Salida ($V_4 = V_{\text{DAC}}$):}
+En el nodo 4, dado que la corriente hacia la entrada no inversora del OpAmp es idealmente nula ($I_{\text{in+}} = 0$):
+\begin{equation}
+\frac{V_4 - V_3}{R} + \frac{V_4 - V_{b3}}{2R} = 0
+\label{eq:lck_nodo4}
+\end{equation}
+Multiplicando por $2R$:
+\begin{equation}
+2(V_4 - V_3) + (V_4 - V_{b3}) = 0 \implies -2V_3 + 3V_4 = V_{b3}
+\end{equation}
+Sustituyendo la ecuación (\ref{eq:v3_despejado}):
+\begin{equation}
+-2\left( \frac{V_4}{2} + \frac{V_{b2}}{4} + \frac{V_{b1}}{8} + \frac{V_{b0}}{16} \right) + 3V_4 = V_{b3}
+\end{equation}
+\begin{equation}
+-V_4 - \frac{V_{b2}}{2} - \frac{V_{b1}}{4} - \frac{V_{b0}}{8} + 3V_4 = V_{b3} \implies 2V_4 = V_{b3} + \frac{V_{b2}}{2} + \frac{V_{b1}}{4} + \frac{V_{b0}}{8}
+\end{equation}
+Dividiendo la igualdad entre 2:
+\begin{equation}
+V_4 = \frac{V_{b3}}{2} + \frac{V_{b2}}{4} + \frac{V_{b1}}{8} + \frac{V_{b0}}{16}
+\label{eq:v4_fracciones}
+\end{equation}
+Sustituyendo $V_{bi} = V_{\text{ref}} \cdot b_i$:
+\begin{equation}
+\boxed{V_{\text{DAC}} = V_4 = V_{\text{ref}} \left( \frac{b_3}{2} + \frac{b_2}{4} + \frac{b_1}{8} + \frac{b_0}{16} \right) = \frac{V_{\text{ref}}}{16} \sum_{i=0}^{3} b_i 2^i = V_{\text{ref}} \cdot \frac{D}{16}}
+\label{eq:vdac_final}
+\end{equation}
+
+\subsection{Demostración de la Resistencia Equivalente de Thévenin ($R_{\text{th}}$)}
+Se demuestra por reducción iterativa de fuentes pasivadas (cortocircuito a tierra) \cite{hayt2012}:
+\begin{enumerate}
+    \item En el nodo 1: La resistencia de terminación $2R$ en paralelo con la rama vertical $2R$ produce:
+    \begin{equation}
+    R_{\text{eq1}} = 2R \parallel 2R = \frac{2R \cdot 2R}{2R + 2R} = R
+    \end{equation}
+    \item En el nodo 2: $R_{\text{eq1}}$ en serie con la resistencia horizontal $R$ resulta en $2R$. Al combinarse en paralelo con la rama vertical del bit 1 ($2R$):
+    \begin{equation}
+    R_{\text{eq2}} = (R + R) \parallel 2R = 2R \parallel 2R = R
+    \end{equation}
+    \item En el nodo 3: Repitiendo el proceso inductivo:
+    \begin{equation}
+    R_{\text{eq3}} = (R + R) \parallel 2R = 2R \parallel 2R = R
+    \end{equation}
+    \item En el nodo 4: Finalmente:
+    \begin{equation}
+    \boxed{R_{\text{th}} = (R + R) \parallel 2R = 2R \parallel 2R = R = 10.0\text{ k}\Omega}
+    \end{equation}
+\end{enumerate}
+La resistencia equivalente es \textbf{estrictamente invariante frente a cualquier combinación de código digital}.
+
+\subsection{Criterio de Selección de $R=10\text{ k}\Omega$ y Corriente de Pines}
+La resistencia vista por cualquier pin digital conectado a una rama $2R$ satisface $R_{\text{in}} \ge 2R$ \cite{franco2015}. Por Ley de Ohm:
+\begin{equation}
+I_{\text{pin(max)}} = \frac{V_{\text{ref}}}{2R} = \frac{5.0000\text{ V}}{20.0\text{ k}\Omega} = 0.250\text{ mA} = 250\ \mu\text{A} \ll 20\text{ mA}
+\label{eq:corriente_pin}
+\end{equation}
+La resistencia de conducción interna de los MOSFETs de salida del puerto digital del ATmega328P es $R_{\text{on}} \approx 25\ \Omega$ \cite{sedra2020}. La caída interna inducida es apenas:
+\begin{equation}
+\Delta V_{\text{drop}} = I_{\text{pin(max)}} \cdot R_{\text{on}} = 0.250\text{ mA} \times 25\ \Omega = 6.25\text{ mV}
+\end{equation}
+lo que introduce un error relativo despreciable de:
+\begin{equation}
+E_{\text{CMOS}} = \frac{6.25\text{ mV}}{5000\text{ mV}} \times 100\% = 0.125\% \ll 10\%
+\end{equation}
+garantizando la integridad del nivel lógico $V_{\text{OH}} \approx 5.00\text{ V}$.
+
+\subsection{Polarización del LM358N y Margen Dinámico Superior}
+El amplificador operacional comercial LM358N posee una etapa de salida cuasi-complementaria con saturación alta limitada por \cite{ti_lm358}:
+\begin{equation}
+V_{\text{OH(max)}} \le V_{\text{CC}} - 1.50\text{ V}
+\label{eq:voh_lm358}
+\end{equation}
+Si el circuito integrado se polarizara con la fuente de $+5.00\text{ V}$, el riel superior alcanzaría únicamente $V_{\text{OH}} \approx 3.50\text{ V}$, provocando una distorsión por recorte severo en los códigos $D = 12, 13, 14, 15$ ($3.75\text{ V}$ a $4.6875\text{ V}$). Para asegurar excursión analógica totalmente lineal, el terminal $V_{\text{CC}}$ (Pin 8) se alimenta con $+9.00\text{ V}$ desde el segundo canal regulado de la fuente de laboratorio:
+\begin{equation}
+V_{\text{OH(disponible)}} = 9.00\text{ V} - 1.50\text{ V} = 7.50\text{ V} > 4.6875\text{ V} \quad (\text{Margen de seguridad: } +2.81\text{ V})
+\end{equation}
+
+% =============================================================================
+\section{Etapa 3: Interfaz de Aislamiento y Efecto de Carga}
+% =============================================================================
+
+\subsection{Demostración Analítica del Efecto de Carga (Loading Effect)}
+Para evidenciar la necesidad obligatoria de la Etapa 3 conforme a los requerimientos \textbf{B.2} y \textbf{F.6}, considérese el escenario hipotético de conexión directa de la red R--2R a la malla del diodo emisor ($R_{\text{driver}} = 150\ \Omega$) sin acoplamiento activo:
+
+\begin{figure}[htbp]
+\centering
+\small
+\begin{verbatim}
+     V_DAC o──────[ R_th = 10 kΩ ]──────o V_carga
+                                        │
+                                      [ R_driver = 150 Ω ]
+                                        │
+                                       (>|) D_LED (V_D ≈ 1.8 V)
+                                        │
+                                       GND
+\end{verbatim}
+\caption{Circuito equivalente de Thévenin con acoplamiento directo de carga.}
+\label{fig:loading_effect}
+\end{figure}
+
+Por el teorema de divisor de tensión resistivo \cite{alexander2018}:
+\begin{equation}
+V_{\text{carga}} = V_{\text{DAC}} \cdot \frac{R_{\text{driver}}}{R_{\text{th}} + R_{\text{driver}}} = V_{\text{DAC}} \cdot \frac{150\ \Omega}{10\,000\ \Omega + 150\ \Omega} = \frac{150}{10\,150}\,V_{\text{DAC}} \approx 0.014778\,V_{\text{DAC}}
+\label{eq:divisor_carga}
+\end{equation}
+La atenuación o porcentaje de pérdida de amplitud analógica es:
+\begin{equation}
+\mathrm{P\acute{e}rdida} = \left( 1 - 0.014778 \right) \times 100\% = \mathbf{98.52\%}
+\label{eq:perdida_carga}
+\end{equation}
+Bajo esta condición, en el estado máximo ($D=15$, $V_{\text{DAC}} = 4.6875\text{ V}$), la tensión resultante sobre la carga sería de únicamente:
+\begin{equation}
+V_{\text{carga(max)}} = 4.6875\text{ V} \times 0.014778 = 0.0693\text{ V} = 69.3\text{ mV}
+\end{equation}
+Como $69.3\text{ mV} \ll V_D \approx 1.80\text{ V}$, el diodo emisor \textbf{permanecería perpetuamente apagado}, haciendo imposible la comunicación óptica.
+
+\subsection{Aislamiento Unipolar mediante Seguidor de Tensión (OpAmp 1B)}
+Al intercalar el **OpAmp 1B** (Pines 5, 6 y 7 del LM358N) en configuración buffer seguidor ($A_v = 1$, con lazo de realimentación cerrado entre Pin 6 y Pin 7) \cite{franco2015}:
+\begin{itemize}
+    \item \textbf{Impedancia de entrada:} $Z_{\text{in}} > 10^{11}\ \Omega \implies I_{\text{entrada}} \to 0\text{ A}$ (no extrae corriente ni atenúa la escalera R--2R).
+    \item \textbf{Impedancia de salida:} $Z_{\text{out}} = \frac{R_o}{1 + A_{\text{OL}}\beta} \approx 0\ \Omega$ (suministra la corriente requerida por el diodo sin caída de tensión).
+    \item \textbf{Tensión transferida:} $V_{\text{interfaz}} = V_{\text{DAC}} = \frac{V_{\text{ref}}}{16} \cdot D$.
+\end{itemize}
+
+% =============================================================================
+\section{Etapa 4: Generador Óptico y Justificación Física del Color}
+% =============================================================================
+
+\subsection{Cálculo del Resistor Limitador de Corriente ($R_{\text{driver}}$ — Req. G.7)}
+Aplicando la Ley de Voltajes de Kirchhoff (LVK) en la malla del emisor:
+\begin{equation}
+-V_{\text{interfaz}}(D) + I_{\text{LED}}(D) \cdot R_{\text{driver}} + V_D = 0
+\end{equation}
+Despejando la corriente de excitación:
+\begin{equation}
+I_{\text{LED}}(D) = \begin{cases} 
+0\text{ A}, & V_{\text{interfaz}}(D) \le V_D \\ 
+\dfrac{V_{\text{interfaz}}(D) - V_D}{R_{\text{driver}}}, & V_{\text{interfaz}}(D) > V_D 
+\end{cases}
+\label{eq:lvk_corriente_led}
+\end{equation}
+
+Para fijar una corriente de operación máxima de seguridad $I_{\text{LED(max)}} \approx 19.25\text{ mA} < 20.0\text{ mA}$ en el código supremo ($D = 15$, $V_{\text{interfaz}} = 4.6875\text{ V}$) considerando $V_D = 1.8000\text{ V}$ para un LED rojo difuso:
+\begin{equation}
+R_{\text{driver}} = \frac{V_{\text{interfaz(15)}} - V_D}{I_{\text{LED(max)}}} = \frac{4.6875\text{ V} - 1.8000\text{ V}}{0.01925\text{ A}} = \frac{2.8875\text{ V}}{0.01925\text{ A}} = \mathbf{150.0\ \Omega}
+\label{eq:rdriver_calculo}
+\end{equation}
+El valor resultante coincide exactamente con un valor comercial estándar al 5\% de la serie E12/E24 ($150\ \Omega$). La potencia máxima disipada por el componente pasivo es:
+\begin{equation}
+P_{R_{\text{driver}}} = I_{\text{LED(max)}}^2 \cdot R_{\text{driver}} = (0.01925\text{ A})^2 \times 150\ \Omega = 0.05558\text{ W} = \mathbf{55.6\text{ mW}} \ll 250\text{ mW (1/4 W)}
+\label{eq:potencia_rdriver}
+\end{equation}
+El resistor trabaja al $22.2\%$ de su capacidad nominal, previniendo derivas térmicas por sobrecalentamiento.
+
+\subsection{Justificación Teórica del Color Rojo ($\lambda \approx 650\text{ nm}$) basada en Física 2 y 3 (Req. H.8)}
+El requerimiento \textbf{H.8} establece plena libertad en la elección de la longitud de onda de emisión, exigiendo justificación fundamentada en física. La elección del espectro rojo visible ($\lambda \approx 650\text{ nm}$) sobre otras opciones cromáticas (verde, azul o infrarrojo) se apoya en tres principios físicos:
+
+\paragraph{1. Relación Cuántica de Planck-Einstein y Margen Dinámico Activo:}
+Por la física cuántica del estado sólido \cite{tipler2010,kasap2013}, la recombinación radiativa electrón-hueco en la juntura semiconductora libera fotones cuya energía fundamental obedece:
+\begin{equation}
+E = h\nu = \frac{h \cdot c}{\lambda} \approx q \cdot V_D \implies V_D \approx \frac{h \cdot c}{q \cdot \lambda}
+\label{eq:planck_einstein}
+\end{equation}
+donde las constantes físicas fundamentales son:
+\begin{itemize}
+    \item Constante de Planck: $h = 6.62607015 \times 10^{-34}\text{ J}\cdot\text{s}$
+    \item Velocidad de la luz en el vacío: $c = 2.99792458 \times 10^8\text{ m/s}$
+    \item Carga elemental: $q = 1.602176634 \times 10^{-19}\text{ C}$
+\end{itemize}
+
+Evaluando las distintas regiones del espectro visible:
+\begin{itemize}
+    \item \textbf{LED Rojo ($\lambda \approx 650\text{ nm}$):}
+    \begin{equation}
+    E = \frac{(6.626 \times 10^{-34})(3.00 \times 10^8)}{(1.602 \times 10^{-19})(650 \times 10^{-9})} = 1.908\text{ eV} \implies V_D \approx 1.80\text{ V}
+    \end{equation}
+    Conduce a partir del código $D=6$ ($V_6 = 1.875\text{ V}$), garantizando \textbf{10 estados activos continuos de modulación óptica} ($D=6$ a $D=15$).
+    \item \textbf{LED Verde ($\lambda \approx 525\text{ nm}$):} $E = 2.36\text{ eV} \implies V_D \approx 2.40\text{ V}$. Comienza a conducir a partir de $D=8$ ($2.50\text{ V}$), desaprovechando el $50\%$ de los códigos digitales.
+    \item \textbf{LED Azul ($\lambda \approx 460\text{ nm}$):} $E = 2.70\text{ eV} \implies V_D \approx 3.0\text{ V}\text{--}3.2\text{ V}$. Conduce únicamente desde $D=11$ ($3.4375\text{ V}$), recortando el $68.7\%$ del rango dinámico.
+\end{itemize}
+
+\paragraph{2. Ventana de Mínima Atenuación en Fibras Plásticas de PMMA:}
+La fibra óptica plástica (POF) emplea un núcleo de polimetilmetacrilato ($n_1 = 1.492$) y revestimiento fluorado ($n_2 = 1.402$). Por la Ley de Snell \cite{tipler2010,ziemann2008}, el ángulo crítico de Reflexión Interna Total (TIR) y la Apertura Numérica (NA) son:
+\begin{equation}
+\theta_c = \arcsin\left( \frac{n_2}{n_1} \right) = \arcsin\left( \frac{1.402}{1.492} \right) = 69.99^\circ \approx 70.0^\circ
+\label{eq:angulo_critico}
+\end{equation}
+\begin{equation}
+\mathrm{NA} = \sqrt{n_1^2 - n_2^2} = \sqrt{(1.492)^2 - (1.402)^2} = \sqrt{2.2261 - 1.9656} = \sqrt{0.2605} \approx \mathbf{0.510}
+\label{eq:apertura_numerica}
+\end{equation}
+
+El espectro de pérdidas ópticas en polímeros PMMA está condicionado por dos fenómenos físicos contrapuestos \cite{ziemann2008}:
+\begin{enumerate}
+    \item \textbf{Dispersión intrínseca de Rayleigh ($\alpha_{\text{Rayleigh}} \propto \lambda^{-4}$):} Domina fuertemente en longitudes de onda cortas (azul y ultravioleta).
+    \item \textbf{Absorción molecular por sobretonos vibracionales C--H:} Crece exponencialmente a partir de $\lambda > 700\text{ nm}$ (infrarrojo cercano).
+\end{enumerate}
+La superposición de ambos mecanismos define la célebre \textbf{ventana de transmisión de mínima atenuación del PMMA centrada exactamente en $\lambda = 650\text{ nm}$}, con coeficientes de pérdida de apenas $\alpha \approx 0.15\text{ dB/m}$ \cite{ziemann2008}.
+
+\paragraph{3. Acoplamiento Espectral con el Sulfuro de Cadmio (CdS):}
+La fotorresistencia está constituida por CdS policristalino ($E_g \approx 2.42\text{ eV}$). Sus niveles de defecto concentran la máxima fotosensibilidad en la banda de $540\text{ nm}$ a $650\text{ nm}$ \cite{rose1963,streetman2016}. Mientras que emisores infrarrojos ($850\text{--}940\text{ nm}$, $E \approx 1.3\text{ eV} < E_g$) no poseen suficiente energía fotónica para promover portadores, el LED rojo visible genera la máxima variación de conductancia.
+
+% =============================================================================
+\section{Etapa 5: Medio Guiado y Receptor Óptico Pasivo}
+% =============================================================================
+
+\begin{itemize}
+    \item \textbf{Medio Óptico (Req. I.9):} Tramo de fibra óptica plástica (POF) cortado transversalmente a $90^\circ$ con longitud exacta de:
+    \begin{equation}
+    L_{\text{fibra}} = 45.0\text{ cm} \in [30.0\text{ cm}, 60.0\text{ cm}]
+    \end{equation}
+    ubicado exactamente en el centro de la tolerancia normativa.
+    \item \textbf{Receptor Óptico Pasivo (Req. J.10):} Fotorresistencia LDR GL5528 constituida de material semiconductor pasivo (sin polarización activa ni ganancia electrónica interna). La resistencia superficial responde a la ley de potencias fenomenológica \cite{rose1963}:
+    \begin{equation}
+    R_{\text{LDR}}(E_v) = R_0 \cdot E_v^{-\gamma}
+    \label{eq:ldr_fotometria}
+    \end{equation}
+    En la simulación circuital y el modelo físico calibrado:
+    \begin{equation}
+    R_{\text{LDR}}(I_{\text{LED}}) = 1500 + 38\,500 \cdot \exp\left( -\frac{I_{\text{LED}}}{3\text{ mA}} \right)\ \Omega
+    \label{eq:ldr_modelo_spice}
+    \end{equation}
+    variando desde $R_{\text{LDR(osc)}} \approx 40.0\text{ k}\Omega$ en corte luminoso hasta $R_{\text{LDR(max)}} \approx 1.577\text{ k}\Omega \approx 1.58\text{ k}\Omega$ bajo la irradiación máxima del código $D=15$.
+\end{itemize}
+
+% =============================================================================
+\section{Etapa 6: Generador de Onda Cuadrada (NE555 Astable)}
+% =============================================================================
+
+\subsection{Deducción Matemática a partir de la Ecuación Diferencial Transitoria RC}
+El oscilador astable basado en el circuito integrado comercial NE555 opera mediante la carga y descarga cíclica del condensador $C_1 = 100\text{ nF}$ a través de la resistencia fija $R_1 = 1.0\text{ k}\Omega$ y la fotorresistencia $R_{\text{LDR}}$ \cite{camenzind2005,ti_ne555}.
+
+La solución analítica general de la ecuación diferencial de primer orden para la tensión en un condensador es:
+\begin{equation}
+v_C(t) = V_{\text{final}} + \left( V_{\text{inicial}} - V_{\text{final}} \right) e^{-t / \tau}
+\label{eq:rc_transitorio}
+\end{equation}
+
+\paragraph{1. Semiciclo de Carga --- Tiempo en Alto ($t_H$):}
+Durante este intervalo, el transistor interno de descarga (Pin 7) permanece en corte. El condensador se carga desde el umbral inferior $V_{\text{inicial}} = \frac{1}{3}V_{\text{CC}}$ hacia $V_{\text{final}} = V_{\text{CC}}$ a través de la resistencia equivalente de carga $(R_1 + R_{\text{LDR}})$, con constante de tiempo $\tau_c = (R_1 + R_{\text{LDR}}) C_1$. 
+
+La conmutación ocurre cuando $v_C(t_H) = \frac{2}{3}V_{\text{CC}}$:
+\begin{equation}
+\frac{2}{3}V_{\text{CC}} = V_{\text{CC}} + \left( \frac{1}{3}V_{\text{CC}} - V_{\text{CC}} \right) e^{-t_H / \tau_c}
+\end{equation}
+\begin{equation}
+-\frac{1}{3}V_{\text{CC}} = -\frac{2}{3}V_{\text{CC}} \, e^{-t_H / \tau_c} \implies e^{-t_H / \tau_c} = \frac{1}{2}
+\end{equation}
+Aplicando el logaritmo natural:
+\begin{equation}
+-\frac{t_H}{\tau_c} = \ln\left( \frac{1}{2} \right) = -\ln(2) \implies \boxed{t_H = \ln(2) \cdot (R_1 + R_{\text{LDR}}) \cdot C_1 \approx 0.69315\,(R_1 + R_{\text{LDR}})\,C_1}
+\label{eq:th_deducido}
+\end{equation}
+
+\paragraph{2. Semiciclo de Descarga --- Tiempo en Bajo ($t_L$):}
+Al alcanzar $\frac{2}{3}V_{\text{CC}}$, el flip-flop interno satura el transistor de descarga del Pin 7 conectándolo a tierra. El condensador se descarga desde $V_{\text{inicial}} = \frac{2}{3}V_{\text{CC}}$ hacia $V_{\text{final}} = 0\text{ V}$ exclusivamente a través de $R_{\text{LDR}}$, con constante de tiempo $\tau_d = R_{\text{LDR}} C_1$.
+
+La conmutación se activa cuando $v_C(t_L) = \frac{1}{3}V_{\text{CC}}$:
+\begin{equation}
+\frac{1}{3}V_{\text{CC}} = 0 + \left( \frac{2}{3}V_{\text{CC}} - 0 \right) e^{-t_L / \tau_d} \implies e^{-t_L / \tau_d} = \frac{1}{2}
+\end{equation}
+\begin{equation}
+\boxed{t_L = \ln(2) \cdot R_{\text{LDR}} \cdot C_1 \approx 0.69315\,R_{\text{LDR}}\,C_1}
+\label{eq:tl_deducido}
+\end{equation}
+
+\paragraph{3. Periodo y Frecuencia Fundamental de Oscilación ($f_{555}$):}
+El periodo total de la forma de onda es:
+\begin{equation}
+T = t_H + t_L = \ln(2)(R_1 + R_{\text{LDR}})C_1 + \ln(2)R_{\text{LDR}}C_1 = \ln(2)\,(R_1 + 2R_{\text{LDR}})\,C_1
+\label{eq:periodo_555}
+\end{equation}
+La frecuencia resultante es:
+\begin{equation}
+\boxed{f_{555} = \frac{1}{T} = \frac{1}{\ln(2)\,(R_1 + 2R_{\text{LDR}})\,C_1} = \frac{1.442695}{(R_1 + 2R_{\text{LDR}})\,C_1} \approx \frac{1.443}{(R_1 + 2R_{\text{LDR}})\,C_1}}
+\label{eq:frecuencia_555}
+\end{equation}
+
+\paragraph{4. Ciclo de Trabajo (Duty Cycle):}
+\begin{equation}
+\mathrm{Duty\ Cycle} = \frac{t_H}{t_H + t_L} \times 100\% = \frac{R_1 + R_{\text{LDR}}}{R_1 + 2R_{\text{LDR}}} \times 100\%
+\label{eq:duty_cycle}
+\end{equation}
+
+\subsection{Evaluación Numérica del Rango Dinámico Acústico}
+Para $R_1 = 1.0\text{ k}\Omega$ y $C_1 = 100\text{ nF}$:
+\begin{enumerate}
+    \item \textbf{Penumbra o Estado Apagado ($D \le 5$, $R_{\text{LDR}} = 40.0\text{ k}\Omega$):}
+    \begin{equation}
+    f_{\text{teo}} = \frac{1.443}{(1000 + 2 \times 40\,000)\times 10^{-7}} = \frac{1.443}{8.10 \times 10^{-3}} = \mathbf{178.1\text{ Hz}}
+    \end{equation}
+    Simulación en LTspice: $f_{\text{sim}} = 176.7\text{ Hz}$ ($E_{\text{rel}} = 0.81\%$, tono grave). Ciclo de trabajo: $50.3\%$.
+    \item \textbf{Máxima Iluminación Óptica ($D = 15$, $R_{\text{LDR}} = 1576.6\ \Omega \approx 1.58\text{ k}\Omega$):}
+    \begin{equation}
+    f_{\text{teo}} = \frac{1.443}{(1000 + 2 \times 1576.6)\times 10^{-7}} = \frac{1.443}{4.1532 \times 10^{-4}} = \mathbf{3474.3\text{ Hz}}
+    \end{equation}
+    *(Nota: Si se redondea $R_{\text{LDR}} = 1.58\text{ k}\Omega$, $f = 1.443 / (4160 \times 10^{-7}) = 3468.8\text{ Hz}$)*.
+    Simulación en LTspice: $f_{\text{sim}} = 3443.0\text{ Hz}$ ($E_{\text{rel}} = 0.90\%$, tono agudo). Ciclo de trabajo: $62.0\%$.
+\end{enumerate}
+Todo el rango de frecuencias reside plenamente en el espectro audible humano ($20\text{ Hz}\text{--}20\text{ kHz}$) y coincide con la máxima sensibilidad acústica del transductor piezoeléctrico.
+
+% =============================================================================
+\section{Etapa 7: Transductor Acústico Pasivo y Acoplamiento AC}
+% =============================================================================
+
+\subsection{Justificación del Desacoplo de Continua (Req. L.12)}
+Un buzzer piezoeléctrico pasivo está constituido por una lámina cerámica de titanato-circonato de plomo (PZT) adherida a un disco elástico metálico \cite{cady1964}. La deformación mecánica periódica que genera presión sonora audible se induce exclusivamente por gradientes dinámicos de potencial eléctrico alterno ($\Delta V$).
+
+La salida del temporizador 555 (Pin 3) conmuta entre $\approx 0\text{ V}$ y $V_{\text{CC}}$, portando una componente de corriente continua no nula:
+\begin{equation}
+V_{\text{DC}} = \frac{1}{T}\int_0^T v_{\text{out}}(t)\,dt \approx \mathrm{Duty} \times V_{\text{CC}} \approx 0.50 \times 5.0\text{ V} = 2.50\text{ V}
+\end{equation}
+La presencia sostenida de una polarización continua genera fatiga dieléctrica, flexión asimétrica y calentamiento óhmico en el transductor cerámico pasivo \cite{cady1964}.
+
+\subsection{Cálculo del Filtro Pasa-Altos de Acoplo AC}
+Para eliminar completamente $V_{\text{DC}}$, se interpone en serie un condensador electrolítico radial de $C_{\text{acoplo}} = 10.0\ \mu\text{F}$. Modelando la impedancia del buzzer pasivo como una resistencia equivalente $R_L \approx 1.0\text{ k}\Omega$, el conjunto conforma un filtro pasa-altos pasivo RC de primer orden \cite{alexander2018}:
+\begin{equation}
+f_c = \frac{1}{2\pi \cdot R_L \cdot C_{\text{acoplo}}} = \frac{1}{2\pi \times (1000\ \Omega) \times (10.0 \times 10^{-6}\text{ F})} = \frac{1}{6.283185 \times 10^{-2}} = \mathbf{15.915\text{ Hz}} \approx \mathbf{15.9\text{ Hz}}
+\label{eq:fc_acoplo}
+\end{equation}
+
+Dado que:
+\begin{equation}
+f_c = 15.9\text{ Hz} \ll f_{\text{min}} = 176.7\text{ Hz} \quad \left(\frac{f_{\text{min}}}{f_c} \approx 11.1\right)
+\end{equation}
+la frecuencia de corte se ubica más de una década por debajo del tono más grave del sistema, garantizando ganancia unitaria sin atenuación de amplitud en ninguna frecuencia útil y bloqueando al $100\%$ el nivel continuo.
+
+% =============================================================================
+\section{Esquema de Alimentación y Cumplimiento Normativo (P.17 y Q.18)}
+% =============================================================================
+
+\subsection{Requerimientos Mandatorios de Alimentación}
+Los requerimientos normativos \textbf{P.17} y \textbf{Q.18} establecen directrices infranqueables:
+\begin{enumerate}
+    \item \textbf{Desconexión Absoluta del Riel de $+5\text{ V}$ del Arduino (Req. P.17):} El pin de $+5\text{ V}$ del microcontrolador Arduino UNO no suministra alimentación a ninguna etapa analógica ni a los circuitos integrados de la protoboard.
+    \item \textbf{Prohibición Expresa de Baterías Portátiles (Req. Q.18):} Queda terminantemente prohibido el empleo de baterías (AA, AAA o de 9V) durante la toma de datos cuantitativos finales y para la defensa evaluativa formal en semana 19. Su uso se restringió exclusivamente a una validación preliminar cualitativa de continuidad de banco tras concluir el ensamble físico.
+    \item \textbf{Fuente de Alimentación DC Regulada de Laboratorio de Doble Canal:}
+    \begin{itemize}
+        \item \textbf{Canal 1 (Ajustado a $+5.00\text{ V}$):} Alimenta el temporizador NE555 (Pines 8 y 4).
+        \item \textbf{Canal 2 (Ajustado a $+9.00\text{ V}$):} Alimenta el amplificador operacional LM358N (Pin 8).
+        \item \textbf{Referencia Unificada (GND Común):} Los bornes negativos de ambos canales de la fuente de alimentación y el terminal \texttt{GND} del Arduino se unen en un único bus de tierra común ($0\text{ V}$).
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Diagnóstico Experimental de Laboratorio y Corrección de Puentes}
+Durante la sesión de pruebas en el laboratorio de la Escuela de Ingeniería Electrónica del ITCR (efectuada por Mario Cerdas e Ian Fuentes), se registraron anomalías en las lecturas de tensión de salida de la escalera DAC. Tras auditar la protoboard y reproducir el comportamiento en TinkerCAD Circuits, se constató que los terminales de realimentación del encapsulado DIP-8 del LM358N se encontraban abiertos.
+
+Se normalizó el circuito aplicando tres puentes rígidos directos:
+\begin{enumerate}
+    \item \textbf{Puente 1 (Pin 1 a Pin 2):} Cierra el lazo de realimentación negativa del OpAmp 1A (Buffer seguidor unitario del DAC R--2R, Etapa 2).
+    \item \textbf{Puente 2 (Pin 6 a Pin 7):} Cierra el lazo de realimentación negativa del OpAmp 1B (Buffer seguidor unitario de la interfaz, Etapa 3).
+    \item \textbf{Enlace Inter-etapas en U (Pin 1 a Pin 5):} Transfiere la tensión analógica $V_{\text{DAC}}$ hacia la entrada no inversora de la Etapa 3 sin efecto de carga.
+\end{enumerate}
+Las pruebas de banco posteriores ratificaron la total linealidad monótona de la escalera de 16 escalones ($0\text{ V}$ a $4.6875\text{ V}$).
+
+% =============================================================================
+\section{Cuadro Maestro de Resultados: Teórico vs. LTspice vs. Experimental}
+% =============================================================================
+
+El requerimiento \textbf{O.16} estipula que el error de medición del sistema conversor debe ser estrictamente inferior al $10\%$:
+\begin{equation}
+E_{\text{rel}}(\%) = \left| \frac{V_{\text{sim}} - V_{\text{teo}}}{V_{\text{teo}}} \right| \times 100\% < 10.0\%
+\label{eq:error_rel_def}
+\end{equation}
+
+\begin{table}[htbp]
+\centering
+\caption{Consolidado Teórico, Simulado en LTspice y Plantilla de Laboratorio para los 16 Estados.}
+\label{tab:maestro_resultados}
+\small
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{ccccccccc}
+\toprule
+\textbf{Dec ($D$)} & \textbf{Binario} & $V_{\text{teo}}$ \textbf{(V)} & $V_{\text{sim}}$ \textbf{(V)} & $V_{\text{exp}}$ \textbf{(V)} & \textbf{Error Sim (\%)} & $I_{\text{LED}}$ \textbf{(mA)} & $R_{\text{LDR}}$ \textbf{(k$\Omega$)} & $f_{555}$ \textbf{(Hz)} \\
+\midrule
+0  & 0000 & 0.0000 & 0.0050 & -- & Sat. $V_{\text{OL}}$ & 0.00 & 40.00 & 176.7 \\
+1  & 0001 & 0.3125 & 0.3125 & -- & 0.0012\% & 0.00 & 40.00 & 176.7 \\
+2  & 0010 & 0.6250 & 0.6250 & -- & 0.0000\% & 0.00 & 40.00 & 176.7 \\
+3  & 0011 & 0.9375 & 0.9375 & -- & 0.0004\% & 0.00 & 40.00 & 176.7 \\
+4  & 0100 & 1.2500 & 1.2500 & -- & 0.0006\% & 0.00 & 40.00 & 176.7 \\
+5  & 0101 & 1.5625 & 1.5625 & -- & 0.0007\% & 0.03 & 39.57 & 178.6 \\
+6  & 0110 & 1.8750 & 1.8750 & -- & 0.0008\% & 1.04 & 28.73 & 244.9 \\
+7  & 0111 & 2.1875 & 2.1875 & -- & 0.0009\% & 2.81 & 16.68 & 416.6 \\
+8  & 1000 & 2.5000 & 2.5000 & -- & 0.0009\% & 4.69 &  9.56 & 710.9 \\
+9  & 1001 & 2.8125 & 2.8125 & -- & 0.0009\% & 6.63 &  5.71 & 1151.9 \\
+10 & 1010 & 3.1250 & 3.1250 & -- & 0.0010\% & 8.61 &  3.68 & 1711.6 \\
+11 & 1011 & 3.4375 & 3.4375 & -- & 0.0010\% & 10.60 & 2.62 & 2291.0 \\
+12 & 1100 & 3.7500 & 3.7500 & -- & 0.0010\% & 12.61 & 2.08 & 2776.7 \\
+13 & 1101 & 4.0625 & 4.0624 & -- & 0.0010\% & 14.62 & 1.79 & 3116.4 \\
+14 & 1110 & 4.3750 & 4.3749 & -- & 0.0010\% & 16.64 & 1.65 & 3325.0 \\
+15 & 1111 & 4.6875 & 4.6874 & -- & 0.0010\% & 18.66 & 1.58 & 3443.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent \textbf{Análisis de Validación del Cuadro~\ref{tab:maestro_resultados}:}
+\begin{enumerate}
+    \item Para todos los estados activos ($D=1$ a $15$), el error relativo simulado es menor al $0.0012\%$, superando en cuatro órdenes de magnitud el requerimiento del $10\%$.
+    \item En el estado $D=0$ ($0000_2$), la salida teórica es $0.0000\text{ V}$. La simulación arroja un offset de $5.0\text{ mV}$ correspondiente a la tensión residual de saturación inferior $V_{\text{OL}}$ del LM358 con fuente unipolar.
+    \item La corriente del LED se mantiene estrictamente por debajo de los $20\text{ mA}$ ($I_{\text{max}} = 18.66\text{ mA}$ en $D=15$), asegurando la integridad del semiconductor.
+\end{enumerate}
+
+% =============================================================================
+\section{Referencias Bibliográficas Académicas (Normadas IEEE)}
+% =============================================================================
+
+\begin{thebibliography}{14}
+
+\bibitem{alexander2018}
+C.~K.~Alexander and M.~N.~O.~Sadiku, \emph{Fundamentos de circuitos eléctricos}, 6ta~ed. México D.F.: McGraw-Hill Interamericana, 2018.
+
+\bibitem{hayt2012}
+W.~H.~Hayt, J.~E.~Kemmerly, and S.~M.~Durbin, \emph{Análisis de circuitos en ingeniería}, 8va~ed. México D.F.: McGraw-Hill, 2012.
+
+\bibitem{sedra2020}
+A.~S.~Sedra, K.~C.~Smith, T.~C.~Carusone, and V.~Gaudet, \emph{Microelectronic Circuits}, 8th~ed. New York: Oxford University Press, 2020.
+
+\bibitem{franco2015}
+S.~Franco, \emph{Design with Operational Amplifiers and Analog Integrated Circuits}, 4th~ed. New York: McGraw-Hill Education, 2015.
+
+\bibitem{proakis2007}
+J.~G.~Proakis and D.~G.~Manolakis, \emph{Digital Signal Processing: Principles, Algorithms, and Applications}, 4th~ed. Upper Saddle River, NJ: Pearson Prentice Hall, 2007.
+
+\bibitem{kasap2013}
+S.~O.~Kasap, \emph{Optoelectronics and Photonics: Principles and Practices}, 2nd~ed. Boston: Pearson, 2013.
+
+\bibitem{tipler2010}
+P.~A.~Tipler y G.~Mosca, \emph{Física para la ciencia y la tecnología. Vol. 2: Electricidad y magnetismo / Luz}, 6ta~ed. Barcelona: Editorial Reverté, 2010.
+
+\bibitem{ziemann2008}
+O.~Ziemann, J.~Krauser, P.~E.~Zamzow, and W.~Daum, \emph{POF Handbook: Optical Short Range Transmission Systems}, 2nd~ed. Berlin Heidelberg: Springer-Verlag, 2008.
+
+\bibitem{rose1963}
+A.~Rose, \emph{Concepts in Photoconductivity and Allied Problems}. New York: Interscience Publishers, John Wiley \& Sons, 1963.
+
+\bibitem{streetman2016}
+B.~G.~Streetman and S.~K.~Banerjee, \emph{Solid State Electronic Devices}, 7th~ed. Upper Saddle River, NJ: Pearson, 2016.
+
+\bibitem{camenzind2005}
+H.~R.~Camenzind, \emph{Designing Analog Chips}. Virtualbookworm Publishing, 2005.
+
+\bibitem{cady1964}
+W.~G.~Cady, \emph{Piezoelectricity: An Introduction to the Theory and Applications of Electromechanical Phenomena in Crystals}. New York: Dover Publications, 1964.
+
+\bibitem{ti_lm358}
+Texas Instruments, \emph{LMx58-N Low-Power, Dual-Operational Amplifiers Datasheet}, Doc.~SNOSBT3J, Dallas, TX, 2023.
+
+\bibitem{ti_ne555}
+Texas Instruments, \emph{NA555, NE555, SA555, SE555 Precision Timers Datasheet}, Doc.~SLFS022I, Dallas, TX, 2022.
+
+\end{thebibliography}
+
+\end{document}

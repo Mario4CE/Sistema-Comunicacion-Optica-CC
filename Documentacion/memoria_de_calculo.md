@@ -26,8 +26,8 @@ donde cada código entero $D[k]$ se descompone en su representación posicional 
 $$D[k] = 8 b_3 + 4 b_2 + 2 b_1 + 1 b_0, \quad b_i \in \{0, 1\}$$
 
 En el script `Matlab/Primero.m` se generan dos secuencias de longitud variable:
-1. **Señal Periódica ($L = 20$ muestras):** Onda sinusoidal $x(t) = 2.5 + 2.1875\sin(2\pi f_0 t)$ contenida en $[0.3125\text{ V}, 4.6875\text{ V}]$.
-2. **Señal Aperiódica ($L = 18$ muestras):** Rampa exponencial ascendente y descendente que recorre los estados extremos.
+1. **Señal Periódica ($L = 20$ muestras):** Onda sinusoidal $x_p(t) = 2.34 + 2.10\sin(2\pi f_0 t)$ contenida en $[0.24\text{ V}, 4.44\text{ V}]$, garantizando muestras no saturadas en los extremos dentro del rango de cuantización.
+2. **Señal Aperiódica ($L = 18$ muestras):** Rampa exponencial transitoria amortiguada $x_a(t) = 0.40 + 4.25 e^{-3.2 t} |\sin(3\pi t + 0.3)|$ que recorre estados dinámicos decrecientes.
 
 ### 1.2 Temporización Estabilizada en Arduino (Req. C.3)
 Cada palabra digital $D[k]$ se envía a los cuatro terminales digitales de salida del ATmega328P (`D8` = $b_0$, `D9` = $b_1$, `D10` = $b_2$, `D11` = $b_3$) durante un tiempo de permanencia $T_{\text{est}}$ controlado por software no bloqueante (`millis()`) que cumple estrictamente la restricción del diseño:
@@ -214,7 +214,7 @@ $$v_C(t) = V_f + (V_i - V_f)e^{-t/\tau}$$
 
 Para los componentes seleccionados ($R_1 = 1\text{ k}\Omega$, $C_1 = 100\text{ nF}$):
 - En penumbra ($R_{\text{LDR}} = 40.0\text{ k}\Omega$): $f_{\text{teo}} = \frac{1.443}{(1000 + 80000)\times 10^{-7}} = 178.1\text{ Hz}$. En la simulación con el modelo nativo de LTspice se obtiene **$f_{\text{sim}} = 176.7\text{ Hz}$** (error $0.81\%$, tono grave).
-- En máxima conducción lumínica ($R_{\text{LDR}} = 1.58\text{ k}\Omega$ en $D = 15$): $f_{\text{teo}} = \frac{1.443}{(1000 + 3160)\times 10^{-7}} = 3474.3\text{ Hz}$. En LTspice se obtiene **$f_{\text{sim}} = 3443.0\text{ Hz}$** (error $0.90\%$, tono agudo).
+- En máxima conducción lumínica ($R_{\text{LDR}} = 1576.6\ \Omega \approx 1.58\text{ k}\Omega$ en $D = 15$ con $I_{\text{LED}} = 18.66\text{ mA}$): $f_{\text{teo}} = \frac{1.443}{(1000 + 2 \times 1576.6)\times 10^{-7}} = 3474.3\text{ Hz}$ *(si se emplea el valor redondeado de $1.58\text{ k}\Omega$: $f = \frac{1.443}{4160 \times 10^{-7}} = 3468.8\text{ Hz}$)*. En la simulación con LTspice se obtiene **$f_{\text{sim}} = 3443.0\text{ Hz}$** (error $0.90\%$, tono agudo).
 
 | Resistencia LDR ($R_{\text{LDR}}$) | Frecuencia Teórica ($f_{\text{teo}}$) | Frecuencia Simulada ($f_{\text{sim}}$) | Error Relativo | Ciclo de Trabajo (Duty Cycle) | Umbrales $V_{\text{THR}}$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|
