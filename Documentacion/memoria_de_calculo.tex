@@ -623,6 +623,112 @@ Se normalizó el circuito aplicando tres puentes rígidos directos:
 Las pruebas de banco posteriores ratificaron la total linealidad monótona de la escalera de 16 escalones ($0\text{ V}$ a $4.6875\text{ V}$).
 
 % =============================================================================
+\section{Cálculos Complementarios de Ingeniería (Para Discusión del Equipo)}
+% =============================================================================
+
+A continuación se presentan cuatro análisis cuantitativos avanzados desarrollados para enriquecer la memoria técnica y proporcionar argumentos rigurosos durante la defensa oral ante el profesor. El equipo de trabajo puede evaluar cuáles incorporar íntegramente en la sustentación y cuáles mantener como respaldo de diseño:
+
+\subsection{Análisis de Tolerancias en Peor Caso y No Linealidad (DNL e INL)}
+El requerimiento \textbf{O.16} estipula un error relativo inferior al $10\%$. Empleando resistores comerciales de película metálica con tolerancia del $1\%$ ($\epsilon = \pm 0.01$), se evalúa la no linealidad diferencial (DNL) en la transición más crítica de la escalera R--2R: el cruce de media escala ($0111_2 \to 1000_2$):
+\begin{itemize}
+    \item En $D=7$ ($0111_2$), la salida depende de la suma de los bits 0, 1 y 2 con peso conjunto $7/16$.
+    \item En $D=8$ ($1000_2$), se desconectan los tres bits inferiores y conmuta exclusivamente el bit MSB ($b_3$) con peso nominal $1/2 = 8/16$.
+\end{itemize}
+
+Bajo la condición de dispersión en peor caso (rama del bit 3 desviada en $-1\%$ y ramas inferiores en $+1\%$):
+\begin{equation}
+\Delta V_{\text{paso(peor)}} = V_{\text{LSB}} \pm 2\epsilon \cdot V_{\text{ref}} = 0.3125\text{ V} \pm 2(0.01)(5.0\text{ V}) = 0.3125\text{ V} \pm 0.1000\text{ V}
+\end{equation}
+Expresando el error de salto en unidades de LSB:
+\begin{equation}
+\mathrm{DNL}_{\text{max}} = \frac{0.1000\text{ V}}{0.3125\text{ V}} = \mathbf{0.32\text{ LSB}} < \mathbf{1.0\text{ LSB}}
+\label{eq:dnl_calculo}
+\end{equation}
+\textbf{Conclusión de Ingeniería:} Dado que $|\mathrm{DNL}| < 1.0\text{ LSB}$, \textbf{la monotonicidad de la escalera está matemáticamente garantizada} (no existen códigos perdidos ni inversiones de pendiente). El error integral máximo (INL) es:
+\begin{equation}
+\mathrm{INL}_{\text{max}} \approx \epsilon \cdot \frac{V_{\text{ref}}}{2} = 0.01 \times 2.50\text{ V} = 25.0\text{ mV} \implies E_{\text{rel(peor)}} \approx \frac{25\text{ mV}}{2500\text{ mV}} \times 100\% = \mathbf{1.0\%} \ll \mathbf{10\%}
+\end{equation}
+
+\subsection{Balance de Potencia Total del Sistema y Elevación Térmica}
+Para dimensionar adecuadamente la Fuente DC Regulada de Laboratorio y verificar la estabilidad térmica de los componentes activos:
+\begin{enumerate}
+    \item \textbf{Canal 1 ($+5.00\text{ V}$ --- NE555 y temporización):}
+    \begin{itemize}
+        \item Corriente de reposo del NE555: $I_{\text{CC(555)}} \approx 6.0\text{ mA}$ \cite{ti_ne555}.
+        \item Corriente promedio por $R_1$: $I_{R1} \approx \frac{V_{\text{CC}} - \frac{2}{3}V_{\text{CC}}}{R_1} \times \mathrm{Duty} \approx \frac{1.67\text{ V}}{1000\ \Omega} \times 0.60 \approx 1.0\text{ mA}$.
+        \item Consumo total en CH1: $I_{\text{CH1}} \approx 7.0\text{ mA} \implies P_{\text{CH1}} = 5.0\text{ V} \times 7.0\text{ mA} = \mathbf{35.0\text{ mW}}$.
+    \end{itemize}
+    \item \textbf{Canal 2 ($+9.00\text{ V}$ --- LM358N y Driver LED):}
+    \begin{itemize}
+        \item Corriente de reposo del LM358N (ambos operacionales): $I_{\text{CC(LM358)}} \approx 1.2\text{ mA}$ \cite{ti_lm358}.
+        \item Corriente máxima entregada al LED en $D=15$: $I_{\text{LED(max)}} = 18.66\text{ mA}$.
+        \item Consumo total máximo en CH2: $I_{\text{CH2(max)}} = 1.2 + 18.66 = 19.86\text{ mA} \implies P_{\text{CH2(max)}} = 9.0\text{ V} \times 19.86\text{ mA} = \mathbf{178.7\text{ mW}}$.
+    \end{itemize}
+    \item \textbf{Potencia total suministrada:} $P_{\text{total}} = 35.0\text{ mW} + 178.7\text{ mW} = \mathbf{213.7\text{ mW}} \approx \mathbf{0.21\text{ W}}$.
+    \item \textbf{Disipación interna y elevación de temperatura en el LM358N (DIP-8):}
+    En $D=15$, la caída de tensión en el transistor de salida del OpAmp 1B es $V_{\text{CE}} = V_{\text{OP}} - V_{\text{interfaz}} = 9.00\text{ V} - 4.6875\text{ V} = 4.3125\text{ V}$.
+    \begin{equation}
+    P_{\text{chip}} = (4.3125\text{ V} \times 18.66\text{ mA}) + (9.0\text{ V} \times 1.2\text{ mA}) = 80.5\text{ mW} + 10.8\text{ mW} = \mathbf{91.3\text{ mW}}
+    \end{equation}
+    Con una resistencia térmica unión-ambiente típica de encapsulado DIP-8 $\theta_{\text{JA}} \approx 100^\circ\text{C/W}$ \cite{ti_lm358}:
+    \begin{equation}
+    \Delta T = P_{\text{chip}} \cdot \theta_{\text{JA}} = 0.0913\text{ W} \times 100^\circ\text{C/W} = \mathbf{9.1^\circ\text{C}} \implies T_J \approx 25^\circ\text{C} + 9.1^\circ\text{C} = \mathbf{34.1^\circ\text{C}} \ll 150^\circ\text{C}
+    \end{equation}
+    El amplificador opera totalmente frío, garantizando vida útil prolongada sin necesidad de disipador.
+\end{enumerate}
+
+\subsection{Balance de Enlace Óptico (Optical Link Budget) y Pérdidas de Fresnel}
+Para caracterizar cuantitativamente la atenuación del canal óptico guiado de $45\text{ cm}$:
+\begin{enumerate}
+    \item \textbf{Pérdidas por Reflexión de Fresnel en las Facetas de la Fibra:}
+    En la transición aire--núcleo de PMMA ($n_{\text{aire}} = 1.000$, $n_1 = 1.492$) con incidencia normal \cite{tipler2010,ziemann2008}:
+    \begin{equation}
+    R = \left( \frac{n_1 - n_{\text{aire}}}{n_1 + n_{\text{aire}}} \right)^2 = \left( \frac{1.492 - 1.000}{1.492 + 1.000} \right)^2 = \left( \frac{0.492}{2.492} \right)^2 = 0.03898 \approx \mathbf{3.90\%}
+    \end{equation}
+    Pérdida en decibeles por faceta: $A_{\text{Fresnel}} = -10\log_{10}(1 - R) = -10\log_{10}(0.9610) = \mathbf{0.173\text{ dB/faceta}}$. Para las dos caras (entrada y salida):
+    \begin{equation}
+    A_{\text{Fresnel(total)}} = 2 \times 0.173\text{ dB} = \mathbf{0.346\text{ dB}}
+    \end{equation}
+    \item \textbf{Eficiencia de Acoplamiento Geométrico (Cono de Aceptación):}
+    Asumiendo emisión lambertiana del LED, la fracción de potencia capturada por la fibra está acotada por su apertura numérica \cite{kasap2013}:
+    \begin{equation}
+    \eta_{\text{acoplo}} \approx \mathrm{NA}^2 = (0.510)^2 = 0.2601 \approx \mathbf{26.0\%} \implies A_{\text{acoplo}} = -10\log_{10}(0.2601) = \mathbf{5.85\text{ dB}}
+    \end{equation}
+    \item \textbf{Atenuación Distribuida en la Fibra POF ($L = 0.45\text{ m}$):}
+    \begin{equation}
+    A_{\text{fibra}} = \alpha \cdot L_{\text{fibra}} = 0.15\text{ dB/m} \times 0.45\text{ m} = \mathbf{0.0675\text{ dB}}
+    \end{equation}
+    \item \textbf{Atenuación Óptica Total del Enlace:}
+    \begin{equation}
+    A_{\text{total}} = A_{\text{acoplo}} + A_{\text{Fresnel(total)}} + A_{\text{fibra}} = 5.85\text{ dB} + 0.35\text{ dB} + 0.07\text{ dB} = \mathbf{6.27\text{ dB}}
+    \end{equation}
+    Para una potencia óptica emitida por el LED de $P_{\text{tx}} \approx 2.50\text{ mW}$ ($+3.98\text{ dBm}$), la potencia incidente en la LDR es:
+    \begin{equation}
+    P_{\text{rx}} = +3.98\text{ dBm} - 6.27\text{ dB} = -2.29\text{ dBm} \approx \mathbf{0.59\text{ mW}} = 590\ \mu\text{W}
+    \end{equation}
+    Esta irradiancia es óptima para reducir la resistencia del sulfuro de cadmio hasta $1.58\text{ k}\Omega$.
+\end{enumerate}
+
+\subsection{Análisis Dinámico: Slew Rate del OpAmp vs. Cinética Fotoconductora de la LDR}
+Para justificar técnicamente el tiempo de permanencia mínimo ($T_{\text{est}} \ge 1\text{ ms}$) exigido en el requerimiento \textbf{C.3}:
+\begin{enumerate}
+    \item \textbf{Tiempo de Respuesta del DAC y OpAmp LM358N:}
+    La constante de tiempo parásita de la escalera R--2R con la capacitancia de entrada del operacional ($C_{\text{in}} \approx 3\text{ pF}$) es $\tau_{\text{DAC}} = 10\text{ k}\Omega \times 3\text{ pF} = 30\text{ ns}$. La velocidad de respuesta del LM358N está gobernada por su Slew Rate ($\mathrm{SR} = 0.50\text{ V}/\mu\text{s}$) \cite{ti_lm358}. El tiempo de transición para una excursión completa ($0\text{ V} \to 4.6875\text{ V}$) es:
+    \begin{equation}
+    t_{\text{SR}} = \frac{\Delta V}{\mathrm{SR}} = \frac{4.6875\text{ V}}{0.50\text{ V}/\mu\text{s}} = \mathbf{9.375\ \mu\text{s}}
+    \end{equation}
+    En comparación con el tiempo de retención mínimo permitido ($T_{\text{est}} = 1\text{ ms} = 1000\ \mu\text{s}$):
+    \begin{equation}
+    \frac{t_{\text{SR}}}{T_{\text{est(min)}}} = \frac{9.375\ \mu\text{s}}{1000\ \mu\text{s}} \times 100\% = \mathbf{0.94\%}
+    \end{equation}
+    La tensión analógica se establece en menos del $1\%$ del intervalo temporal de la muestra.
+    \item \textbf{Cinética Fotoconductora del Sulfuro de Cadmio (CdS):}
+    A diferencia de la respuesta electrónica del DAC ($< 10\ \mu\text{s}$), el proceso de recombinación de portadores libres en la fotorresistencia GL5528 está limitado por estados trampa profundos \cite{rose1963}, exhibiendo un tiempo de subida $t_r \approx 20\text{--}30\text{ ms}$ y un tiempo de caída (retorno a oscuridad) $t_f \approx 30\text{--}40\text{ ms}$.
+    
+    \textbf{Conclusión de Ingeniería:} A frecuencias de conmutación muy elevadas ($T_{\text{est}} \approx 1\text{ ms}$), la LDR actúa como un filtro pasa-bajos promediador. Para lograr que la frecuencia del tono acústico del 555 alcance plenamente el estado estacionario en cada muestra, el tiempo de permanencia óptimo de operación es $T_{\text{est}} \ge 500\text{ ms}$ (habiéndose configurado $1500\text{ ms}$ por defecto en el firmware de Arduino).
+\end{enumerate}
+
+% =============================================================================
 \section{Cuadro Maestro de Resultados: Teórico vs. LTspice vs. Experimental}
 % =============================================================================
 

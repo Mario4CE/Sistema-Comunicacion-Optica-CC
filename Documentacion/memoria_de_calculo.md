@@ -261,7 +261,42 @@ Las pruebas posteriores en banco validaron la recuperación completa de la linea
 
 ---
 
-## 8. Referencias Bibliográficas Académicas (Normadas)
+## 8. Cálculos y Análisis Complementarios de Ingeniería (Para Discusión del Equipo)
+
+A continuación se resumen cuatro análisis cuantitativos avanzados propuestos para robustecer la memoria técnica y la defensa del proyecto:
+
+### 8.1 Análisis de Tolerancias en Peor Caso y No Linealidad (DNL e INL)
+- **Tolerancia de componentes pasivos:** $1\%$ ($\epsilon = \pm 0.01$).
+- **Transición crítica de media escala ($0111_2 \to 1000_2$):** En el peor caso de desvío opuesto entre el bit MSB y los bits inferiores:
+  $$\Delta V_{\text{paso(peor)}} = V_{\text{LSB}} \pm 2\epsilon V_{\text{ref}} = 0.3125\text{ V} \pm 0.1000\text{ V} \implies \mathrm{DNL}_{\text{max}} = \frac{0.1000\text{ V}}{0.3125\text{ V}} = \mathbf{0.32\text{ LSB}} < \mathbf{1.0\text{ LSB}}$$
+- **Garantía de Monotonicidad:** Como $|\mathrm{DNL}| < 1.0\text{ LSB}$, no existen códigos perdidos ni saltos decrecientes.
+- **Error Integral Máximo (INL):** $\mathrm{INL}_{\text{max}} \approx 25.0\text{ mV} \implies E_{\text{rel(peor)}} \approx \mathbf{1.0\%} \ll \mathbf{10\%}$ (cumple holgadamente el Req. O.16).
+
+### 8.2 Balance de Potencia Total del Sistema y Elevación Térmica
+- **Consumo Canal 1 ($+5.00\text{ V}$ --- NE555):** $I_{\text{CH1}} \approx 7.0\text{ mA} \implies P_{\text{CH1}} \approx \mathbf{35.0\text{ mW}}$.
+- **Consumo Canal 2 ($+9.00\text{ V}$ --- LM358N y LED):** $I_{\text{CH2(max)}} \approx 19.86\text{ mA} \implies P_{\text{CH2(max)}} \approx \mathbf{178.7\text{ mW}}$.
+- **Potencia Total Consumida:** $P_{\text{total}} \approx \mathbf{213.7\text{ mW}} \approx \mathbf{0.21\text{ W}}$.
+- **Disipación Interna en el LM358N:** En $D=15$, la caída sobre el transistor interno es $V_{\text{CE}} = 9.0\text{ V} - 4.6875\text{ V} = 4.3125\text{ V}$.
+  $$P_{\text{chip}} = (4.3125\text{ V} \times 18.66\text{ mA}) + (9.0\text{ V} \times 1.2\text{ mA}) = \mathbf{91.3\text{ mW}}$$
+  Elevación térmica en encapsulado DIP-8 ($\theta_{\text{JA}} \approx 100^\circ\text{C/W}$):
+  $$\Delta T = 0.0913\text{ W} \times 100^\circ\text{C/W} = \mathbf{9.1^\circ\text{C}} \implies T_J \approx 34.1^\circ\text{C} \ll 150^\circ\text{C}$$
+  El chip opera prácticamente a temperatura ambiente sin necesidad de disipador.
+
+### 8.3 Balance de Enlace Óptico (Optical Link Budget) y Pérdidas de Fresnel
+- **Pérdidas de Fresnel (aire--PMMA, $n_1 = 1.492$):** $R = \left(\frac{1.492 - 1}{1.492 + 1}\right)^2 \approx 3.90\% \implies 0.173\text{ dB}$ por faceta ($0.35\text{ dB}$ en dos caras).
+- **Eficiencia de Acoplamiento Geométrico (Apertura Numérica $\text{NA} = 0.510$):** $\eta_{\text{acoplo}} \approx \text{NA}^2 \approx 0.2601 \implies \mathbf{5.85\text{ dB}}$.
+- **Atenuación en Fibra POF ($45\text{ cm}$):** $A_{\text{fibra}} = 0.15\text{ dB/m} \times 0.45\text{ m} = \mathbf{0.068\text{ dB}}$.
+- **Pérdida Total del Canal Óptico:** $A_{\text{total}} = 5.85 + 0.35 + 0.07 = \mathbf{6.27\text{ dB}}$.
+  Con una potencia emitida de $\approx 2.5\text{ mW}$ ($+3.98\text{ dBm}$), la potencia recibida en la LDR es $\approx \mathbf{0.59\text{ mW}}$ ($590\ \mu\text{W}$), suficiente para excitar la fotoconducción del CdS hasta $\approx 1.58\text{ k}\Omega$.
+
+### 8.4 Análisis Dinámico: Slew Rate vs. Cinética Fotoconductora de la LDR
+- **Transición Electrónica del DAC:** Con un Slew Rate de $0.50\text{ V}/\mu\text{s}$ (LM358N), el escalón completo ($0\text{ V} \to 4.69\text{ V}$) tarda $t_{\text{SR}} = \mathbf{9.38\ \mu\text{s}}$, representando menos del **$0.94\%$** del tiempo mínimo permitido ($T_{\text{est}} = 1\text{ ms}$).
+- **Cinética Fotoconductora de la LDR:** Debido a la vida media de recombinación de portadores en el CdS, los tiempos de subida y bajada óptica son $t_r \approx 20\text{--}30\text{ ms}$ y $t_f \approx 30\text{--}40\text{ ms}$.
+- **Conclusión Práctica:** Para permitir que el tono audible del 555 alcance un régimen estable y limpio en cada muestra, el tiempo de permanencia óptimo en laboratorio es $T_{\text{est}} \ge 500\text{ ms}$ (habiéndose configurado $1500\text{ ms}$ por defecto en Arduino).
+
+---
+
+## 9. Referencias Bibliográficas Académicas (Normadas)
 
 Todas las ecuaciones, modelos físicos y criterios de selección implementados en esta memoria de cálculo y en el proyecto se fundamentan en las siguientes fuentes académicas y técnicas verificables:
 
