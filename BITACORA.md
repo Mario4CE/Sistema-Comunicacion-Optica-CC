@@ -255,6 +255,25 @@
 
 ---
 
+### [2026-11-07] - Sesión 17: Auditoría Integral de Cálculos, Sincronización Documental y Generación de la Memoria de Cálculo en LaTeX (`memoria_de_calculo.tex`)
+* **Auditoría Numérica y Analítica Exhaustiva de Cálculos (100% Verificado):**
+  * Se verificaron de forma cruzada todas las deducciones matemáticas, parámetros circuitales y valores numéricos de las siete etapas del sistema:
+    1. **Etapa 1:** Resolución $\Delta V_{\text{LSB}} = 0.3125\text{ V}$, 16 niveles de cuantización ($0\text{ a }4.6875\text{ V}$), $\text{SQNR} = 25.84\text{ dB}$, temporización $T_{\text{est}} \in [1\text{ ms}, 10\text{ s}]$.
+    2. **Etapa 2:** Ecuaciones nodales de Kirchhoff (LCK) en los 4 nodos principales ($V_1, V_2, V_3, V_4$), demostración analítica de impedancia de Thévenin invariante $R_{\text{th}} = R = 10\text{ k}\Omega$, corriente máxima de pines de Arduino $I_{\text{pin}} = 0.25\text{ mA} \ll 20\text{ mA}$, error relativo simulado $< 0.0012\% \ll 10\%$ (Req. O.16) y justificación de polarización $V_{\text{OP}} = +9.0\text{ V}$ en Pin 8 del LM358N para evitar saturación de riel superior ($V_{\text{OH}} \le V_{\text{CC}} - 1.5\text{ V}$).
+    3. **Etapa 3:** Demostración del efecto de carga y pérdida del $98.52\%$ de tensión sin buffer seguidor; aislamiento de impedancia con OpAmp 1B ($Z_{\text{in}} > 10\text{ M}\Omega, Z_{\text{out}} \approx 0\ \Omega$).
+    4. **Etapa 4:** Resistor limitador $R_{\text{driver}} = 150\ \Omega$, $I_{\text{LED(max)}} = 19.25\text{ mA}$, disipación $P = 55.6\text{ mW} \ll 250\text{ mW}$; justificación física del LED rojo ($\lambda \approx 650\text{ nm}$) basada en la relación cuántica de Planck-Einstein ($E = 1.91\text{ eV} \implies V_D \approx 1.80\text{ V}$, 10 estados activos), ventana de mínima atenuación en fibra POF PMMA ($\alpha \approx 0.15\text{ dB/m}$) y sensibilidad fotoconductora del CdS.
+    5. **Etapa 5:** Fibra POF de $45\text{ cm}$ ($\theta_c \approx 70.0^\circ, \text{NA} \approx 0.51$), receptor LDR GL5528 pasivo ($40\text{ k}\Omega$ a $1.58\text{ k}\Omega$).
+    6. **Etapa 6:** Deducción matemática formal a partir de la ecuación diferencial de primer orden RC para los tiempos de carga ($t_H = 0.693(R_1+R_{\text{LDR}})C_1$) y descarga ($t_L = 0.693 R_{\text{LDR}} C_1$), frecuencia fundamental $f_{555} = 1.443/((R_1 + 2R_{\text{LDR}})C_1)$, oscilación audible entre $176.7\text{ Hz}$ y $3443.0\text{ Hz}$ (error $< 0.90\%$) y ciclo de trabajo ($50.3\%\text{--}62.1\%$).
+    7. **Etapa 7:** Filtro pasa-altos capacitivo con $C_{\text{acoplo}} = 10\ \mu\text{F}$ y buzzer pasivo ($R_L \approx 1\text{ k}\Omega$): frecuencia de corte $f_c = 15.9\text{ Hz} \ll 176.7\text{ Hz}$, con supresión total de componente continua ($V_{\text{DC}} \approx 2.5\text{ V}$) para proteger el elemento piezoeléctrico.
+* **Creación de la Memoria de Cálculo en LaTeX (`Documentacion/memoria_de_calculo.tex`):**
+  * Se diseñó y compiló el documento formal en formato LaTeX (`article`, estándar A4/Letter con paquetes `amsmath`, `booktabs`, `hyperref`, `fancyhdr`), estructurado profesionalmente para ser compartido con los compañeros de equipo y editado en Overleaf / TeX Live.
+  * Incluye la totalidad de las deducciones matemáticas paso a paso, esquemas ASCII de circuitos y divisores de tensión, tablas de niveles teóricos, explicación teórica de cada decisión de ingeniería, notas de laboratorio y 14 referencias bibliográficas normadas en formato IEEE.
+* **Sincronización y Depuración de Documentación:**
+  * Se ajustaron las descripciones en `memoria_de_calculo.md` (precisión entre resistencia exacta de SPICE $1576.6\ \Omega$ y valor redondeado de $1.58\text{ k}\Omega$ en la frecuencia máxima del 555, y sincronización de la función senoidal con `Matlab/Primero.m`).
+  * Se actualizó `README.md` incorporando la referencia a `memoria_de_calculo.tex`.
+
+---
+
 ## 2. Inventario Físico de Componentes Adquiridos
 
 | Ítem | Componente | Especificación / Modelo | Cantidad | Función Circuital (Etapa) | Estado de Verificación |
@@ -344,6 +363,8 @@
 | **57** | `7c19f14` | 2026-10-29 | Memoria de Cálculo | Sincronización de la memoria de cálculo con los resultados del barrido paramétrico de fotorresistencia en el temporizador 555. | `Documentacion/memoria_de_calculo.md` |
 | **58** | `daad84d` | 2026-10-29 | Documentación / README | Actualización del estado de validación al 100% de los esquemáticos de simulación en el archivo principal `README.md`. | `README.md` |
 | **59** | `4d6d204` | 2026-10-29 | Bitácora / Sesión 15 | Registro de la sesión 15 con el diagnóstico y verificación de las 3 simulaciones en LTspice, saneamiento de carpeta y trazabilidad completa de commits. | `BITACORA.md` |
+| **60** | `8efb414` | 2026-11-07 | Memoria de Cálculo LaTeX | Creación de `memoria_de_calculo.tex` para Overleaf/LaTeX y sincronización de `memoria_de_calculo.md`. | `Documentacion/memoria_de_calculo.tex`, `Documentacion/memoria_de_calculo.md` |
+| **61** | `a93b4f1` | 2026-11-07 | Bitácora / README | Registro de la sesión 17 de auditoría matemática, actualización de trazabilidad en bitácora e indexación en `README.md`. | `BITACORA.md`, `README.md` |
 
 ---
 
