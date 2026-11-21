@@ -5,7 +5,6 @@
 **Profesor:** Ing. Fabián Alberto Picado García  
 **Equipo de Trabajo:**
 * **Mario Cerdas** (Carné: 2022437519, `m.cerdas@estudiantec.cr`)
-* **Sebastián Quirós Fernández** (Carné: 2024073526, `s.quiros.4@estudiantec.cr`)
 * **Ian Fuentes Núñez** (Carné: 2025100912, `I.fuentes.1@estudiantec.cr`)  
 **Repositorio Git:** `Sistema-Comunicacion-Optica-CC`  
 **Rama Activa de Trabajo:** `mario-dev`  
@@ -154,9 +153,8 @@
 
 ### [2026-10-27] - Sesión 13 (HOY): Ensamble Físico Completo del Circuito y Pruebas Preliminares de Funcionamiento con Batería
 * **Conformación Oficial del Equipo de Trabajo:**
-  * Se formalizó la integración de los compañeros de trabajo en toda la documentación técnica, código y reportes del proyecto:
+  * Se formalizó la integración de los integrantes del equipo en toda la documentación técnica, código y reportes del proyecto:
     * **Mario Cerdas** (Carné: 2022437519, `m.cerdas@estudiantec.cr`).
-    * **Sebastián Quirós Fernández** (Carné: 2024073526, correo institucional: `s.quiros.4@estudiantec.cr`).
     * **Ian Fuentes Núñez** (Carné: 2025100912, correo institucional: `I.fuentes.1@estudiantec.cr`).
 * **Ensamble Físico Integral del Circuito (100% Completado):**
   * El circuito se ensambló por completo en su totalidad sobre la placa protoboard de 830 puntos montada e integrada en la base de MDF de corte láser ($250\times 200\text{ mm}$), dejando interconectadas las 7 etapas de la cadena optoelectrónica:
@@ -173,7 +171,7 @@
   * **Nota Normativa de Cumplimiento (Req. P.17 y Q.18):** Se deja constancia explícita en la documentación de que el uso de la batería se restringió de manera exclusiva a una prueba preliminar de validación de banco y continuidad tras finalizar el ensamble. Para la toma de datos cuantitativos finales ($V_{\text{exp}}$) que se consignarán en el Cuadro I del informe IEEE y para la defensa y evaluación presencial final ante el profesor en semana 19, la alimentación se realizará obligatoria y exclusivamente con la **Fuente DC Regulada de Laboratorio** provista por la bodega de la Escuela de Electrónica.
 * **Actualización Integral de Documentos del Proyecto:**
   * Se actualizaron todos los documentos que lo ameritaban:
-    * `Documentacion/informe_ieee_el2113.tex`: Incorporación de los tres autores, correos institucionales, mención al ensamble completo y pruebas preliminares con batería.
+    * `Documentacion/informe_ieee_el2113.tex`: Incorporación de los autores, correos institucionales, mención al ensamble completo y pruebas preliminares con batería.
     * `Documentacion/memoria_de_calculo.md`: Actualización del equipo de trabajo en el encabezado y adición de la subsección 7.1 documentando las pruebas preliminares de banco con batería frente al cumplimiento estricto de P.17/Q.18.
     * `README.md`: Actualización del equipo de autores, estado del prototipo completamente ensamblado con pruebas de batería superadas y corrección de enlaces a la estructura oficial del repositorio.
     * `Arduino/Logica/Logica.ino`: Encabezado con autores, carnés y correos institucionales.
@@ -229,7 +227,7 @@
 
 ### [2026-10-29] - Sesión 16: Validación Rigurosa de Referencias Académicas, Justificación de Modelos y Humanización del Informe Técnico
 * **Actualización y Unificación de Correos Institucionales:**
-  * Se incorporó el correo institucional de Mario Cerdas (`m.cerdas@estudiantec.cr`) en todos los documentos del proyecto (`informe_ieee_el2113.tex`, `memoria_de_calculo.md`, `protocolo_pruebas_laboratorio.tex`, `README.md` y `BITACORA.md`), asegurando la consistencia de los tres autores ante la Escuela de Ingeniería Electrónica del ITCR.
+  * Se incorporó el correo institucional de Mario Cerdas (`m.cerdas@estudiantec.cr`) en todos los documentos del proyecto (`informe_ieee_el2113.tex`, `memoria_de_calculo.md`, `protocolo_pruebas_laboratorio.tex`, `README.md` y `BITACORA.md`), asegurando la consistencia de los autores ante la Escuela de Ingeniería Electrónica del ITCR.
 * **Auditoría y Validación Rigurosa de Referencias Bibliográficas Académicas:**
   * Se eliminaron atribuciones genéricas o imprecisas y se sustituyeron por **14 referencias académicas de primer nivel, reales, verificables y de alto impacto**, vinculando cada ecuación, teorema y principio físico con su respectiva obra canónica:
     1. **Alexander y Sadiku (2018):** Leyes de Kirchhoff, análisis nodal en corriente continua, divisor de tensión y efecto de carga.
@@ -354,7 +352,7 @@
 | **48** | `f91bec0` | 2026-10-24 | Limpieza / Ensamble | Limpieza de archivos temporales/obsoletos e incorporación de evidencia fotográfica del circuito con base láser (`CircuitoConBase.jpeg`). | `TinkerCAD/CircuitoConBase.jpeg` |
 | **49** | `bdfdcbc` | 2026-10-24 | Documentación | Registro de actividades de limpieza y mantenimiento en bitácora. | `BITACORA.md` |
 | **50** | `91ca47d` | 2026-10-24 | Kit 3D / IEEE / Docs | Unificación del kit 3D de 8 piezas (`Atornillada.scad` / `2022437519-01.stl`), reorganización del firmware Arduino, actualización de `README.md` y plantilla experimental en `informe_ieee_el2113.tex`. | `Prototipos/Impresion_3D/Atornillada.scad`, `Documentacion/informe_ieee_el2113.tex`, `BITACORA.md` |
-| **51** | `21754a2` | 2026-10-27 | Ensamble Físico / Pruebas / Docs | Ensamble físico 100% completado del circuito, pruebas funcionales preliminares con batería superadas, formalización de integrantes del equipo (Sebastián Quirós Fernández e Ian Fuentes Núñez) y actualización de toda la documentación del proyecto. | `BITACORA.md`, `README.md`, `Documentacion/informe_ieee_el2113.tex`, `Documentacion/memoria_de_calculo.md`, `Arduino/Logica/Logica.ino`, `Matlab/Primero.m`, `Matlab/Final.m` |
+| **51** | `21754a2` | 2026-10-27 | Ensamble Físico / Pruebas / Docs | Ensamble físico 100% completado del circuito, pruebas funcionales preliminares con batería superadas, formalización de integrante del equipo (Ian Fuentes Núñez) y actualización de toda la documentación del proyecto. | `BITACORA.md`, `README.md`, `Documentacion/informe_ieee_el2113.tex`, `Documentacion/memoria_de_calculo.md`, `Arduino/Logica/Logica.ino`, `Matlab/Primero.m`, `Matlab/Final.m` |
 | **52** | `46944a3` | 2026-10-28 | Pruebas Lab / Corrección Voltaje / Docs | Registro de pruebas en laboratorio con Ian Fuentes, diagnóstico y corrección circuital de puentes del LM358N en TinkerCAD y físico (`puentes_lm358.svg`), validación preliminar de niveles de voltaje correctos y estimación de reunión el lunes para pruebas finales y cierre del proyecto. | `BITACORA.md`, `README.md`, `TinkerCAD/puentes_lm358.*`, `Documentacion/` |
 | **53** | `7e19a42` | 2026-10-28 | Evidencia de Trabajo / Limpieza | Incorporación de fotografías de evidencia de laboratorio e integración y depuración de archivos basura. | `Prototipos/Circuito/`, `BITACORA.md` |
 | **54** | `209281e` | 2026-10-29 | Simulación LTspice / Fix Codificación | Corrección de cabecera UTF-8 en `receptor_555_ldr.asc` (eliminación de marca BOM) para permitir la apertura inmediata sin errores de sintaxis en LTspice de Windows. | `LTspice/receptor_555_ldr.asc` |

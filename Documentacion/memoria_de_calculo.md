@@ -4,7 +4,6 @@
 **Institución:** Escuela de Ingeniería Electrónica, Instituto Tecnológico de Costa Rica (ITCR)  
 **Equipo de Trabajo:**
 - **Mario Cerdas** (Carné: 2022437519, `m.cerdas@estudiantec.cr`)
-- **Sebastián Quirós Fernández** (Carné: 2024073526, `s.quiros.4@estudiantec.cr`)
 - **Ian Fuentes Núñez** (Carné: 2025100912, `I.fuentes.1@estudiantec.cr`)  
 **Profesor:** Ing. Fabián Alberto Picado García  
 **Semestre:** II Semestre 2026  
