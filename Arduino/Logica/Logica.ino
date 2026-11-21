@@ -5,7 +5,6 @@
  * 
  * EQUIPO DE TRABAJO:
  *   - Mario Cerdas (Carne: 2022437519, m.cerdas@estudiantec.cr)
- *   - Sebastian Quiros Fernandez (Carne: 2024073526, s.quiros.4@estudiantec.cr)
  *   - Ian Fuentes Nunez (Carne: 2025100912, I.fuentes.1@estudiantec.cr)
  * PROFESOR: Ing. Fabian Alberto Picado Garcia
  * SEMESTRE: II Semestre 2026
