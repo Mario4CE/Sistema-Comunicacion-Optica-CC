@@ -1,0 +1,48 @@
+# Archivos temporales de sistema y editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+.vscode/
+.idea/
+
+# Compilación de Arduino
+build/
+*.hex
+*.elf
+*.bin
+
+# Archivos temporales de LTspice
+*.raw
+*.op.raw
+*.log.raw
+*.log
+*.fft
+*.net
+*.plt
+*.tmp
+*.bak
+*.db
+
+# Archivos temporales de MATLAB
+*.asv
+*.m~
+slprj/
+
+# Archivos auxiliares de LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.out
+*.toc
+*.bbl
+*.blg
+
+# Archivos comprimidos y carpetas de empaquetado temporal
+Investigacion_Dirigida/
+*.zip
+__pycache__/
+*.pyc
+*.db
